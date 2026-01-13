@@ -3,7 +3,7 @@ import logging
 from game_objects.card import Card
 
 
-class Deck:
+class Player:
     def __init__(self):
         self.id_counter = 0
         self.all_cards = {}

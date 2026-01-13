@@ -5,14 +5,14 @@ import pygame
 image_loader = None
 
 class ImageLoader:
-    ASSETS_DIR = 'assets'
+    IMAGES_DIR = 'assets/images'
 
     def __init__(self):
         self.registry = {}
-        for filename in os.listdir(self.ASSETS_DIR):
+        for filename in os.listdir(self.IMAGES_DIR):
             name, ext = filename.split('.')
             if ext in ['png', 'bmp', 'jpg', 'jpeg']:
-                self.registry[name] = pygame.image.load(f'{self.ASSETS_DIR}/{filename}')
+                self.registry[name] = pygame.image.load(f'{self.IMAGES_DIR}/{filename}')
                 # TODO: Resize here
 
     def get(self, name):

@@ -1,12 +1,13 @@
 import pygame
 import math
 from game_objects.level import Level
+from game_objects.route import Route
 from utils.image_loader import img_fetch
 from render.constants import *
 
 
-BOARD_WIDTH = SCREEN_WIDTH - 20
-BOARD_HEIGHT = SCREEN_HEIGHT // 2
+NETWORK_WIDTH = SCREEN_WIDTH - 20
+NETWORK_HEIGHT = SCREEN_HEIGHT // 2
 
 ICON_SIZE = (50, 50)
 VECTOR_SIZE = (30, 30)
@@ -16,25 +17,38 @@ VECTOR_FONT_SIZE = 32
 color_map = {
     'PLAYER': pygame.Color('#51FC45'),
     'ENEMY': pygame.Color('#FF5555'),
-    'NEUTRAL': pygame.Color('#DDDDDD')
+    'NEUTRAL': pygame.Color('#DDDDDD'),
+    'PLAYER_PATH': pygame.Color('#B1FFAB'),
+    'ENEMY_PATH': pygame.Color('#FFB7B7')
 }
 
 WARD_COLOR = pygame.Color('#B8EAFF')
 WARD_RADIUS = 30
-WARD_FONT_SIZE = 24
+WARD_FONT_SIZE = 26
 
 DASHED_LINE_SEGMENT = 20  # Desired length
-DASHED_LINE_WIDTH = 3
+LINE_WIDTH = 3
+
+VERTICAL_PATH_OFFSET = 4
 
 
-def generate(level: Level):
-    s = pygame.Surface((BOARD_WIDTH, BOARD_HEIGHT))
+def generate(level: Level, routes: list[Route]=None):
+    player_edges = []
+    enemy_edges = []
+    if routes:
+        for route in routes:
+            if route.owner == 'PLAYER':
+                player_edges += route.edge_path
+            elif route.owner == 'ENEMY':
+                enemy_edges += route.edge_path
 
-    x_cells = level.board_width
-    y_cells = level.board_height
+    s = pygame.Surface((NETWORK_WIDTH, NETWORK_HEIGHT))
 
-    cell_width = BOARD_WIDTH // x_cells
-    cell_height = BOARD_HEIGHT // y_cells
+    x_cells = level.network_width
+    y_cells = level.network_height
+
+    cell_width = NETWORK_WIDTH // x_cells
+    cell_height = NETWORK_HEIGHT // y_cells
 
     node_img = img_fetch().get('server-icon')
     node_img = pygame.transform.smoothscale(node_img, ICON_SIZE)
@@ -48,7 +62,16 @@ def generate(level: Level):
                 next_node_x_center = edge.right.position[0]*cell_width + cell_width//2
                 next_node_y_center = edge.right.position[1]*cell_height + cell_height//2
 
-                draw_dashed_line(s, color_map[edge.owner], DASHED_LINE_WIDTH, (x_center, y_center), (next_node_x_center, next_node_y_center))
+                draw_dashed_line(s, color_map[edge.owner], LINE_WIDTH, (x_center, y_center), (next_node_x_center, next_node_y_center))
+
+                # Draw planned routes
+                if edge in player_edges:
+                    pygame.draw.line(s, color_map['PLAYER_PATH'], (x_center, y_center-VERTICAL_PATH_OFFSET),
+                                     (next_node_x_center, next_node_y_center-VERTICAL_PATH_OFFSET), LINE_WIDTH)
+                    
+                if edge in enemy_edges:
+                    pygame.draw.line(s, color_map['ENEMY_PATH'], (x_center, y_center+VERTICAL_PATH_OFFSET),
+                                     (next_node_x_center, next_node_y_center+VERTICAL_PATH_OFFSET), LINE_WIDTH)
 
         s.blit(recolor(node_img, color_map[node.owner]), (x_center-ICON_SIZE[0]//2, y_center-ICON_SIZE[1]//2))
 
@@ -57,22 +80,22 @@ def generate(level: Level):
             pygame.draw.rect(s, color_map[node.owner], pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]), width=2)
 
             # Draw vector text
-            font = pygame.font.Font(None, VECTOR_FONT_SIZE)
+            font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', VECTOR_FONT_SIZE)
             text = font.render(node.vector, True, color_map[node.owner])
             text_rect = text.get_rect(center=(x_center, y_center))
             s.blit(text, text_rect)
 
         if node.ward:
             # Draw ward circle
-            pygame.draw.circle(s, WARD_COLOR, (x_center, y_center), WARD_RADIUS, width=1)
+            pygame.draw.circle(s, WARD_COLOR, (x_center, y_center), WARD_RADIUS, width=2)
 
             # Draw ward value
-            font = pygame.font.Font(None, WARD_FONT_SIZE)
+            font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', WARD_FONT_SIZE)
             text = font.render(f'{node.ward}🛡️', True, WARD_COLOR)
             text_rect = text.get_rect(center=(x_center, y_center+WARD_RADIUS))
             s.blit(text, text_rect)
 
-
+        # TODO: Draw something to identify source nodes
 
     return s
 

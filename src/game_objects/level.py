@@ -1,18 +1,23 @@
 
 
 class Level:
-    def __init__(self, nodes, edges, pattern, other):
-        self.pattern = pattern
-        self.edge_difficulty = other.get('edge_difficulty', 1)
-        self.board_width = other['board_width']
-        self.board_height = other['board_height']
+    def __init__(self, definition):
+        self.pattern = definition['pattern']
+        self.planned_action = None
+        self.hp = definition['hp']
+        self.edge_difficulty = definition.get('edge_difficulty', 1)
+        self.network_width = definition['network_width']
+        self.network_height = definition['network_height']
 
-        self.nodes = {node['id']: Node(**node) for node in nodes}
+        self.nodes = {node['id']: Node(**node) for node in definition['nodes']}
 
-        for e in edges:
+        for e in definition['edges']:
             edge = Edge(self.nodes[e['left_id']], self.nodes[e['right_id']], e.get('difficulty', self.edge_difficulty))
             self.nodes[e['left_id']].right.append(edge)
             self.nodes[e['right_id']].left.append(edge)
+
+    def plan_action(self):
+        pass
 
 
 class Node:
@@ -22,6 +27,7 @@ class Node:
         self.vector = kwargs.get('vector', '')
         self.owner = kwargs.get('owner', 'NEUTRAL')
         self.name = kwargs.get('name')
+        self.source = kwargs.get('source', False)
         self.left = []
         self.right = []
 
@@ -38,3 +44,16 @@ class Edge:
         self.right = right
         self.difficulty = difficulty
         self.owner = owner
+
+
+# Find the edge that connects two adjacent nodes
+def get_connecting_edge(node1: Node, node2: Node):
+    for edge in node1.right:
+        if edge in node2.left:
+            return edge
+
+    for edge in node1.left:
+        if edge in node2.right:
+            return edge
+
+    return None

@@ -4,23 +4,22 @@ from game_objects.card_type import CardType
 
 
 def on_script_activation(script: Script):
-    pass
+    script.power += 2
 
 
 definition = {
-    'name': 'Payload1',
-    'type': CardType.SCRIPT_PAYLOAD,
+    'id': 'basic-mod',
+    'name': 'Boost',
+    'type': CardType.SCRIPT_MOD,
     'cost': 1,
-    'description': """
-    4 %power%
-    """,
+    'description': '+2 power',
     'rarity': 'TODO',
     'on_play': None,
-    'on_vector_install': None,
+    'vector': None,
     'on_script_add': None,
     'on_script_activation': on_script_activation,
     'on_ward_install': None,
-    'image_id': 'temp'
+    'image_id': 'mod'
 }
 
 

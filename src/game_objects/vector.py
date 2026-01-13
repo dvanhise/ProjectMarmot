@@ -1,11 +1,11 @@
-from src.game_objects.script import Script
+from dataclasses import dataclass
+from typing import Callable
 
+
+@dataclass
 class Vector:
-    def __init__(self):
-        pass
-
-    def on_trigger(self, script: Script):
-        pass
-
-    def on_install(self):
-        pass
+    name: str
+    power: int
+    on_trigger: Callable = None
+    on_install: Callable = None
+    on_attack: Callable = None

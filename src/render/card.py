@@ -24,32 +24,31 @@ IMAGE_SIZE = (CARD_WIDTH-BORDER_WIDTH*2, 50)
 
 def generate(card: Card):
     s = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
-    # TODO: Is this default transparent?
 
     # Draw card back
     pygame.draw.rect(s, BORDER_COLOR, pygame.Rect(0, 0, CARD_WIDTH, CARD_HEIGHT), border_radius=5)
     pygame.draw.rect(s, BG_COLOR, pygame.Rect(BORDER_WIDTH, BORDER_WIDTH, CARD_WIDTH-2*BORDER_WIDTH, CARD_HEIGHT-2*BORDER_WIDTH), border_radius=1)
 
     # Draw image
-    image = img_fetch().get(card.image_id) or img_fetch().get('temp')
+    image = img_fetch().get(card.image_id) or img_fetch().get('default')
     image = pygame.transform.smoothscale(image, IMAGE_SIZE)
     s.blit(image, (BORDER_WIDTH, IMAGE_VERT_OFFSET))
 
     # Draw title
-    font = pygame.font.Font(None, NAME_FONT_SIZE)
+    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', NAME_FONT_SIZE)
     text = font.render(card.name, True, TEXT_COLOR)
     text_rect = text.get_rect(center=(CARD_WIDTH//2, NAME_VERT_OFFSET))
     s.blit(text, text_rect)
 
     # Draw description
-    font = pygame.font.Font(None, DESCRIPTION_FONT_SIZE)
+    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', DESCRIPTION_FONT_SIZE)
     text = font.render(card.description, True, TEXT_COLOR)
     text_rect = text.get_rect(center=(CARD_WIDTH//2, DESCRIPTION_VERT_OFFSET))
     s.blit(text, text_rect)
 
     # Draw energy
     pygame.draw.circle(s, ENERGY_CIRCLE_COLOR, ENERGY_CENTER, ENERGY_CIRCLE_RADIUS)
-    font = pygame.font.Font(None, ENERGY_FONT_SIZE)
+    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', ENERGY_FONT_SIZE)
     text = font.render(str(card.cost), True, ENERGY_COLOR)
     text_rect = text.get_rect(center=ENERGY_CENTER)
     s.blit(text, text_rect)

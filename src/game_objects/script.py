@@ -1,14 +1,13 @@
 from game_objects.card import Card
+from game_objects.vector import Vector
 import logging
 
 
 class Script:
     def __init__(self):
-        pass
-
-    def apply_card(self, card: Card):
-        pass
-
+        self.power = 0
+        self.vector = None  # TODO: Allow for multiple vectors
+        self.boosts = []
 
 class ScriptBuilder:
     def __init__(self):
@@ -31,7 +30,10 @@ class ScriptBuilder:
 
     def send_script(self):
         script = Script()
-        [card.on_script_activation(script) for card in self.payloads + self.mods + self.vectors]
+        for card in self.payloads + self.mods + self.vectors:
+            if card.vector:
+                self.vector = Vector(**card.vector)
+            card.on_script_activation(script)
 
         self.clear()
 

@@ -11,8 +11,8 @@ class Card:
     description: str
     rarity: str
     image_id: str
+    vector: dict
     on_play: Callable = None
-    on_vector_install: Callable = None
     on_script_add: Callable = None
     on_script_activation: Callable = None
     on_ward_install: Callable = None
