@@ -4,15 +4,15 @@ import logging
 from game_objects.card import Card
 
 
-CARD_DEF_DIR = 'game_objects/card_definitions'
+CARD_DEF_DIR = './src/game_objects/card_definitions'
 CARD_DEF_PATH = 'game_objects.card_definitions'
 
 
 card_registry = {}
 
-# Get all python files in this directory excluding this one
+# Get all python files in the directory
 card_files = os.listdir(CARD_DEF_DIR)
-card_files = [f.replace('.py', '') for f in card_files if f != __file__ and f.endswith('.py')]
+card_files = [f.replace('.py', '') for f in card_files if f.endswith('.py')]
 
 for f in card_files:
     card = importlib.import_module(f'{CARD_DEF_PATH}.{f}')

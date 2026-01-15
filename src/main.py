@@ -1,17 +1,25 @@
 import pygame
+import logging
 from game_objects.player import Player
 from game_objects.script import ScriptBuilder
 from game_objects.level import Level
 from game_objects.level_definitions.level1 import definition as level1_def
-from game_objects.card_definitions.registry import get_new_card
 
-from render.hand import generate as gen_hand
-from render.script_builder import generate as gen_script
-from render.network import generate as gen_network
-from render.card import CARD_HEIGHT
+from render.hand import render_hand
+from render.script_builder import render_script_builder
+from render.network import render_network
+from render.card import CARD_WIDTH, CARD_HEIGHT
+from render.draw_pile import generate as gen_draw
+from render.discard_pile import generate as gen_discard
+from render.end_turn_button import render_end_turn
 from render.constants import *
 
+from utils.image_loader import img_fetch
+from utils.click_check import ClickCheck
+from utils.card_registry import get_new_card
+
 from game_state import GameState
+
 
 
 class Game:
@@ -19,6 +27,11 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.state = GameState()
+        self.click_check = ClickCheck()
+        self.click_down = None
+
+        # Preload
+        self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
     def load_game(self):
         self.player = Player()
@@ -50,13 +63,20 @@ class Game:
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_on = self.click_check.on_object(mouse_x, mouse_y)
 
                 if self.state.current_state == GameState.wait_for_player:
-                    # start card drag, send script, or end turn
-                    pass
+                    if mouse_on in ['SEND_SCRIPT', 'END_TURN']:
+                        self.click_down = mouse_on
+                    elif mouse_on.startswith('CARD'):
+                        # Figure out which card
+                        # start card drag
+                        pass
+
                 elif self.state.current_state == GameState.choose_script_path:
-                    # select next node
-                    pass
+                    if mouse_on.startswith('NODE'):
+                        self.click_down = mouse_on
+
                 elif self.state.current_state == GameState.end_of_level:
                     # select card or next level
                     pass
@@ -68,11 +88,32 @@ class Game:
                     pass
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                mouse_x, mouse_y = pygame.mouse.get_pos()
+                mouse_on = self.click_check.on_object(mouse_x, mouse_y)
+
                 if self.state.current_state == GameState.wait_for_player:
-                    # card drop, send script, or end turn
-                    pass
+                    if mouse_on == 'END_TURN' and self.click_down == 'END_TURN':
+                        self.state.end_turn()
+                    elif mouse_on == 'SEND_SCRIPT' and self.click_down == 'SEND_SCRIPT':
+                        self.state.send_script()
+                if self.state.current_state == GameState.card_drag:
+                    if mouse_on.startswith('SCRIPT'):
+                        ndx = int(mouse_on.replace('SCRIPT', ''))
+                        # Add or replace script space if valid
+                        pass
+                    elif mouse_on.startswith('NODE') and self.click_down == mouse_on:
+                        # Play card on node if valid
+                        pass
+                    elif mouse_on.startswith('UTILITY_PLAY_AREA_TODO'):
+                        # Play card if valid
+                        pass
+                    else:
+                        # Card drop invalid, put back in hand
+                        pass
                 elif self.state.current_state == GameState.choose_script_path:
-                    # start select next node
+                    if mouse_on.startswith('NODE') and self.click_down == mouse_on:
+                        # Play card on node if valid
+                        pass
                     pass
                 elif self.state.current_state == GameState.end_of_level:
                     pass
@@ -81,30 +122,50 @@ class Game:
                 elif self.state.current_state == GameState.game_end_win:
                     pass
 
-    def render_screen(self):
+                self.click_down = None
 
-        # fill the screen with a color to wipe away anything from last frame
+    def render_screen(self):
+        # Clear screen from last frame
         self.screen.fill("black")
+        self.screen.blit(self.background, (0, 0))
+
+        self.click_check.reset()
 
         # Render the network
-        network_render = gen_network(self.level)
-        self.screen.blit(network_render, (10, 10))
+        interactables = render_network(self.screen, self.level)
+        self.click_check.register_rect(interactables)
 
         # Render hand
-        hand_render = gen_hand(self.player)
-        self.screen.blit(hand_render, (300, SCREEN_HEIGHT - CARD_HEIGHT - 10))
+        interactables = render_hand(self.screen, self.player)
+        self.click_check.register_rect(interactables)
 
-        # Render draw player and discard pile
+        # Render draw pile
+        draw_render = gen_draw(self.player)
+        self.screen.blit(draw_render, (10, SCREEN_HEIGHT - CARD_HEIGHT - 10))
 
-        # Render other buttons
+        # Render discard pile
+        discard_render = gen_discard(self.player)
+        self.screen.blit(discard_render, (SCREEN_WIDTH - 180, SCREEN_HEIGHT - CARD_HEIGHT - 10))
+
+        # Render end turn button
+        interactables = render_end_turn(self.screen)
+        self.click_check.register_rect(interactables)
 
         # Render script builder
-        script_render = gen_script(self.script_builder)
-        self.screen.blit(script_render, (400, 460))
+        interactables = render_script_builder(self.screen, self.script_builder)
+        self.click_check.register_rect(interactables)
+
+        # Render dragged card
+        if self.state.card_drag:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            c = self.player.dragged
+
+        # Render current energy
+        # Render current health
 
         # Render version
         font = pygame.font.SysFont("assets/fonts/BrassMono-Regular.ttf", 30)
-        text = font.render("v0.1 Alpha", True, 'white')
+        text = font.render(DEVELOPMENT_VERSION, True, 'white')
         self.screen.blit(text, (2, 2))
 
         # flip() the display to put your work on screen

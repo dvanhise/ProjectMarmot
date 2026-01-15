@@ -1,4 +1,3 @@
-from game_objects.game_state import GameState
 from game_objects.script import Script
 from game_objects.card_type import CardType
 

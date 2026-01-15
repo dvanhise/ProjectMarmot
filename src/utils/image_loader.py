@@ -5,7 +5,7 @@ import pygame
 image_loader = None
 
 class ImageLoader:
-    IMAGES_DIR = 'assets/images'
+    IMAGES_DIR = './assets/images'
 
     def __init__(self):
         self.registry = {}

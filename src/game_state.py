@@ -42,6 +42,10 @@ class GameState(StateMachine):
         end_of_level.to(game_end_win, cond='player_won_game') |
         end_of_level.to(setup_level)
     )
+    ready_for_exit_game = (
+        game_end_loss.to(game_end_win) |
+        game_end_win.to(exit_game)
+    )
 
 
     def player_won(self):

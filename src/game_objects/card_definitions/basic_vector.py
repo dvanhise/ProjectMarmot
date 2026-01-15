@@ -1,4 +1,3 @@
-from game_objects.level import Node
 from game_objects.card_type import CardType
 
 

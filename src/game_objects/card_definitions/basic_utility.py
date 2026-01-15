@@ -1,9 +1,9 @@
-from game_objects.game_state import GameState
+from game_objects.player import Player
 from game_objects.card_type import CardType
 
 
-def on_play(game: GameState):
-    game.deck.draw(3)
+def on_play(player: Player):
+    player.deck.draw(3)
 
 
 definition = {
