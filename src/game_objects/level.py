@@ -8,6 +8,8 @@ class Level:
         self.edge_difficulty = definition.get('edge_difficulty', 1)
         self.network_width = definition['network_width']
         self.network_height = definition['network_height']
+        self.portrait = 'avatar2'  # FIXME
+        self.health = 5
 
         self.nodes = {node['id']: Node(**node) for node in definition['nodes']}
 
@@ -16,15 +18,20 @@ class Level:
             self.nodes[e['left_id']].right.append(edge)
             self.nodes[e['right_id']].left.append(edge)
 
-    def plan_action(self):
-        pass
+    def get_source(self, owner):
+        for node in self.nodes.values():
+            if node.owner == owner and node.source:
+                return node
+
+        return None
 
 
 class Node:
     def __init__(self, *args, **kwargs):
+        self.id = kwargs['id']
         self.position = kwargs['position']
         self.ward = kwargs.get('ward', 0)
-        self.vector = kwargs.get('vector', '')
+        self.vector = kwargs.get('vector', None)
         self.owner = kwargs.get('owner', 'NEUTRAL')
         self.name = kwargs.get('name')
         self.source = kwargs.get('source', False)
@@ -44,16 +51,3 @@ class Edge:
         self.right = right
         self.difficulty = difficulty
         self.owner = owner
-
-
-# Find the edge that connects two adjacent nodes
-def get_connecting_edge(node1: Node, node2: Node):
-    for edge in node1.right:
-        if edge in node2.left:
-            return edge
-
-    for edge in node1.left:
-        if edge in node2.right:
-            return edge
-
-    return None

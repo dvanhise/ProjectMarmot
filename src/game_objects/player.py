@@ -13,6 +13,23 @@ class Player:
         self.discard_pile = []
         self.dragged = None
 
+        self.energy = 0
+        self.max_energy = 3
+        self.draw_count = 5
+
+        self.portrait = 'avatar1'
+        self.health = 5
+
+    def start_turn(self):
+        self.draw(self.draw_count)
+        self.energy = self.max_energy
+
+    def end_turn(self):
+        self.discard_hand()
+
+    def get_dragged_card(self):
+        return self.all_cards[self.dragged]
+
     def get_full_deck(self):
         return list(self.all_cards.values())
 
@@ -47,13 +64,17 @@ class Player:
         return discarded
 
     def add_card_to_discard(self, card_id):
-        pass
+        self.discard_pile.append(card_id)
 
-    def add_temp_card(self):
-        pass
+    def add_card_to_hand(self, card_id):
+        self.current_hand.append(card_id)
 
     def draw(self, count):
         for _ in range(count):
+            if len(self.draw_pile) == 0:
+                self.draw_pile = self.discard_pile
+                self.discard_pile = []
+                shuffle(self.draw_pile)
             self.current_hand.append(self.draw_pile.pop(0))
 
     def start_drag(self, card_id):
@@ -63,3 +84,9 @@ class Player:
 
         self.dragged = card_id
         self.current_hand.remove(card_id)
+
+    def play_card_generic(self, card_id):
+        self.dragged = None
+        card = self.all_cards[card_id]
+        card.on_play()
+        self.discard_pile.append(card_id)

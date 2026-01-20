@@ -1,0 +1,46 @@
+import pygame
+from game_objects.player import Player
+from game_objects.level import Level
+from utils.image_loader import img_fetch
+from render.constants import *
+
+
+INFO_SECTION_SIZE = (120, 160)
+
+PORTRAIT_SIZE = (100, 100)
+PORTRAIT_VERT_OFFSET = 10
+
+SCREEN_OFFSET_PLAYER = (40, 40)
+SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 40, 40)
+
+HEALTH_FONT_SIZE = 24
+
+
+def render_player_info(s: pygame.Surface, player: Player):
+    info_surface = generate(player.portrait, player.health)
+    s.blit(info_surface, SCREEN_OFFSET_PLAYER)
+
+def render_enemy_info(s: pygame.Surface, level: Level):
+    info_surface = generate(level.portrait, level.health)
+    s.blit(info_surface, SCREEN_OFFSET_ENEMY)
+
+def generate(portrait_id, health):
+    s = pygame.Surface(INFO_SECTION_SIZE, pygame.SRCALPHA)
+    offset = (INFO_SECTION_SIZE[0]//2 - PORTRAIT_SIZE[0]//2, PORTRAIT_VERT_OFFSET)
+
+    # Draw portait and border
+    img = img_fetch().get(portrait_id)
+    img = pygame.transform.smoothscale(img, PORTRAIT_SIZE)
+    s.blit(img, offset)
+    pygame.draw.rect(s, '#444444', pygame.Rect(offset, PORTRAIT_SIZE), 5, 5)
+    pygame.draw.rect(s, '#DDDDDD', pygame.Rect(offset, PORTRAIT_SIZE), 3, 5)
+
+    # Draw health
+    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', HEALTH_FONT_SIZE)
+    text = font.render(f'{health} HP', True, 'white')
+    text_rect = text.get_rect(center=(INFO_SECTION_SIZE[0]//2, PORTRAIT_VERT_OFFSET+PORTRAIT_SIZE[1]+10))
+    s.blit(text, text_rect)
+
+    # TODO: Render buffs
+
+    return s

@@ -1,3 +1,4 @@
+import logging
 from statemachine import StateMachine, State
 
 
@@ -19,7 +20,7 @@ class GameState(StateMachine):
     loading_complete = loading.to(setup_level)
     setup_level_complete = setup_level.to(plan_enemy_turn)
     plan_enemy_turn_complete = plan_enemy_turn.to(wait_for_player)
-    send_script = wait_for_player.to(choose_script_path)
+    send_script_selected = wait_for_player.to(choose_script_path)
     script_path_complete = choose_script_path.to(run_script)
     run_script_complete = (
         run_script.to(game_end_loss, cond='player_lost') |
@@ -47,6 +48,9 @@ class GameState(StateMachine):
         game_end_win.to(exit_game)
     )
 
+
+    def on_enter_state(self, event, state):
+        logging.info(f"Entering '{state.id}' state from '{event}' event.")
 
     def player_won(self):
         pass

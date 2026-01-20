@@ -3,7 +3,7 @@ from game_objects.card_type import CardType
 
 
 def on_play(player: Player):
-    player.deck.draw(3)
+    player.draw(3)
 
 
 definition = {

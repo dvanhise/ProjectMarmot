@@ -1,22 +1,16 @@
 import logging
 import random
-from game_objects.level import Level, Node, get_connecting_edge
-from game_objects.script import Script
+from typing import Tuple
+from game_objects.level import Node, Edge
 
 
 class Route:
-    def __init__(self, level: Level, owner, script: Script):
-        self.level = level
+    def __init__(self, source_node, owner):
         self.owner = owner
-        self.script = script
         self.node_path = []
         self.edge_path = []
 
-        # Find source node
-        for node in self.level.nodes:
-            if node.owner == self.owner and node.source:
-                self.node_path.append(node)
-                break
+        self.node_path.append(source_node)
 
         if not len(self.node_path):
             logging.critical(f'Failed to found source node with owner "{self.owner}"')
@@ -30,10 +24,18 @@ class Route:
         else:
             raise ValueError('No paths found.')
 
+    def get_next_edge_options(self) -> list[Edge]:
+        if self.owner == 'PLAYER':
+            return self.node_path[-1].right
+        elif self.owner == 'ENEMY':
+            return self.node_path[-1].left
+        else:
+            raise ValueError('No paths found.')
+
     def choose_next_node(self, node: Node):
         if node not in self.get_next_node_options():
             raise ValueError('Invalid node')
-        
+
         self.node_path.append(node)
         self.edge_path.append(get_connecting_edge(self.node_path[-2], self.node_path[-1]))
 
@@ -48,5 +50,17 @@ class Route:
         else:
             raise ValueError(f'Pathing type "{pathing_type}" not implemented yet')
 
-
     # TODO: Methods for undoing choices or skipping nodes
+
+
+# Given two nodes, find the edge that connects them
+def get_connecting_edge(node1: Node, node2: Node):
+    for edge in node1.right:
+        if edge in node2.left:
+            return edge
+
+    for edge in node1.left:
+        if edge in node2.right:
+            return edge
+
+    return None

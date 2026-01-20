@@ -1,3 +1,5 @@
+from game_objects.vector import Vector
+
 """
     0   1   2   3   4
 0           [4]
@@ -49,14 +51,14 @@ definition = {
             'name': 'Database',
             'position': (3, 3),
             'owner': 'ENEMY',
-            'ward': 4
+            'ward': 4,
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
-            'source': True,
-            'hp': 5
+            'source': True
         }
     ],
     'edges': [

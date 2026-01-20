@@ -1,4 +1,5 @@
 import pygame
+import logging
 import math
 from game_objects.level import Level
 from game_objects.route import Route
@@ -6,44 +7,51 @@ from utils.image_loader import img_fetch
 from render.constants import *
 
 
-NETWORK_WIDTH = SCREEN_WIDTH - 20
+NETWORK_WIDTH = SCREEN_WIDTH
 NETWORK_HEIGHT = SCREEN_HEIGHT // 2
 
-SCREEN_OFFSET = (10, 10)
+SCREEN_OFFSET = (0, 0)
 
 ICON_SIZE = (60, 60)
 ICON_HITBOX_SIZE = (50, 50)
-VECTOR_SIZE = (40, 40)
+VECTOR_SIZE = (32, 32)
 
-VECTOR_FONT_SIZE = 32
+VECTOR_FONT_SIZE = 14
 
 color_map = {
     'PLAYER': pygame.Color('#51FC45'),
     'ENEMY': pygame.Color('#FF5555'),
     'NEUTRAL': pygame.Color('#DDDDDD'),
-    'PLAYER_PATH': pygame.Color('#B1FFAB'),
-    'ENEMY_PATH': pygame.Color('#FFB7B7')
+    'PLAYER_PATH': pygame.Color('#51FC45'),
+    'ENEMY_PATH': pygame.Color('#FF5555')
 }
 
 WARD_COLOR = pygame.Color('#B8EAFF')
 WARD_RADIUS = 35
-WARD_FONT_SIZE = 26
+WARD_FONT_SIZE = 18
+
+SELECTABLE_NODE_RADIUS = 50
+SELECTABLE_NODE_COLOR = pygame.Color('#FFFFFF')
 
 DASHED_LINE_SEGMENT = 20  # Desired length
 LINE_WIDTH = 3
 
-VERTICAL_PATH_OFFSET = 4
+VERTICAL_PATH_OFFSET = 5
 
 
 def render_network(s: pygame.Surface, level: Level, routes: list[Route]=None):
     player_edges = []
     enemy_edges = []
-    if routes:
-        for route in routes:
-            if route.owner == 'PLAYER':
-                player_edges += route.edge_path
-            elif route.owner == 'ENEMY':
-                enemy_edges += route.edge_path
+    player_route = None
+    for route in [r for r in routes if r] if routes else []:
+        if route.owner == 'PLAYER':
+            player_route = route
+            player_edges += route.edge_path
+        elif route.owner == 'ENEMY':
+            enemy_edges += route.edge_path
+
+    node_choices = player_route.get_next_node_options() if player_route else []
+    edge_choices = player_route.get_next_edge_options() if player_route else []
 
     # I don't understand why this requires pygame.SRCALPHA to be transparent and other surfaces don't
     network_surface = pygame.Surface((NETWORK_WIDTH, NETWORK_HEIGHT), pygame.SRCALPHA)
@@ -82,17 +90,32 @@ def render_network(s: pygame.Surface, level: Level, routes: list[Route]=None):
                     pygame.draw.line(network_surface, color_map['ENEMY_PATH'], (x_center, y_center+VERTICAL_PATH_OFFSET),
                                      (next_node_x_center, next_node_y_center+VERTICAL_PATH_OFFSET), LINE_WIDTH)
 
+                # Draw route choices
+                if edge in edge_choices:
+                    draw_dashed_line(network_surface, c, LINE_WIDTH+2, (x_center, y_center),(next_node_x_center, next_node_y_center))
+
         network_surface.blit(recolor(node_img, color_map[node.owner]), (x_center-ICON_SIZE[0]//2, y_center-ICON_SIZE[1]//2))
 
-        interactables[f'NODE{node_id}'] = pygame.Rect(SCREEN_OFFSET, ICON_HITBOX_SIZE)
+        # Draw selectable node identification circles
+        if node in node_choices:
+            # FIXME: issues with colors from color_map being transparent
+            pygame.draw.circle(network_surface, SELECTABLE_NODE_COLOR, (x_center, y_center), SELECTABLE_NODE_RADIUS, width=5)
+            pygame.draw.circle(network_surface, pygame.Color('#51FC45'), (x_center, y_center), SELECTABLE_NODE_RADIUS, width=2)
+
+        interactables[f'NODE{node_id}'] = pygame.Rect((SCREEN_OFFSET[0]+x_center-ICON_HITBOX_SIZE[0]//2, SCREEN_OFFSET[1]+y_center-ICON_HITBOX_SIZE[1]//2), ICON_HITBOX_SIZE)
 
         if node.vector:
             # Draw square container
-            pygame.draw.rect(network_surface, color_map[node.owner], pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]), width=2)
+            pygame.draw.rect(network_surface, 'black', pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]))
+
+            # Drew border
+            c = color_map[node.owner]
+            c.a = 255
+            pygame.draw.rect(network_surface, c, pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]), width=2)
 
             # Draw vector text
             font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', VECTOR_FONT_SIZE)
-            text = font.render(node.vector, True, color_map[node.owner])
+            text = font.render(f'P+{node.vector.power_boost}', True, color_map[node.owner])
             text_rect = text.get_rect(center=(x_center, y_center))
             network_surface.blit(text, text_rect)
 
@@ -103,12 +126,10 @@ def render_network(s: pygame.Surface, level: Level, routes: list[Route]=None):
             # Draw ward value
             font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', WARD_FONT_SIZE)
             text = font.render(f'{node.ward}W', True, WARD_COLOR)
-            text_rect = text.get_rect(center=(x_center, y_center+WARD_RADIUS))
+            text_rect = text.get_rect(center=(x_center, y_center+WARD_RADIUS + 6))
             network_surface.blit(text, text_rect)
 
-        # TODO: Draw something to identify source nodes
-
-        # Render installed vectors
+        # TODO: Render installed vectors
 
         s.blit(network_surface, SCREEN_OFFSET)
 

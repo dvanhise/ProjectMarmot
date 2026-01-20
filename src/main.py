@@ -4,14 +4,18 @@ from game_objects.player import Player
 from game_objects.script import ScriptBuilder
 from game_objects.level import Level
 from game_objects.level_definitions.level1 import definition as level1_def
+from game_objects.route import Route
 
 from render.hand import render_hand
 from render.script_builder import render_script_builder
 from render.network import render_network
-from render.card import CARD_WIDTH, CARD_HEIGHT
+from render.card import CARD_WIDTH, CARD_HEIGHT, generate as gen_card
 from render.draw_pile import generate as gen_draw
 from render.discard_pile import generate as gen_discard
 from render.end_turn_button import render_end_turn
+from render.playzone import render_playzone
+from render.energy_tracker import render_energy_tracker
+from render.info_section import render_enemy_info, render_player_info
 from render.constants import *
 
 from utils.image_loader import img_fetch
@@ -21,14 +25,17 @@ from utils.card_registry import get_new_card
 from game_state import GameState
 
 
-
 class Game:
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
         self.clock = clock
         self.state = GameState()
+        self.level = None
         self.click_check = ClickCheck()
         self.click_down = None
+
+        self.player_route = None
+        self.enemy_route = None
 
         # Preload
         self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -36,8 +43,6 @@ class Game:
     def load_game(self):
         self.player = Player()
         self.script_builder = ScriptBuilder()
-        self.level = Level(level1_def)
-        self.script_builder.clear()
 
         # Starter deck
         self.player.add_card(get_new_card('basic-payload'))
@@ -51,8 +56,20 @@ class Game:
         self.player.add_card(get_new_card('basic-ward'))
         self.player.add_card(get_new_card('basic-utility'))
 
-        self.player.reset()
-        self.player.draw(5)
+
+    def level_update(self):
+        # Load new level
+        if self.state.current_state == GameState.setup_level:
+            self.level = Level(level1_def)
+            self.script_builder.clear()
+            self.state.setup_level_complete()
+            self.player.reset()
+            self.player.start_turn()
+
+        if self.state.current_state == GameState.plan_enemy_turn:
+            self.enemy_route = Route(self.level.get_source('ENEMY'), 'ENEMY')
+            self.enemy_route.generate_path('RANDOM')
+            self.state.plan_enemy_turn_complete()
 
 
     def check_events(self):
@@ -69,9 +86,9 @@ class Game:
                     if mouse_on in ['SEND_SCRIPT', 'END_TURN']:
                         self.click_down = mouse_on
                     elif mouse_on.startswith('CARD'):
-                        # Figure out which card
-                        # start card drag
-                        pass
+                        card_id = self.player.current_hand[int(mouse_on.replace('CARD', ''))]
+                        self.player.start_drag(card_id)
+                        self.state.start_drag()
 
                 elif self.state.current_state == GameState.choose_script_path:
                     if mouse_on.startswith('NODE'):
@@ -93,28 +110,43 @@ class Game:
 
                 if self.state.current_state == GameState.wait_for_player:
                     if mouse_on == 'END_TURN' and self.click_down == 'END_TURN':
+                        self.player.end_turn()
                         self.state.end_turn()
                     elif mouse_on == 'SEND_SCRIPT' and self.click_down == 'SEND_SCRIPT':
-                        self.state.send_script()
+                        # Start planning a route for the script
+                        self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
+                        self.state.send_script_selected()
+
                 if self.state.current_state == GameState.card_drag:
                     if mouse_on.startswith('SCRIPT'):
                         ndx = int(mouse_on.replace('SCRIPT', ''))
-                        # Add or replace script space if valid
-                        pass
-                    elif mouse_on.startswith('NODE') and self.click_down == mouse_on:
+                        if self.script_builder.is_valid_play(self.player.get_dragged_card(), ndx):
+                            replaced = self.script_builder.add_card(self.player.dragged, self.player.get_dragged_card(), ndx)
+                            if replaced:
+                                self.player.add_card_to_discard(replaced)
+                        else:
+                            self.player.add_card_to_hand(self.player.dragged)
+                        self.state.card_drop()
+                    elif mouse_on.startswith('NODE'):
+                        # TODO
                         # Play card on node if valid
-                        pass
-                    elif mouse_on.startswith('UTILITY_PLAY_AREA_TODO'):
-                        # Play card if valid
-                        pass
+                        self.state.card_drop()
+                    elif mouse_on == 'PLAYZONE':
+                        self.player.play_card_generic(self.player.dragged)
+                        self.state.card_drop()
                     else:
                         # Card drop invalid, put back in hand
-                        pass
+                        self.player.add_card_to_hand(self.player.dragged)
+                    self.player.dragged = None
+
                 elif self.state.current_state == GameState.choose_script_path:
                     if mouse_on.startswith('NODE') and self.click_down == mouse_on:
-                        # Play card on node if valid
-                        pass
-                    pass
+                        node_id = int(mouse_on.replace('NODE', ''))
+                        node = self.level.nodes[node_id]
+                        if node in self.player_route.get_next_node_options():
+                            self.player_route.choose_next_node(node)
+                            if self.player_route.is_path_complete():
+                                self.state.script_path_complete()
                 elif self.state.current_state == GameState.end_of_level:
                     pass
                 elif self.state.current_state == GameState.game_end_loss:
@@ -132,8 +164,12 @@ class Game:
         self.click_check.reset()
 
         # Render the network
-        interactables = render_network(self.screen, self.level)
+        interactables = render_network(self.screen, self.level, [self.enemy_route, self.player_route])
         self.click_check.register_rect(interactables)
+
+        # Render info
+        render_player_info(self.screen, self.player)
+        render_enemy_info(self.screen, self.level)
 
         # Render hand
         interactables = render_hand(self.screen, self.player)
@@ -155,13 +191,20 @@ class Game:
         interactables = render_script_builder(self.screen, self.script_builder)
         self.click_check.register_rect(interactables)
 
-        # Render dragged card
-        if self.state.card_drag:
+        # Render dragged card to mouse position
+        if self.state.card_drag and self.player.dragged:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            c = self.player.dragged
+            self.screen.blit(
+                gen_card(self.player.get_dragged_card()),
+                (mouse_x - CARD_WIDTH//2, mouse_y - CARD_HEIGHT//2)
+            )
+
+        # Render zone to play non-specific cards
+        interactables = render_playzone(self.screen)
+        self.click_check.register_rect(interactables)
 
         # Render current energy
-        # Render current health
+        render_energy_tracker(self.screen, self.player)
 
         # Render version
         font = pygame.font.SysFont("assets/fonts/BrassMono-Regular.ttf", 30)
@@ -177,7 +220,8 @@ class Game:
 
 
 def main():
-    # pygame setup
+    logging.getLogger().setLevel(logging.DEBUG)
+
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -188,6 +232,7 @@ def main():
 
     running = True
     while running:
+        game.level_update()
         game.check_events()
         game.render_screen()
     pygame.quit()

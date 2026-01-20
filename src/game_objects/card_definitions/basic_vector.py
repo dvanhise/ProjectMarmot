@@ -1,4 +1,5 @@
 from game_objects.card_type import CardType
+from game_objects.vector import Vector
 
 
 definition = {
@@ -8,11 +9,7 @@ definition = {
     'cost': 1,
     'description': 'Install vector TODO',
     'rarity': 'TODO',
-    'vector': {
-        'name': 'Amp',
-        'power': 2,
-        'todo': 'TODO'
-    },
+    'vector': Vector(name='Amp', power_boost=2, default_ward=0),
     'image_id': 'default'
 }
 
