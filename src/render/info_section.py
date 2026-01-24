@@ -1,8 +1,7 @@
-import pygame
 from game_objects.player import Player
 from game_objects.level import Level
 from utils.image_loader import img_fetch
-from render.constants import *
+from constants import *
 
 
 INFO_SECTION_SIZE = (120, 160)
@@ -10,8 +9,8 @@ INFO_SECTION_SIZE = (120, 160)
 PORTRAIT_SIZE = (100, 100)
 PORTRAIT_VERT_OFFSET = 10
 
-SCREEN_OFFSET_PLAYER = (40, 40)
-SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 40, 40)
+SCREEN_OFFSET_PLAYER = (30, 30)
+SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 30, 30)
 
 HEALTH_FONT_SIZE = 24
 

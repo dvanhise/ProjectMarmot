@@ -1,7 +1,6 @@
-import pygame
 from game_objects.player import Player
 from render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
-from render.constants import *
+from constants import *
 
 
 HAND_WIDTH = 1000

@@ -7,7 +7,7 @@ definition = {
     'name': 'Amplifier',
     'type': CardType.SCRIPT_VECTOR,
     'cost': 1,
-    'description': 'Install vector TODO',
+    'description': ['Install Vector:', '  Boost script power +2'],
     'rarity': 'TODO',
     'vector': Vector(name='Amp', power_boost=2, default_ward=0),
     'image_id': 'default'

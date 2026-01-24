@@ -2,8 +2,8 @@ from enum import StrEnum, auto
 
 
 class CardType(StrEnum):
-    SCRIPT_PAYLOAD = auto()
-    SCRIPT_MOD = auto()
-    SCRIPT_VECTOR = auto()
-    WARD = auto()
-    UTILITY = auto()
+    SCRIPT_PAYLOAD = 'Script Payload'
+    SCRIPT_MOD = 'Script Mod'
+    SCRIPT_VECTOR = 'Script Vector'
+    WARD = 'Ward'
+    UTILITY = 'Utility'

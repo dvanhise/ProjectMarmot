@@ -1,10 +1,12 @@
 import pygame
-import logging
 import math
 from game_objects.level import Level
 from game_objects.route import Route
+from game_objects.script import Script
+from render.vector import generate as gen_vector
 from utils.image_loader import img_fetch
-from render.constants import *
+from utils.text_helper import draw_text_with_outline
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 NETWORK_WIDTH = SCREEN_WIDTH
@@ -17,6 +19,13 @@ ICON_HITBOX_SIZE = (50, 50)
 VECTOR_SIZE = (32, 32)
 
 VECTOR_FONT_SIZE = 14
+
+INSTALL_VECTOR_OFFSET = 40
+INSTALL_VECTOR_BORDER = 5
+
+SCRIPT_POWER_SIZE = (50, 50)
+SCRIPT_X_OFFSET = 10
+SCRIPT_Y_OFFSET = -10
 
 color_map = {
     'PLAYER': pygame.Color('#51FC45'),
@@ -39,7 +48,7 @@ LINE_WIDTH = 3
 VERTICAL_PATH_OFFSET = 5
 
 
-def render_network(s: pygame.Surface, level: Level, routes: list[Route]=None):
+def render_network(s: pygame.Surface, level: Level, script: Script, routes: list[Route]=None):
     player_edges = []
     enemy_edges = []
     player_route = None
@@ -104,11 +113,43 @@ def render_network(s: pygame.Surface, level: Level, routes: list[Route]=None):
 
         interactables[f'NODE{node_id}'] = pygame.Rect((SCREEN_OFFSET[0]+x_center-ICON_HITBOX_SIZE[0]//2, SCREEN_OFFSET[1]+y_center-ICON_HITBOX_SIZE[1]//2), ICON_HITBOX_SIZE)
 
+        # Add info on the script and vector installation for the current node
+        if player_route and node == player_route.node_path[-1]:
+            installable_vector_count = len(script.vector)
+            if installable_vector_count:
+                box_width = installable_vector_count*(INSTALL_VECTOR_BORDER+1)+VECTOR_SIZE[0]+3
+                box_height = VECTOR_SIZE[1]+INSTALL_VECTOR_BORDER*2
+                box_left = x_center-box_width//2
+                box_top = y_center+INSTALL_VECTOR_OFFSET
+
+                pygame.draw.rect(network_surface, 'blue', pygame.Rect((box_left, box_top),(box_width, box_height)))
+                for ndx, vector in enumerate(script.vector):
+                    vector_render = gen_vector(vector, pygame.Color('#51FC45'))
+                    network_surface.blit(vector_render, (box_left+ndx*VECTOR_SIZE[0]+(ndx+1)*INSTALL_VECTOR_BORDER, box_top+INSTALL_VECTOR_BORDER))
+                    interactables[f'INSTALL_VECTOR{ndx}'] = pygame.Rect((box_left+ndx*VECTOR_SIZE[0]+(ndx+1)*INSTALL_VECTOR_BORDER, box_top+INSTALL_VECTOR_BORDER), VECTOR_SIZE)
+
+                # Add help text above vector box
+                action_text = 'Overwrite Vector?' if node.vector else 'Install Vector?'
+                font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 14)
+                text = font.render(action_text, True, 'white')
+                text_rect = text.get_rect(center=(x_center, box_top+VECTOR_SIZE[1]+20))
+                network_surface.blit(text, text_rect)
+
+            # Draw info on the executing script
+            script_img = img_fetch().get('power')
+            script_img = pygame.transform.smoothscale(script_img, SCRIPT_POWER_SIZE)
+            network_surface.blit(script_img, (x_center+SCRIPT_X_OFFSET, y_center+SCRIPT_Y_OFFSET))
+
+            font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 24)
+            power_text = draw_text_with_outline(str(script.power), font, 'white', 1, 'black')
+            text_rect = power_text.get_rect(center=(x_center+SCRIPT_X_OFFSET+SCRIPT_POWER_SIZE[0]//2, y_center+SCRIPT_Y_OFFSET+SCRIPT_POWER_SIZE[1]//2))
+            network_surface.blit(power_text, text_rect)
+
         if node.vector:
             # Draw square container
             pygame.draw.rect(network_surface, 'black', pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]))
 
-            # Drew border
+            # Draw border
             c = color_map[node.owner]
             c.a = 255
             pygame.draw.rect(network_surface, c, pygame.Rect(x_center-VECTOR_SIZE[0]//2, y_center-VECTOR_SIZE[1]//2, VECTOR_SIZE[0], VECTOR_SIZE[1]), width=2)

@@ -1,0 +1,11 @@
+import pygame
+
+
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 900
+
+DARK_TERMINAL = pygame.Color('#282828')
+TERMINAL_GREEN = pygame.Color('#33FF33')
+ENERGY_COLOR = pygame.Color('#00FFF4')
+
+DEVELOPMENT_VERSION = 'v0.1 Alpha'

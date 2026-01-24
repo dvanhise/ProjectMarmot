@@ -1,15 +1,17 @@
+from game_objects.graph import Node, Edge
+from game_objects.script import Script
 
 
 class Level:
     def __init__(self, definition):
-        self.pattern = definition['pattern']
-        self.planned_action = None
-        self.hp = definition['hp']
+        self.pattern = {action['pattern_id']: action for action in definition['pattern']}
+        self.current_pattern_id = None
+        self.planned_script = None
         self.edge_difficulty = definition.get('edge_difficulty', 1)
         self.network_width = definition['network_width']
         self.network_height = definition['network_height']
         self.portrait = 'avatar2'  # FIXME
-        self.health = 5
+        self.health = definition['health']
 
         self.nodes = {node['id']: Node(**node) for node in definition['nodes']}
 
@@ -18,6 +20,23 @@ class Level:
             self.nodes[e['left_id']].right.append(edge)
             self.nodes[e['right_id']].left.append(edge)
 
+
+    def next_script(self):
+        if self.current_pattern_id is None:
+            self.current_pattern_id = [k for k,v in self.pattern.items() if v.get('start')][0]
+        else:
+            # TODO: Allow for RNG-based patterns
+            self.current_pattern_id = self.pattern[self.current_pattern_id]['next']
+
+        self.planned_script = Script('ENEMY')
+        p = self.pattern[self.current_pattern_id]
+        self.planned_script.power = p.get('power', 0)
+        vector = p.get('vector')
+        if vector:
+            self.planned_script.vector.append(vector)
+
+        return self.planned_script
+
     def get_source(self, owner):
         for node in self.nodes.values():
             if node.owner == owner and node.source:
@@ -25,29 +44,5 @@ class Level:
 
         return None
 
-
-class Node:
-    def __init__(self, *args, **kwargs):
-        self.id = kwargs['id']
-        self.position = kwargs['position']
-        self.ward = kwargs.get('ward', 0)
-        self.vector = kwargs.get('vector', None)
-        self.owner = kwargs.get('owner', 'NEUTRAL')
-        self.name = kwargs.get('name')
-        self.source = kwargs.get('source', False)
-        self.left = []
-        self.right = []
-
-    def apply_ward(self):
-        pass
-
-    def apply_vector(self):
-        pass
-
-
-class Edge:
-    def __init__(self, left: Node, right: Node, difficulty, owner='NEUTRAL'):
-        self.left = left
-        self.right = right
-        self.difficulty = difficulty
-        self.owner = owner
+    def check_victory(self):
+        return self.health <= 0

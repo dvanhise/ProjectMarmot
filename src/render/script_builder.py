@@ -3,7 +3,8 @@ from game_objects.script import ScriptBuilder
 from game_objects.card_type import CardType
 from render.card import CARD_HEIGHT, CARD_WIDTH, generate as gen_card
 from utils.image_loader import img_fetch
-from render.constants import *
+from utils.text_helper import draw_text_with_outline
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ENERGY_COLOR
 
 
 SCREEN_X_OFFSET = SCREEN_WIDTH // 2 - 250
@@ -16,8 +17,7 @@ HEADER_HEIGHT = 10
 
 LABEL_FONT_SIZE = 24
 
-BUTTON_SIZE = (100, 100)
-BUTTON_FONT_SIZE = 20
+BUTTON_SIZE = (150, 110)
 
 LABEL_MAP = {
     CardType.SCRIPT_PAYLOAD: 'Payload',
@@ -60,14 +60,16 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
     current_x_offset += CARD_WIDTH + 40
 
     # Draw send script button
-    image = img_fetch().get('button')
+    image = img_fetch().get('execute')
     image = pygame.transform.smoothscale(image, BUTTON_SIZE)
     s.blit(image, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2))
 
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', BUTTON_FONT_SIZE)
-    text = font.render('>>execute', True, 'white')
-    text_rect = text.get_rect(center=(current_x_offset + BUTTON_SIZE[0]//2, SCREEN_Y_OFFSET + CARD_HEIGHT//2))
-    s.blit(text, text_rect)
+    # Add energy cost to button
+    pygame.draw.circle(s, ENERGY_COLOR, (current_x_offset+60, SCREEN_Y_OFFSET+60), 16)
+    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 26)
+    outline_text = draw_text_with_outline('1', font, 'white', 2, 'black')
+    text_rect = outline_text.get_rect(center=(current_x_offset+60, SCREEN_Y_OFFSET+60))
+    s.blit(outline_text, text_rect)
 
     interactables['SEND_SCRIPT'] = pygame.Rect((current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2), BUTTON_SIZE)
 

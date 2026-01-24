@@ -24,6 +24,12 @@ class Player:
         self.draw(self.draw_count)
         self.energy = self.max_energy
 
+    def has_energy(self, cost):
+        return cost <= self.energy
+
+    def pay_energy(self, cost):
+        self.energy -= cost
+
     def end_turn(self):
         self.discard_hand()
 
@@ -88,5 +94,8 @@ class Player:
     def play_card_generic(self, card_id):
         self.dragged = None
         card = self.all_cards[card_id]
-        card.on_play()
+        card.on_play(self)
         self.discard_pile.append(card_id)
+
+    def check_loss(self):
+        return self.health <= 0

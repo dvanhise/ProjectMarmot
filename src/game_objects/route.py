@@ -1,7 +1,6 @@
 import logging
 import random
-from typing import Tuple
-from game_objects.level import Node, Edge
+from game_objects.graph import Node, Edge
 
 
 class Route:
@@ -9,12 +8,20 @@ class Route:
         self.owner = owner
         self.node_path = []
         self.edge_path = []
+        self.walkthrough_ndx = 0
 
         self.node_path.append(source_node)
 
         if not len(self.node_path):
             logging.critical(f'Failed to found source node with owner "{self.owner}"')
             raise ValueError('No source node found.')
+
+    def next(self):
+        # Walk through a path that has already been generated
+        edge = self.edge_path[self.walkthrough_ndx - 1] if self.walkthrough_ndx - 1 >= 0 else None
+        node = self.node_path[self.walkthrough_ndx]
+        self.walkthrough_ndx += 1
+        return edge, node
 
     def get_next_node_options(self) -> list[Node]:
         if self.owner == 'PLAYER':

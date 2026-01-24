@@ -20,4 +20,9 @@ def generate(player: Player):
     text_rect = text.get_rect(center=COUNT_OFFSET)
     s.blit(text, text_rect)
 
+    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 14)
+    text = font.render('Draw', True, 'white')
+    text_rect = text.get_rect(center=(CARD_WIDTH//4, CARD_HEIGHT//4))
+    s.blit(text, text_rect)
+
     return s

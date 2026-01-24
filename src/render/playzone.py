@@ -1,6 +1,5 @@
-import pygame
-from render.card import CARD_HEIGHT, CARD_WIDTH
-from render.constants import *
+from render.card import CARD_HEIGHT
+from constants import *
 from utils.image_loader import img_fetch
 
 

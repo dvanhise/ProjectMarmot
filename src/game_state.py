@@ -8,8 +8,7 @@ class GameState(StateMachine):
     plan_enemy_turn = State()
     wait_for_player = State()
     card_drag = State()
-    choose_script_path = State()
-    run_script = State()   # Build, enact, and animate script
+    evaluate_script = State()  # Build, enact, and animate script
     end_of_level = State()
     enemy_turn = State()
     game_end_win = State()
@@ -20,13 +19,12 @@ class GameState(StateMachine):
     loading_complete = loading.to(setup_level)
     setup_level_complete = setup_level.to(plan_enemy_turn)
     plan_enemy_turn_complete = plan_enemy_turn.to(wait_for_player)
-    send_script_selected = wait_for_player.to(choose_script_path)
-    script_path_complete = choose_script_path.to(run_script)
-    run_script_complete = (
-        run_script.to(game_end_loss, cond='player_lost') |
-        run_script.to(end_of_level, cond='player_won') |
-        run_script.to(wait_for_player)
-    )
+    send_script_selected = wait_for_player.to(evaluate_script)
+
+    script_level_win = evaluate_script.to(end_of_level)
+    script_level_loss = evaluate_script.to(game_end_loss)
+    script_complete = evaluate_script.to(wait_for_player)
+
     start_drag = wait_for_player.to(card_drag)
     card_drop = (
         card_drag.to(game_end_loss, cond='player_lost') |

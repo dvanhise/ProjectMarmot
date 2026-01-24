@@ -1,7 +1,7 @@
 from game_objects.vector import Vector
 
 """
-    0   1   2   3   4
+     0   1   2   3   4
 0           [4]
 1       [2]     [7]
 2   [1p]    [5]     [9e]
@@ -14,7 +14,7 @@ definition = {
     'edge_difficulty': 2,
     'network_width': 5,
     'network_height': 5,
-    'hp': 5,
+    'health': 5,
     'nodes': [
         {
             'id': 1,
@@ -115,15 +115,16 @@ definition = {
     'pattern': [
         {
             'pattern_id': 1,
+            'start': True,
             'power': 4,
-            'vector': '+1|W2',
+            'vector': Vector(name='TODO', power_boost=1, default_ward=1),
             'targeting': 'RANDOM',
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 6,
-            'targeting': 'AGRO',
+            'targeting': 'RANDOM',
             'next': 1
         }
     ]

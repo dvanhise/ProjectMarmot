@@ -1,6 +1,5 @@
-import pygame
-from render.constants import *
-from render.card import CARD_HEIGHT, CARD_WIDTH
+from constants import *
+from render.card import CARD_HEIGHT
 
 SCREEN_OFFSET = (140, SCREEN_HEIGHT - CARD_HEIGHT + 20)
 ENERGY_CIRCLE_COLOR = pygame.Color('#AA00AA')

@@ -13,6 +13,7 @@ class Card:
     rarity: str
     image_id: str
     vector: dict = None
+    ward: int = 0
     on_play: Callable = None
     on_script_add: Callable = None
     on_script_activation: Callable = None
