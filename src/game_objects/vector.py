@@ -1,10 +1,6 @@
 class Vector:
 
-    def __init__(self, name='Default', power_boost=0, default_ward=0):
+    def __init__(self, name='Default', default_ward=0, tags=None):
         self.name = name
-        self.power_boost = power_boost
+        self.tags = tags or []
         self.default_ward = default_ward
-
-        # on_trigger: Callable = None
-        # on_install: Callable = None
-        # on_attack: Callable = None

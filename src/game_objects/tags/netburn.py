@@ -1,0 +1,14 @@
+from game_objects.tag import Tag
+
+
+class NetBurn(Tag):
+    id = 'net-burn'
+    icon = 'burn'
+    tooltip = 'Reduce ward by {count} at end of turn.'
+    count = 0
+
+    def on_turn_end_node(self, node):
+        node.ward = max(0, node.ward - self.count)
+
+    def after_failed_script_node_encounter(self, script, node):
+        node.tags.append(script.tags.pop(self))

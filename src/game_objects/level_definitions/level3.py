@@ -1,5 +1,4 @@
 from game_objects.vector import Vector
-from game_objects.tags.boost import Boost
 
 """
      0   1   2   3   4
@@ -15,7 +14,7 @@ definition = {
     'edge_difficulty': 2,
     'network_width': 5,
     'network_height': 5,
-    'portrait': 'avatar2',
+    'portrait': 'placeholder',
     'health': 5,
     'nodes': [
         {
@@ -34,32 +33,40 @@ definition = {
         },
         {
             'id': 4,
-            'position': (2, 0)
+            'position': (2, 0),
+            'owner': 'ENEMY',
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 5,
-            'position': (2, 2)
+            'position': (2, 2),
+            'owner': 'ENEMY',
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 6,
-            'position': (2, 4)
+            'position': (2, 4),
+            'owner': 'ENEMY',
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 7,
-            'position': (3, 1)
+            'position': (3, 1),
+            'owner': 'ENEMY',
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 8,
             'name': 'Database',
             'position': (3, 3),
             'owner': 'ENEMY',
-            'ward': 4,
-            'vector': Vector(name='Amp', tags=[Boost(2)])
+            'vector': Vector(name='Amp', power_boost=2)
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
+            'vector': Vector(name='Amp', power_boost=2),
             'source': True
         }
     ],
@@ -90,23 +97,28 @@ definition = {
         },
         {
             'left_id': 4,
-            'right_id': 7
+            'right_id': 7,
+            'owner': 'ENEMY'
         },
         {
             'left_id': 5,
-            'right_id': 7
+            'right_id': 7,
+            'owner': 'ENEMY'
         },
         {
             'left_id': 5,
-            'right_id': 8
+            'right_id': 8,
+            'owner': 'ENEMY'
         },
         {
             'left_id': 6,
-            'right_id': 8
+            'right_id': 8,
+            'owner': 'ENEMY'
         },
         {
             'left_id': 7,
-            'right_id': 9
+            'right_id': 9,
+            'owner': 'ENEMY'
         },
         {
             'left_id': 8,
@@ -118,8 +130,7 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 3,
-            'vector': Vector(name='Amp', default_ward=1, tags=[Boost(2)]),
+            'power': 4,
             'targeting': 'RANDOM',
             'next': 2
         },

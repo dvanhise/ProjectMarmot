@@ -1,6 +1,7 @@
 import os
 import importlib
 import logging
+import random
 from game_objects.card import Card
 
 
@@ -21,7 +22,12 @@ for f in card_files:
 
 def get_new_card(name):
     if name not in card_registry:
-        logging.error(f'Card "{name}" not found in card registry.')
-        return None
+        raise KeyError(f'Card "{name}" not found in card registry.')
 
     return Card(**card_registry[name])
+
+
+def random_card_choices(count):
+    available_cards = [c for c in list(card_registry.values()) if c['rarity'] in ['simple', 'intermediate', 'elite']]
+    card_sample = random.sample(available_cards, count)
+    return [Card(**c) for c in card_sample]

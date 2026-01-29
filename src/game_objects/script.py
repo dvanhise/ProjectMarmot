@@ -9,9 +9,9 @@ class Script:
         self.owner = owner
         self.power = 0
         self.vector = []
-        self.boosts = []
+        self.tags = []
 
-    def on_node_advance(self, edge: Edge, node: Node, opponent):
+    def on_node_advance(self, edge: Edge, node: Node, opponent, autoplay_vector = False):
         # 'edge' can be None if approaching the source node
         # Return True if script is still running, return False if it was defeated
 
@@ -26,25 +26,36 @@ class Script:
         if self.owner != node.owner:
             if node.ward > self.power:
                 node.ward -= self.power
+                #
                 return False
             else:
                 self.power -= node.ward
                 node.ward = 0
                 # TODO: Other vector effects
 
+            node.vector = None
             if node.source:
                 # TODO: Vector effects
                 opponent.health -= self.power
+
             else:
-                node.vector = None
                 node.owner = self.owner
-                if edge:
-                    edge.owner = self.owner
+
+                # Update edge ownership after node ownership changes
+                for e in node.right + node.left:
+                    if e.left.owner == e.right.owner:
+                        e.owner = e.left.owner
+                    else:
+                        e.owner = 'NEUTRAL'
 
         # Interact with friendly node
         elif node.vector:
-            self.power += node.vector.power_boost
-            # TODO: Other vector effects
+            for tag in node.vector.tags:
+                tag.on_friendly_script_node_encounter(self, node)
+
+        # Automatically install a vector if node doesn't have one installed
+        if autoplay_vector and len(self.vector) and not node.vector:
+            node.install_vector(self.vector.pop(-1))
 
         return True
 
@@ -75,7 +86,7 @@ class ScriptBuilder:
         self.slots = [ScriptSlot(CardType.SCRIPT_PAYLOAD), ScriptSlot(CardType.SCRIPT_MOD), ScriptSlot(CardType.SCRIPT_VECTOR)]
 
     def clear(self):
-        return [slot.reset() for slot in self.slots]
+        return [slot.reset() for slot in self.slots if slot.card_id]
 
     def is_valid_play(self, card: Card, slot_ndx):
         return self.slots[slot_ndx].type == card.type

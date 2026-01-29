@@ -1,4 +1,5 @@
 from game_objects.vector import Vector
+from game_objects.card import Card
 
 
 class Node:
@@ -13,10 +14,15 @@ class Node:
         self.health = kwargs.get('health', 1)
         self.left = []
         self.right = []
+        self.tags = []
 
-    def apply_ward(self, ward_value=0, ward_other=None):
+    def apply_ward_from_card(self, card: Card):
+        if card.ward:
+            self.apply_ward(card.ward)
+
+    def apply_ward(self, ward_value):
+        # TODO: Other ward effects
         self.ward = max(self.ward, ward_value)
-        # TODO: Alternate ward effects
 
     def install_vector(self, vector: Vector):
         self.vector = vector
@@ -24,7 +30,7 @@ class Node:
 
 
 class Edge:
-    def __init__(self, left: Node, right: Node, difficulty, owner='NEUTRAL'):
+    def __init__(self, left: Node, right: Node, difficulty, owner):
         self.left = left
         self.right = right
         self.difficulty = difficulty

@@ -7,14 +7,14 @@ def on_play(player: Player):
 
 
 definition = {
-    'id': 'basic-utility',
+    'id': 'query',
     'name': 'Query',
     'type': CardType.UTILITY,
+    'rarity': 'default',
+    'image_id': 'query',
     'cost': 1,
     'description': 'Draw 3 cards',
-    'rarity': 'TODO',
-    'on_play': on_play,
-    'image_id': 'query'
+    'on_play': on_play
 }
 
 

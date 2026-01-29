@@ -5,63 +5,51 @@ from statemachine import StateMachine, State
 class GameState(StateMachine):
     loading = State(initial=True)  # Init player, init game objects, load everything
     setup_level = State()  # Load the level and draw up for player's hand
-    plan_enemy_turn = State()
+    pre_turn_prep = State()
     wait_for_player = State()
     card_drag = State()
-    evaluate_script = State()  # Build, enact, and animate script
+    run_player_script = State()  # Build, enact, and animate script
+    run_enemy_script = State()
     end_of_level = State()
-    enemy_turn = State()
+    card_pick = State()
+    # hardware_pick = State()
     game_end_win = State()
     game_end_loss = State()
     exit_game = State(final=True)
 
 
     loading_complete = loading.to(setup_level)
-    setup_level_complete = setup_level.to(plan_enemy_turn)
-    plan_enemy_turn_complete = plan_enemy_turn.to(wait_for_player)
-    send_script_selected = wait_for_player.to(evaluate_script)
+    setup_level_complete = setup_level.to(pre_turn_prep)
+    pre_turn_prep_complete = pre_turn_prep.to(wait_for_player)
 
-    script_level_win = evaluate_script.to(end_of_level)
-    script_level_loss = evaluate_script.to(game_end_loss)
-    script_complete = evaluate_script.to(wait_for_player)
+    send_script_selected = wait_for_player.to(run_player_script)
+    player_script_complete = (
+        run_player_script.to(end_of_level, cond='player_won_level') |
+        run_player_script.to(game_end_loss, cond='player_lost_level') |
+        run_player_script.to(wait_for_player, unless=['player_won_level', 'player_lost_level'])
+    )
 
     start_drag = wait_for_player.to(card_drag)
     card_drop = (
-        card_drag.to(game_end_loss, cond='player_lost') |
-        card_drag.to(end_of_level, cond='player_won') |
-        card_drag.to(wait_for_player)
+        card_drag.to(end_of_level, cond='player_won_level') |
+        card_drag.to(game_end_loss, cond='player_lost_level') |
+        card_drag.to(wait_for_player, unless=['player_won_level', 'player_lost_level'])
     )
-    end_turn = wait_for_player.to(enemy_turn)
-    enemy_turn_complete = (
-        enemy_turn.to(game_end_loss, cond='player_lost') |
-        enemy_turn.to(end_of_level, cond='player_won') |
-        enemy_turn.to(wait_for_player)
+
+    end_turn = wait_for_player.to(run_enemy_script)
+    enemy_script_complete = (
+        run_enemy_script.to(end_of_level, cond='player_won_level') |
+        run_enemy_script.to(game_end_loss, cond='player_lost_level') |
+        run_enemy_script.to(pre_turn_prep, unless=['player_won_level', 'player_lost_level'])
     )
-    next_level = (
+
+    end_of_level_progress = (
         end_of_level.to(game_end_win, cond='player_won_game') |
-        end_of_level.to(setup_level)
+        end_of_level.to(card_pick, unless='player_won_game') |
+        card_pick.to(setup_level)
     )
-    ready_for_exit_game = (
-        game_end_loss.to(game_end_win) |
+
+    select_exit_game = (
+        game_end_loss.to(exit_game) |
         game_end_win.to(exit_game)
     )
-
-
-    def on_enter_state(self, event, state):
-        logging.info(f"Entering '{state.id}' state from '{event}' event.")
-
-    def player_won(self):
-        pass
-
-    def player_lost(self):
-        pass
-
-    def player_won_game(self):
-        pass
-
-    def after_card_drop(self):
-        pass
-
-    def after_enemy_turn_complete(self):
-        # New hand for player
-        pass

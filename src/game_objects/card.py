@@ -11,9 +11,10 @@ class Card:
     cost: int
     description: str
     rarity: str
-    image_id: str
+    image_id: str = 'default'
     vector: dict = None
     ward: int = 0
+    delete_on_execution: bool = False
     on_play: Callable = None
     on_script_add: Callable = None
     on_script_activation: Callable = None

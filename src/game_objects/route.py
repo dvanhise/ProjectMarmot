@@ -46,6 +46,19 @@ class Route:
         self.node_path.append(node)
         self.edge_path.append(get_connecting_edge(self.node_path[-2], self.node_path[-1]))
 
+    def choose_next_node_from_route(self, route: 'Route'):
+        next_node = None
+        for ndx, node in enumerate(route.node_path):
+            if node == self.node_path[-1]:
+                next_node = route.node_path[ndx+1]
+                break
+
+        if not next_node or next_node not in self.get_next_node_options():
+            raise ValueError('Invalid node')
+
+        self.node_path.append(next_node)
+        self.edge_path.append(get_connecting_edge(self.node_path[-2], self.node_path[-1]))
+
     def is_path_complete(self):
         return len(self.node_path) > 1 and self.node_path[0].source and self.node_path[-1].source
 

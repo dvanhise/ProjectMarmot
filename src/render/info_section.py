@@ -1,5 +1,5 @@
 from game_objects.player import Player
-from game_objects.level import Level
+from game_objects.enemy import Enemy
 from utils.image_loader import img_fetch
 from constants import *
 
@@ -19,8 +19,8 @@ def render_player_info(s: pygame.Surface, player: Player):
     info_surface = generate(player.portrait, player.health)
     s.blit(info_surface, SCREEN_OFFSET_PLAYER)
 
-def render_enemy_info(s: pygame.Surface, level: Level):
-    info_surface = generate(level.portrait, level.health)
+def render_enemy_info(s: pygame.Surface, enemy: Enemy):
+    info_surface = generate(enemy.portrait, enemy.health)
     s.blit(info_surface, SCREEN_OFFSET_ENEMY)
 
 def generate(portrait_id, health):
@@ -40,6 +40,6 @@ def generate(portrait_id, health):
     text_rect = text.get_rect(center=(INFO_SECTION_SIZE[0]//2, PORTRAIT_VERT_OFFSET+PORTRAIT_SIZE[1]+10))
     s.blit(text, text_rect)
 
-    # TODO: Render buffs
+    # TODO: Render tags
 
     return s

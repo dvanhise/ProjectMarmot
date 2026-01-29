@@ -4,10 +4,12 @@ from game_objects.card import Card
 
 
 class Player:
+    owner = 'PLAYER'
+
     def __init__(self):
         self.id_counter = 0
         self.all_cards = {}
-        self.temp_cards = []
+        self.temp_cards = {}
         self.draw_pile = []
         self.current_hand = []
         self.discard_pile = []
@@ -15,7 +17,11 @@ class Player:
 
         self.energy = 0
         self.max_energy = 3
-        self.draw_count = 5
+        self.max_hand_size = 10
+        self.draw_count = 4
+        self.card_reward_count = 4
+        self.tags = []
+        self.script = None
 
         self.portrait = 'avatar1'
         self.health = 5
@@ -52,6 +58,15 @@ class Player:
         self.all_cards[self.id_counter] = new_card
         self.id_counter += 1
 
+    def add_temp_card(self, new_card: Card, to: str):
+        self.temp_cards[self.id_counter] = new_card
+        if to == 'hand': self.current_hand.append(self.id_counter)
+        elif to == 'discard': self.discard_pile.append(self.id_counter)
+        elif to == 'draw': self.draw_pile.append(self.id_counter)
+        else:
+            raise ValueError(f'Unexpected location to add temp card "{to}"')
+        self.id_counter += 1
+
     def remove_card(self, card_id):
         card = self.all_cards[card_id]
         del self.all_cards[card_id]
@@ -69,25 +84,37 @@ class Player:
         self.current_hand = []
         return discarded
 
-    def add_card_to_discard(self, card_id):
+    def add_card_to_discard(self, card_id: int):
         self.discard_pile.append(card_id)
 
-    def add_card_to_hand(self, card_id):
+    def add_card_to_hand(self, card_id: int):
         self.current_hand.append(card_id)
 
     def draw(self, count):
         for _ in range(count):
             if len(self.draw_pile) == 0:
+
+                # Stop drawing cards if draw and discard are empty
+                if len(self.discard_pile) == 0:
+                    break
+
+                # Reshuffle discard into draw if draw is empty
                 self.draw_pile = self.discard_pile
                 self.discard_pile = []
                 shuffle(self.draw_pile)
-            self.current_hand.append(self.draw_pile.pop(0))
+
+            if len(self.current_hand) >= self.max_hand_size:
+                # Don't draw over max hand size
+                self.discard_pile.append(self.draw_pile.pop(0))
+            else:
+                self.current_hand.append(self.draw_pile.pop(0))
 
     def start_drag(self, card_id):
         if card_id not in self.current_hand:
             logging.error(f'Card ID "{card_id}" not found in current hand "{self.current_hand}"')
             return
 
+        logging.info(f'Start dragging "{card_id}"')
         self.dragged = card_id
         self.current_hand.remove(card_id)
 
@@ -97,5 +124,5 @@ class Player:
         card.on_play(self)
         self.discard_pile.append(card_id)
 
-    def check_loss(self):
+    def check_defeat(self):
         return self.health <= 0

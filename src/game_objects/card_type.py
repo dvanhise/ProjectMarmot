@@ -7,3 +7,5 @@ class CardType(StrEnum):
     SCRIPT_VECTOR = 'Script Vector'
     WARD = 'Ward'
     UTILITY = 'Utility'
+    NULL = 'Null'
+
