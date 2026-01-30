@@ -1,6 +1,4 @@
-from game_objects.script import Script
 from game_objects.card_type import CardType
-
 
 
 definition = {
@@ -12,5 +10,3 @@ definition = {
     'cost': 0,
     'description': 'Unplayable'
 }
-
-

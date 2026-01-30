@@ -1,11 +1,12 @@
-from game_objects.player import Player
 from game_objects.card_type import CardType
+from utils.action_queue import get_aq
 
 
-def on_play(player: Player):
-    player.health -= 1
-    player.energy += 2
-    # TODO: Figure out how to do something with script builder
+def on_play():
+    queue = get_aq()
+    queue.queue_action('change_player_health', -1)
+    queue.queue_action('change_energy', 2)
+    get_aq().queue_action('execute_script')
 
 
 definition = {

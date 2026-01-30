@@ -13,5 +13,3 @@ definition = {
     'description': ['Install Vector:', '  On capture,', '  shuffle Lance', '  into draw pile'],
     'vector': Vector(name='Amp', tags=[CardMine(count=1, card='lance')])
 }
-
-

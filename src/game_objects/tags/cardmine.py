@@ -1,4 +1,5 @@
 from game_objects.tag import Tag
+from utils.action_queue import get_aq
 
 
 class CardMine(Tag):
@@ -19,5 +20,4 @@ class CardMine(Tag):
         return f'{self.id}_{self.card}'
 
     def on_node_capture(self, node, vector):
-        # TODO: Figure out how to add cards to player
-        pass
+        get_aq().queue_action('add_card', self.card, 'draw')

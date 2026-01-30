@@ -1,10 +1,12 @@
 import logging
-from game_objects.player import Player
-from game_objects.enemy import Enemy
-from game_objects.script import ScriptBuilder
-from game_objects.level import Level
+import pygame
+
 from game_objects.level_definitions.level1 import definition as level1_def
 from game_objects.level_definitions.level2 import definition as level2_def
+from game_objects.level import Level
+from game_objects.enemy import Enemy
+from game_objects.player import Player
+from game_objects.script import ScriptBuilder
 from game_objects.route import Route
 from game_objects.card_type import CardType
 
@@ -20,11 +22,13 @@ from render.info_section import render_enemy_info, render_player_info
 from render.terminal import render_terminal
 from render.card_pick import render_card_pick
 from render.help_text import render_help_text
-from constants import *
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
 
 from utils.image_loader import img_fetch
+from utils.global_getter import get_player, get_script_builder, new_enemy, new_level
 from utils.mouse_check import MouseCheck
 from utils.card_registry import get_new_card, random_card_choices
+from utils.action_queue import get_aq
 
 from game_state import GameState
 
@@ -307,17 +311,20 @@ class Game:
 
         self.player_route.choose_next_node(node)
         success = self.player.script.on_node_advance(self.player_route.edge_path[-1], self.player_route.node_path[-1], self.level)
+        self.run_action_queue()
 
         if not success or self.player_route.is_path_complete():
             change_state('player_script_complete')
 
-    def send_script(self):
-        if not self.player.has_energy(1):
+    def send_script(self, ignore_cost=False):
+        if not ignore_cost and not self.player.has_energy(1):
             logging.info(f'Not enough energy to execute script.')
             return
 
-        self.player.pay_energy(1)
+        if ignore_cost:
+            self.player.pay_energy(1)
         self.player.script = self.script_builder.build_script()
+        self.run_action_queue()
         self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
         self.player.script.on_node_advance(None, self.player_route.node_path[-1], self.level)
         change_state('send_script_selected')
@@ -335,7 +342,7 @@ class Game:
         else:
             self.player.pay_energy(card.cost)
             node.apply_ward_from_card(card)
-
+            self.run_action_queue()
 
     def play_card_on_script_builder(self, script_ndx, card):
         if not self.script_builder.is_valid_play(card, script_ndx):
@@ -347,6 +354,7 @@ class Game:
         else:
             self.player.pay_energy(card.cost)
             replaced = self.script_builder.add_card(self.player.dragged, card, script_ndx)
+            self.run_action_queue()
             if replaced:
                 self.player.add_card_to_discard(replaced)
 
@@ -360,6 +368,31 @@ class Game:
         else:
             self.player.pay_energy(card.cost)
             self.player.play_card_generic(self.player.dragged)
+            self.run_action_queue()
+
+    def run_action_queue(self):
+        queue = get_aq()
+        action = queue.get_action()
+        while action:
+            if action[0] == 'add_card':
+                self.player.add_temp_card(get_new_card(action[1]), to=action[2])
+            elif action[0] == 'draw_cards':
+                self.player.draw(action[1])
+            elif action[0] == 'change_player_health':
+                self.player.health += action[1]
+            elif action[0] == 'change_enemy_health':
+                self.enemy.health += action[1]
+            elif action[0] == 'execute_script':
+                self.send_script(ignore_cost=True)
+            elif action[0] == 'change_energy':
+                self.player.energy += action[1]
+            elif action[0] == 'add_player_tag':
+                self.player.tags.append(action[1](action[2]))
+            elif action[0] == 'add_enemy_tag':
+                self.enemy.tags.append(action[1](action[2]))
+
+            # Get next action
+            action = queue.get_action()
 
 
 # Hacky workaround to allow the Game class to modify GameState and define on-change methods

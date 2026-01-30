@@ -121,7 +121,7 @@ class Player:
     def play_card_generic(self, card_id):
         self.dragged = None
         card = self.all_cards[card_id]
-        card.on_play(self)
+        card.on_play()
         self.discard_pile.append(card_id)
 
     def check_defeat(self):

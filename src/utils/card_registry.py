@@ -1,6 +1,5 @@
 import os
 import importlib
-import logging
 import random
 from game_objects.card import Card
 

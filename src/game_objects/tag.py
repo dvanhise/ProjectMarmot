@@ -29,9 +29,6 @@ class Tag:
     def on_friendly_script_node_encounter(self, script, node):
         pass
 
-    def on_node_capture(self, node, vector):
-        pass
-
     def on_turn_end_node(self, node):
         pass
 
@@ -42,4 +39,7 @@ class Tag:
         pass
 
     def on_vector_install(self):
+        pass
+
+    def on_script_execution(self, script):
         pass
