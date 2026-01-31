@@ -24,11 +24,15 @@ class Player:
         self.script = None
 
         self.portrait = 'avatar1'
-        self.health = 5
+        self.health = 6
+        self.max_health = 6
 
     def start_turn(self):
         self.draw(self.draw_count)
         self.energy = self.max_energy
+
+    def change_health(self, change):
+        self.health = min(self.max_health, max(0, self.health + change))
 
     def has_energy(self, cost):
         return cost <= self.energy

@@ -7,12 +7,12 @@ from utils.text_helper import draw_text_with_outline
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ENERGY_COLOR
 
 
-SCREEN_X_OFFSET = SCREEN_WIDTH // 2 - 250
+SCREEN_X_OFFSET = SCREEN_WIDTH // 2 - 90
 SCREEN_Y_OFFSET = SCREEN_HEIGHT // 2 + 20
 
 SPACING = 5
 ARROW_WIDTH = 25
-ARROW_HEIGHT = 15
+ARROW_HEIGHT = 22
 HEADER_HEIGHT = 10
 
 LABEL_FONT_SIZE = 24
@@ -52,25 +52,23 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
 
         current_x_offset += CARD_WIDTH + SPACING
 
-        # Skip displaying the arrow on the last slot
-        if ndx+1 < len(builder.slots):
-            s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2))
-            current_x_offset += ARROW_WIDTH + SPACING
+        s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2))
+        current_x_offset += ARROW_WIDTH + SPACING
 
     current_x_offset += CARD_WIDTH + 40
 
     # Draw send script button
     image = img_fetch().get('execute')
     image = pygame.transform.smoothscale(image, BUTTON_SIZE)
-    s.blit(image, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2))
+    s.blit(image, (SCREEN_WIDTH-BUTTON_SIZE[0]-10, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2))
 
     # Add energy cost to button
-    pygame.draw.circle(s, ENERGY_COLOR, (current_x_offset+60, SCREEN_Y_OFFSET+60), 16)
+    pygame.draw.circle(s, ENERGY_COLOR, (SCREEN_WIDTH-BUTTON_SIZE[0]+45, SCREEN_Y_OFFSET+60), 16)
     font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 26)
     outline_text = draw_text_with_outline('1', font, 'white', 2, 'black')
-    text_rect = outline_text.get_rect(center=(current_x_offset+60, SCREEN_Y_OFFSET+60))
+    text_rect = outline_text.get_rect(center=(SCREEN_WIDTH - BUTTON_SIZE[0] +45, SCREEN_Y_OFFSET+60))
     s.blit(outline_text, text_rect)
 
-    interactables['SEND_SCRIPT'] = pygame.Rect((current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2), BUTTON_SIZE)
+    interactables['SEND_SCRIPT'] = pygame.Rect((SCREEN_WIDTH-BUTTON_SIZE[0]-10, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2), BUTTON_SIZE)
 
     return interactables

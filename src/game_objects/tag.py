@@ -17,7 +17,7 @@ class Tag:
     def get_full_name(self):
         return self.id
 
-    def before_node_encounter(self):
+    def before_script_node_encounter(self, script, node):
         pass
 
     def after_failed_script_node_encounter(self, script, node):
@@ -29,16 +29,24 @@ class Tag:
     def on_friendly_script_node_encounter(self, script, node):
         pass
 
+    def on_node_captured(self, node):
+        # When an opponent captures a node
+        pass
+
     def on_turn_end_node(self, node):
         pass
 
     def on_turn_end_player(self, player):
         pass
 
+    def on_turn_end_enemy(self, enemy):
+        pass
+
     def on_turn_end_vector(self, vector, node):
         pass
 
     def on_vector_install(self):
+        # TODO: Has not been set up
         pass
 
     def on_script_execution(self, script):

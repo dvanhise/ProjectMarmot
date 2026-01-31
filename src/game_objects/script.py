@@ -22,21 +22,27 @@ class Script:
         if self.power < 0:
             return False
 
+        for tag in node.tags:
+            tag.before_script_node_encounter(self, node)
+
         # Interact with non-friendly node
         if self.owner != node.owner:
             if node.ward > self.power:
                 node.ward -= self.power
-                #
+                for tag in node.tags:
+                    tag.after_failed_script_node_encounter(self, node)
                 return False
             else:
                 self.power -= node.ward
                 node.ward = 0
-                # TODO: Other vector effects
+                for tag in node.tags:
+                    tag.on_node_captured(node)
+                    tag.after_successful_script_node_encounter(self, node)
 
             node.vector = None
             if node.source:
                 # TODO: Vector effects
-                opponent.health -= self.power
+                opponent.change_health(-self.power)
 
             else:
                 node.owner = self.owner

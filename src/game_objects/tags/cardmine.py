@@ -19,5 +19,5 @@ class CardMine(Tag):
     def get_full_name(self):
         return f'{self.id}_{self.card}'
 
-    def on_node_capture(self, node, vector):
+    def on_node_captured(self, node):
         get_aq().queue_action('add_card', self.card, 'draw')

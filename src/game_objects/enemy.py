@@ -10,7 +10,11 @@ class Enemy:
         self.script = None
         self.portrait = definition['portrait']
         self.health = definition['health']
+        self.max_health = definition['health']
         self.tags = []
+
+    def change_health(self, change):
+        self.health = min(self.max_health, max(0, self.health + change))
         
     def next_script(self):
         if self.current_pattern_id is None:

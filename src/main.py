@@ -124,8 +124,8 @@ class Game:
 
         elif get_state() == GameState.pre_turn_prep:
             self.enemy_temp_route = Route(self.level.get_source('ENEMY'), 'ENEMY')
-            self.enemy_temp_route.generate_path('RANDOM')
             self.enemy.next_script()
+            self.enemy_temp_route.generate_path('RANDOM', self.enemy.script)
             change_state('pre_turn_prep_complete')
 
             # Card status right before player turn
@@ -136,6 +136,7 @@ class Game:
         elif get_state() == GameState.run_enemy_script:
             if not self.enemy_route:
                 self.enemy_route = Route(self.level.get_source('ENEMY'), 'ENEMY')
+                self.enemy.script.on_node_advance(None, self.enemy_route.node_path[-1], self.player, autoplay_vector=True)
                 return
             pygame.time.wait(1500)  # Delay enemy action for clarity
 
@@ -185,7 +186,7 @@ class Game:
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if get_state() == GameState.wait_for_player:
                     if mouse_on == 'END_TURN' and self.click_down == 'END_TURN':
-                        change_state('end_turn')
+                        self.end_turn()
                     elif mouse_on == 'SEND_SCRIPT' and self.click_down == 'SEND_SCRIPT':
                         self.send_script()
 
@@ -285,7 +286,7 @@ class Game:
         self.mouseover_text = None
 
         # Render dragged card to mouse position
-        if get_state() == GameState.card_drag and self.player.dragged:
+        if get_state() == GameState.card_drag and self.player.dragged is not None:
             self.screen.blit(
                 gen_card(self.player.get_dragged_card()),
                 (mouse_x - CARD_WIDTH//2, mouse_y - CARD_HEIGHT//2)
@@ -310,7 +311,7 @@ class Game:
             return
 
         self.player_route.choose_next_node(node)
-        success = self.player.script.on_node_advance(self.player_route.edge_path[-1], self.player_route.node_path[-1], self.level)
+        success = self.player.script.on_node_advance(self.player_route.edge_path[-1], self.player_route.node_path[-1], self.enemy)
         self.run_action_queue()
 
         if not success or self.player_route.is_path_complete():
@@ -321,9 +322,12 @@ class Game:
             logging.info(f'Not enough energy to execute script.')
             return
 
-        if ignore_cost:
+        if not ignore_cost:
             self.player.pay_energy(1)
         self.player.script = self.script_builder.build_script()
+        self.run_action_queue()
+        for tag in self.player.tags:
+            tag.on_script_execution(self.player.script)
         self.run_action_queue()
         self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
         self.player.script.on_node_advance(None, self.player_route.node_path[-1], self.level)
@@ -370,6 +374,26 @@ class Game:
             self.player.play_card_generic(self.player.dragged)
             self.run_action_queue()
 
+    def end_turn(self):
+        for tag in self.player.tags:
+            tag.on_turn_end_player(self.player)
+        self.run_action_queue()
+
+        for tag in self.enemy.tags:
+            tag.on_turn_end_enemy(self.enemy)
+        self.run_action_queue()
+
+        for node in self.level.nodes.values():
+            for tag in node.tags:
+                tag.on_turn_end_node(node)
+            if node.vector:
+                for tag in node.vector.tags:
+                    tag.on_turn_end_vector(node.vector, node)
+        self.run_action_queue()
+
+        change_state('end_turn')
+
+
     def run_action_queue(self):
         queue = get_aq()
         action = queue.get_action()
@@ -379,9 +403,9 @@ class Game:
             elif action[0] == 'draw_cards':
                 self.player.draw(action[1])
             elif action[0] == 'change_player_health':
-                self.player.health += action[1]
+                self.player.change_health(action[1])
             elif action[0] == 'change_enemy_health':
-                self.enemy.health += action[1]
+                self.enemy.change_health(action[1])
             elif action[0] == 'execute_script':
                 self.send_script(ignore_cost=True)
             elif action[0] == 'change_energy':

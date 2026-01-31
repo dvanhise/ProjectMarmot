@@ -9,6 +9,8 @@ class NetBurn(Tag):
 
     def on_turn_end_node(self, node):
         node.ward = max(0, node.ward - self.count)
+        if node.ward == 0:
+            node.vector = None
 
     def after_failed_script_node_encounter(self, script, node):
         node.tags.append(script.tags.pop(self))
