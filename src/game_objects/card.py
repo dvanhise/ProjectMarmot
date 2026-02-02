@@ -1,21 +1,31 @@
-from dataclasses import dataclass
-from typing import Callable
 from game_objects.card_type import CardType
 
 
-@dataclass
 class Card:
-    name: str
-    id: str
-    type: CardType
-    cost: int
-    description: str
-    rarity: str
-    image_id: str = 'default'
-    vector: dict = None
-    ward: int = 0
-    delete_on_execution: bool = False
-    on_play: Callable = None
-    on_script_add: Callable = None
-    on_script_activation: Callable = None
-    on_ward_install: Callable = None
+    name = 'default-name'
+    id = ''
+    cost = 0
+    type = CardType.NULL
+    description = 'Default description'
+    rarity = 'simple'
+    image_id = 'default'
+    vector = None
+    ward = 0
+    power = 0
+    delete_on_execution = False
+    delete_on_play = False
+
+    def get_description(self):
+        return [line.format(ward=self.ward, power=self.power) for line in self.description]
+
+    def on_play(self):
+        pass
+
+    def on_script_activation(self, script, player_info):
+        pass
+
+    def on_ward_install(self, node):
+        pass
+
+    def on_script_replacement(self):
+        pass

@@ -1,13 +1,14 @@
 from game_objects.player import Player
 from game_objects.enemy import Enemy
+from render.tag import gen_tag, TAG_ICON_SIZE
 from utils.image_loader import img_fetch
+from utils.mouse_check import Tooltip
 from constants import *
 
 
 INFO_SECTION_SIZE = (120, 160)
 
 PORTRAIT_SIZE = (100, 100)
-PORTRAIT_VERT_OFFSET = 10
 
 SCREEN_OFFSET_PLAYER = (30, 30)
 SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 30, 30)
@@ -15,20 +16,18 @@ SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 30, 30)
 HEALTH_FONT_SIZE = 24
 
 
-def render_player_info(s: pygame.Surface, player: Player):
-    info_surface = generate(player.portrait, player.health)
-    s.blit(info_surface, SCREEN_OFFSET_PLAYER)
+def render_info(s: pygame.Surface, entity: Player|Enemy):
+    if entity.owner == 'PLAYER':
+        offset = SCREEN_OFFSET_PLAYER
+    elif entity.owner == 'ENEMY':
+        offset = SCREEN_OFFSET_ENEMY
+    else:
+        raise ValueError(f'Unexpected entity type "{entity.owner}"')
 
-def render_enemy_info(s: pygame.Surface, enemy: Enemy):
-    info_surface = generate(enemy.portrait, enemy.health)
-    s.blit(info_surface, SCREEN_OFFSET_ENEMY)
-
-def generate(portrait_id, health):
-    s = pygame.Surface(INFO_SECTION_SIZE, pygame.SRCALPHA)
-    offset = (INFO_SECTION_SIZE[0]//2 - PORTRAIT_SIZE[0]//2, PORTRAIT_VERT_OFFSET)
+    mouseover = []
 
     # Draw portait and border
-    img = img_fetch().get(portrait_id)
+    img = img_fetch().get(entity.portrait)
     img = pygame.transform.smoothscale(img, PORTRAIT_SIZE)
     s.blit(img, offset)
     pygame.draw.rect(s, '#444444', pygame.Rect(offset, PORTRAIT_SIZE), 5, 5)
@@ -36,10 +35,16 @@ def generate(portrait_id, health):
 
     # Draw health
     font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', HEALTH_FONT_SIZE)
-    text = font.render(f'{health} HP', True, 'white')
-    text_rect = text.get_rect(center=(INFO_SECTION_SIZE[0]//2, PORTRAIT_VERT_OFFSET+PORTRAIT_SIZE[1]+10))
+    text = font.render(f'{entity.health} HP', True, 'white')
+    text_rect = text.get_rect(center=(offset[0]+PORTRAIT_SIZE[0]//2, offset[1]+PORTRAIT_SIZE[1]-10))
     s.blit(text, text_rect)
 
-    # TODO: Render tags
+    # Draw tags
+    for ndx, tag in enumerate(entity.tags):
+        s.blit(gen_tag(tag), (offset[0]+ndx*TAG_ICON_SIZE[0], offset[1]+PORTRAIT_SIZE[1]))
+        mouseover.append(Tooltip(
+            pygame.Rect((offset[0]+ndx*TAG_ICON_SIZE[0], offset[1]+PORTRAIT_SIZE[1]), TAG_ICON_SIZE),
+            tag.get_tooltip())
+        )
 
-    return s
+    return mouseover

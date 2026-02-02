@@ -1,5 +1,6 @@
 from game_objects.vector import Vector
 from game_objects.tags.boost import Boost
+from utils.router import PathType
 
 """
      0   1   2   3   4
@@ -110,8 +111,7 @@ definition = {
         },
         {
             'left_id': 8,
-            'right_id': 9,
-            'owner': 'ENEMY'
+            'right_id': 9
         }
     ],
     'pattern': [
@@ -120,13 +120,13 @@ definition = {
             'start': True,
             'power': 3,
             'vector': Vector(name='Amp', default_ward=1, tags=[Boost(2)]),
-            'targeting': 'RANDOM',
+            'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 5,
-            'targeting': 'RANDOM',
+            'pathing': PathType.TAKE_OPPONENT_NODES,
             'next': 1
         }
     ]

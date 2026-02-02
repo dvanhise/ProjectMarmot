@@ -18,19 +18,20 @@ from render.deck_info import render_deck_info
 from render.end_turn_button import render_end_turn
 from render.playzone import render_playzone
 from render.energy_tracker import render_energy_tracker
-from render.info_section import render_enemy_info, render_player_info
+from render.info_section import render_info
 from render.terminal import render_terminal
 from render.card_pick import render_card_pick
 from render.help_text import render_help_text
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
 
 from utils.image_loader import img_fetch
-from utils.global_getter import get_player, get_script_builder, new_enemy, new_level
+from utils.router import generate_route
 from utils.mouse_check import MouseCheck
-from utils.card_registry import get_new_card, random_card_choices
+from utils.card_registry import get_new_card, random_card_choices, get_card_stats
 from utils.action_queue import get_aq
 
 from game_state import GameState
+from starter_deck import add_starter_cards
 
 
 class Game:
@@ -53,9 +54,12 @@ class Game:
         self.level_ndx = 0
         self.level_order = [level1_def, level2_def]
 
-
     def on_enter_state(self, event, state):
         logging.info(f"Entering '{state.id}' state from '{event}' event.")
+
+    def after_setup_level_complete(self):
+        self.player.init_round()
+        self.script_builder.init_round()
 
     def after_pre_turn_prep_complete(self):
         self.player.start_turn()
@@ -71,7 +75,11 @@ class Game:
     def after_player_script_complete(self):
         self.player.script = None
         self.player_route = None
-        self.player.discard_pile += self.script_builder.clear()
+        for card_id in self.script_builder.clear():
+            if self.player.all_cards[card_id].delete_on_execution:
+                self.player.deleted_pile.append(card_id)
+            else:
+                self.player.discard_pile.append(card_id)
 
     def on_exit_end_of_level(self):
         self.level_ndx += 1
@@ -98,20 +106,11 @@ class Game:
         logging.info('YOU WIN')
 
     def load_game(self):
+        logging.info(get_card_stats())
+
         self.player = Player()
         self.script_builder = ScriptBuilder()
-
-        # Starter deck
-        self.player.add_card(get_new_card('spike'))
-        self.player.add_card(get_new_card('spike'))
-        self.player.add_card(get_new_card('spike'))
-        self.player.add_card(get_new_card('spike'))
-        self.player.add_card(get_new_card('amplifier'))
-        self.player.add_card(get_new_card('amplifier'))
-        self.player.add_card(get_new_card('security-group'))
-        self.player.add_card(get_new_card('security-group'))
-        self.player.add_card(get_new_card('query'))
-
+        add_starter_cards(self.player)
 
     def level_update(self):
         # Load new level
@@ -123,9 +122,8 @@ class Game:
             change_state('setup_level_complete')
 
         elif get_state() == GameState.pre_turn_prep:
-            self.enemy_temp_route = Route(self.level.get_source('ENEMY'), 'ENEMY')
             self.enemy.next_script()
-            self.enemy_temp_route.generate_path('RANDOM', self.enemy.script)
+            self.enemy_temp_route = generate_route(self.level.get_source('ENEMY'), self.enemy.script)
             change_state('pre_turn_prep_complete')
 
             # Card status right before player turn
@@ -244,8 +242,12 @@ class Game:
             self.mouse_check.register_mouseover_rect(mouseovers)
 
         # Render info
-        render_player_info(self.screen, self.player)
-        render_enemy_info(self.screen, self.enemy)
+        mouseovers = render_info(self.screen, self.player)
+        self.mouse_check.register_mouseover_rect(mouseovers)
+        mouseovers = render_info(self.screen, self.enemy)
+        self.mouse_check.register_mouseover_rect(mouseovers)
+
+        # Render terminal
         render_terminal(self.screen, self.player)
         render_terminal(self.screen, self.enemy)
 
@@ -324,10 +326,9 @@ class Game:
 
         if not ignore_cost:
             self.player.pay_energy(1)
-        self.player.script = self.script_builder.build_script()
+        self.player.script = self.script_builder.build_script(self.player.get_player_info_dict())
         self.run_action_queue()
-        for tag in self.player.tags:
-            tag.on_script_execution(self.player.script)
+        self.player.tags.on_script_execution(self.player.script)
         self.run_action_queue()
         self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
         self.player.script.on_node_advance(None, self.player_route.node_path[-1], self.level)
@@ -375,20 +376,16 @@ class Game:
             self.run_action_queue()
 
     def end_turn(self):
-        for tag in self.player.tags:
-            tag.on_turn_end_player(self.player)
+        self.player.tags.on_turn_end_player(self.player)
         self.run_action_queue()
 
-        for tag in self.enemy.tags:
-            tag.on_turn_end_enemy(self.enemy)
+        self.enemy.tags.on_turn_end_enemy(self.enemy)
         self.run_action_queue()
 
         for node in self.level.nodes.values():
-            for tag in node.tags:
-                tag.on_turn_end_node(node)
+            node.tags.on_turn_end_node(node)
             if node.vector:
-                for tag in node.vector.tags:
-                    tag.on_turn_end_vector(node.vector, node)
+                node.vector.tags.on_turn_end_vector(node.vector, node)
         self.run_action_queue()
 
         change_state('end_turn')
@@ -402,6 +399,15 @@ class Game:
                 self.player.add_temp_card(get_new_card(action[1]), to=action[2])
             elif action[0] == 'draw_cards':
                 self.player.draw(action[1])
+            elif action[0] == 'delete_cards':
+                if action[1] == 'RIGHT':
+                    ndx = -1
+                elif action[1] == 'LEFT':
+                    ndx = 0
+                else:
+                    raise ValueError(f'Unknown card delete argument "{action[1]}"')
+                for _ in range(action[2]):
+                    self.player.deleted_pile.append(self.player.current_hand.pop(ndx))
             elif action[0] == 'change_player_health':
                 self.player.change_health(action[1])
             elif action[0] == 'change_enemy_health':
@@ -414,6 +420,17 @@ class Game:
                 self.player.tags.append(action[1](action[2]))
             elif action[0] == 'add_enemy_tag':
                 self.enemy.tags.append(action[1](action[2]))
+            elif action[0] == 'card_updates_ward':
+                for card in self.player.all_cards_temp.values():
+                    if card.type == CardType.WARD and card.ward:
+                        card.ward += action[1]
+            elif action[0] == 'card_updates_power':
+                # TODO: Will break if the change is negative
+                for card in self.player.all_cards_temp.values():
+                    if card.type == CardType.SCRIPT_PAYLOAD and card.power:
+                        card.power += action[1]
+            elif action[0] == 'add_script_slot':
+                self.script_builder.add_slot(action[1], temporary=True)
 
             # Get next action
             action = queue.get_action()

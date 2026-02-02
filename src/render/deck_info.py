@@ -23,7 +23,7 @@ def render_deck_info(s: pygame.Surface, player: Player):
     text_rect = text.get_rect(center=(INFO_CARD_SIZE[0]//2, INFO_CARD_SIZE[1]*2//3))
     card_surface.blit(text, text_rect)
 
-    s.blit(card_surface, (SCREEN_WIDTH-200, SCREEN_HEIGHT-CARD_HEIGHT-30))
+    s.blit(card_surface, (SCREEN_WIDTH-200, SCREEN_HEIGHT-CARD_HEIGHT-10))
 
     # TODO: Interactables to give info on cards in draw and discard piles
 

@@ -1,4 +1,5 @@
 from game_objects.script import Script
+from game_objects.tag import TagManager
 
 
 class Enemy:
@@ -11,7 +12,7 @@ class Enemy:
         self.portrait = definition['portrait']
         self.health = definition['health']
         self.max_health = definition['health']
-        self.tags = []
+        self.tags = TagManager()
 
     def change_health(self, change):
         self.health = min(self.max_health, max(0, self.health + change))
@@ -20,12 +21,13 @@ class Enemy:
         if self.current_pattern_id is None:
             self.current_pattern_id = [k for k,v in self.pattern.items() if v.get('start')][0]
         else:
-            # TODO: Allow for RNG-based patterns
+            # TODO: Allow for RNG-based pattern changes
             self.current_pattern_id = self.pattern[self.current_pattern_id]['next']
 
         self.script = Script('ENEMY')
         p = self.pattern[self.current_pattern_id]
         self.script.power = p.get('power', 0)
+        self.script.pathing = p['pathing']
         vector = p.get('vector')
         if vector:
             self.script.vector.append(vector)

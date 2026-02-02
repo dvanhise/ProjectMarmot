@@ -1,5 +1,6 @@
 from game_objects.vector import Vector
 from game_objects.card import Card
+from game_objects.tag import TagManager
 
 
 class Node:
@@ -14,14 +15,13 @@ class Node:
         self.health = kwargs.get('health', 1)
         self.left = []
         self.right = []
-        self.tags = []
+        self.tags = TagManager()
 
     def apply_ward_from_card(self, card: Card):
         if card.ward:
             self.apply_ward(card.ward)
 
     def apply_ward(self, ward_value):
-        # TODO: Other ward effects
         self.ward = max(self.ward, ward_value)
 
     def install_vector(self, vector: Vector):

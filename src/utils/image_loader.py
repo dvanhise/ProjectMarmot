@@ -13,7 +13,7 @@ class ImageLoader:
             name, ext = filename.split('.')
             if ext in ['png', 'bmp', 'jpg', 'jpeg']:
                 self.registry[name] = pygame.image.load(f'{self.IMAGES_DIR}/{filename}')
-                # TODO: Resize here
+                # TODO: Resize here for efficiency?
 
     def get(self, name):
         return self.registry.get(name)

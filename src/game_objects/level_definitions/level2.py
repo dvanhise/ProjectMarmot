@@ -92,33 +92,27 @@ definition = {
         },
         {
             'left_id': 4,
-            'right_id': 6,
-            'owner': 'ENEMY'
+            'right_id': 6
         },
         {
             'left_id': 5,
-            'right_id': 7,
-            'owner': 'ENEMY'
+            'right_id': 7
         },
         {
             'left_id': 6,
-            'right_id': 8,
-            'owner': 'ENEMY'
+            'right_id': 8
         },
         {
             'left_id': 7,
-            'right_id': 9,
-            'owner': 'ENEMY'
+            'right_id': 9
         },
         {
             'left_id': 8,
-            'right_id': 10,
-            'owner': 'ENEMY'
+            'right_id': 10
         },
         {
             'left_id': 9,
-            'right_id': 10,
-            'owner': 'ENEMY'
+            'right_id': 10
         }
     ],
     'pattern': [
@@ -127,13 +121,14 @@ definition = {
             'start': True,
             'power': 4,
             'vector': Vector(name='TODO', default_ward=4),
-            'targeting': 'RANDOM',
+            'pathing': 'RANDOM',
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 6,
-            'targeting': 'RANDOM',
+            'self_tag': [],
+            'pathing': 'RANDOM',
             'next': 1
         }
     ]

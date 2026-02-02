@@ -4,7 +4,7 @@ from game_objects.tag import Tag
 class Boost(Tag):
     id = 'boost'
     icon = 'power'
-    tooltip = 'Increase script power by {count}.'
+    tooltip = 'Increase script power by {count}.  Remove 1 stack when used.'
     count = 0
 
     part_of_vector = True
@@ -15,3 +15,4 @@ class Boost(Tag):
 
     def on_friendly_script_node_encounter(self, script, node):
         script.power += self.count
+        self.count -= 1

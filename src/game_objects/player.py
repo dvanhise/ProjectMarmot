@@ -1,6 +1,8 @@
+import copy
 from random import shuffle
 import logging
 from game_objects.card import Card
+from game_objects.tag import TagManager
 
 
 class Player:
@@ -9,10 +11,12 @@ class Player:
     def __init__(self):
         self.id_counter = 0
         self.all_cards = {}
+        self.all_cards_temp = {}  # Temporary copy of all cards during a round that can be temporarily modified
         self.temp_cards = {}
         self.draw_pile = []
         self.current_hand = []
         self.discard_pile = []
+        self.deleted_pile = []
         self.dragged = None
 
         self.energy = 0
@@ -20,7 +24,7 @@ class Player:
         self.max_hand_size = 10
         self.draw_count = 4
         self.card_reward_count = 4
-        self.tags = []
+        self.tags = TagManager()
         self.script = None
 
         self.portrait = 'avatar1'
@@ -30,6 +34,9 @@ class Player:
     def start_turn(self):
         self.draw(self.draw_count)
         self.energy = self.max_energy
+
+    def init_round(self):
+        self.all_cards_temp = copy.deepcopy(self.all_cards)
 
     def change_health(self, change):
         self.health = min(self.max_health, max(0, self.health + change))
@@ -44,21 +51,22 @@ class Player:
         self.discard_hand()
 
     def get_dragged_card(self):
-        return self.all_cards[self.dragged]
+        return self.all_cards_temp[self.dragged]
 
     def get_full_deck(self):
-        return list(self.all_cards.values())
+        return list(self.all_cards_temp.values())
 
     def get_cards_in_hand(self):
-        return [self.all_cards[card_id] for card_id in self.current_hand]
+        return [self.all_cards_temp[card_id] for card_id in self.current_hand]
 
     def get_cards_in_discard(self):
-        return [self.all_cards[card_id] for card_id in self.discard_pile]
+        return [self.all_cards_temp[card_id] for card_id in self.discard_pile]
 
     def get_cards_in_draw_pile(self):
-        return [self.all_cards[card_id] for card_id in self.draw_pile]
+        return [self.all_cards_temp[card_id] for card_id in self.draw_pile]
 
     def add_card(self, new_card: Card):
+        # For new cards in between rounds
         self.all_cards[self.id_counter] = new_card
         self.id_counter += 1
 
@@ -79,6 +87,7 @@ class Player:
     def reset(self):
         self.current_hand = []
         self.discard_pile = []
+        self.deleted_pile = []
         self.draw_pile = list(self.all_cards.keys())
         shuffle(self.draw_pile)
 
@@ -124,9 +133,21 @@ class Player:
 
     def play_card_generic(self, card_id):
         self.dragged = None
-        card = self.all_cards[card_id]
+        card = self.all_cards_temp[card_id]
         card.on_play()
-        self.discard_pile.append(card_id)
+        if card.delete_on_play:
+            self.deleted_pile.append(card_id)
+        else:
+            self.discard_pile.append(card_id)
 
     def check_defeat(self):
         return self.health <= 0
+
+    def get_player_info_dict(self):
+        return {
+            'cards_in_hand': len(self.current_hand),
+            'cards_in_discard': len(self.discard_pile),
+            'cards_in_draw': len(self.draw_pile),
+            'health': self.health,
+            'energy': self.energy
+        }

@@ -1,4 +1,6 @@
 from game_objects.vector import Vector
+from game_objects.tags.boost import Boost
+from utils.router import PathType
 
 """
      0   1   2   3   4
@@ -35,38 +37,38 @@ definition = {
             'id': 4,
             'position': (2, 0),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2)
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 5,
             'position': (2, 2),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2)
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 6,
             'position': (2, 4),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2)
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 7,
             'position': (3, 1),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2)
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 8,
             'name': 'Database',
             'position': (3, 3),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2)
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', power_boost=2),
+            'vector': Vector(name='Amp', tags=[Boost(1)]),
             'source': True
         }
     ],
@@ -97,33 +99,27 @@ definition = {
         },
         {
             'left_id': 4,
-            'right_id': 7,
-            'owner': 'ENEMY'
+            'right_id': 7
         },
         {
             'left_id': 5,
-            'right_id': 7,
-            'owner': 'ENEMY'
+            'right_id': 7
         },
         {
             'left_id': 5,
-            'right_id': 8,
-            'owner': 'ENEMY'
+            'right_id': 8
         },
         {
             'left_id': 6,
-            'right_id': 8,
-            'owner': 'ENEMY'
+            'right_id': 8
         },
         {
             'left_id': 7,
-            'right_id': 9,
-            'owner': 'ENEMY'
+            'right_id': 9
         },
         {
             'left_id': 8,
-            'right_id': 9,
-            'owner': 'ENEMY'
+            'right_id': 9
         }
     ],
     'pattern': [
@@ -131,13 +127,13 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 4,
-            'targeting': 'RANDOM',
+            'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 5,
-            'targeting': 'RANDOM',
+            'pathing': PathType.RANDOM,
             'next': 1
         }
     ]

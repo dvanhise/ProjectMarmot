@@ -6,7 +6,6 @@ class CardMine(Tag):
     id = 'card-mine'
     icon = 'power'
     tooltip = 'Add {card} to draw pile when vector is captured.'
-    count = 0
     card = ''
 
     part_of_vector = True

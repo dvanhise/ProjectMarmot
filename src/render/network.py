@@ -11,7 +11,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 NETWORK_WIDTH = SCREEN_WIDTH
-NETWORK_HEIGHT = SCREEN_HEIGHT // 2
+NETWORK_HEIGHT = SCREEN_HEIGHT // 2 + 40
 
 ICON_SIZE = (70, 70)
 ICON_HITBOX_SIZE = (60, 60)
@@ -109,7 +109,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                     midpoint_y-EDGE_DEGREDATION_RADIUS//2,
                     EDGE_DEGREDATION_RADIUS,
                     EDGE_DEGREDATION_RADIUS
-                ), f'Reduces power of unfriendly scripts by {edge.difficulty}.'))
+                ), f'Edge penalty: Reduces power of non-friendly scripts by {edge.difficulty}.'))
 
                 # Draw planned routes
                 if edge in player_edges:

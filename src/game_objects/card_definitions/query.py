@@ -1,20 +1,16 @@
 from game_objects.card_type import CardType
 from utils.action_queue import get_aq
+from game_objects.card import Card
 
 
-def on_play():
-    get_aq().queue_action('draw_cards', 3)
+class Query(Card):
+    id = 'query'
+    name = 'Query'
+    type = CardType.UTILITY
+    rarity = 'simple'
+    image_id = 'query',
+    cost = 1
+    description = ['Draw 3 cards']
 
-
-definition = {
-    'id': 'query',
-    'name': 'Query',
-    'type': CardType.UTILITY,
-    'rarity': 'default',
-    'image_id': 'query',
-    'cost': 1,
-    'description': 'Draw 3 cards',
-    'on_play': on_play
-}
-
-
+    def on_play(self):
+        get_aq().queue_action('draw_cards', 3)

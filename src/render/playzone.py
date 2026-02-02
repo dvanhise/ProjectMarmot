@@ -1,16 +1,16 @@
-from render.card import CARD_HEIGHT
+from render.card import CARD_WIDTH, CARD_HEIGHT
 from constants import *
 from utils.image_loader import img_fetch
 
 
-SCREEN_OFFSET = (20, SCREEN_HEIGHT // 2 + 20)
-ZONE_SIZE = (int(CARD_HEIGHT*1.5), CARD_HEIGHT)
+SCREEN_OFFSET = (20, SCREEN_HEIGHT // 2 + 80)
+ZONE_SIZE = (CARD_WIDTH, CARD_HEIGHT)
 
 FONT_SIZE = 24
 
 
 def render_playzone(s: pygame.Surface):
-    img = img_fetch().get('playzone')
+    img = img_fetch().get('empty-space')
     img = pygame.transform.smoothscale(img, ZONE_SIZE)
     s.blit(img, SCREEN_OFFSET)
 

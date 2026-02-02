@@ -24,6 +24,14 @@ CARD_TYPE_BOX_SIZE = (100, 15)
 IMAGE_VERT_OFFSET = 30
 IMAGE_SIZE = (CARD_WIDTH-BORDER_WIDTH*2, 60)
 
+RARITY_COLOR_MAP = {
+    'built-in': '',
+    'simple': '',
+    'intermediate': '#ABFAFF',
+    'elite': '#FFFB14',
+    'special': '#ABABAB'
+}
+
 
 def generate(card: Card):
     s = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
@@ -55,15 +63,14 @@ def generate(card: Card):
 
     # Draw description
     font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', DESC_FONT_SIZE)
-    if isinstance(card.description, list):
-        for ndx, line in enumerate(card.description):
-            text = font.render(line, True, TERMINAL_GREEN)
-            text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET + ndx*DESC_LINE_OFFSET))
-            s.blit(text, text_rect)
-    else:
-        text = font.render(card.description, True, TERMINAL_GREEN)
-        text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET))
+    for ndx, line in enumerate(card.get_description()):
+        text = font.render(line, True, TERMINAL_GREEN)
+        text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET + ndx*DESC_LINE_OFFSET))
         s.blit(text, text_rect)
+    # else:
+    #     text = font.render(card.description, True, TERMINAL_GREEN)
+    #     text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET))
+    #     s.blit(text, text_rect)
 
     # Draw energy
     pygame.draw.circle(s, ENERGY_COLOR, ENERGY_CENTER, ENERGY_CIRCLE_RADIUS)

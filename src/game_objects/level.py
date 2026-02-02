@@ -1,5 +1,6 @@
 from game_objects.graph import Node, Edge
 from game_objects.script import Script
+from game_objects.tag import TagManager
 
 
 class Level:
@@ -12,12 +13,15 @@ class Level:
         self.network_height = definition['network_height']
         self.portrait = definition['portrait']
         self.health = definition['health']
-        self.tags = []
+        self.tags = TagManager()
 
         self.nodes = {node['id']: Node(**node) for node in definition['nodes']}
 
         for e in definition['edges']:
-            edge = Edge(self.nodes[e['left_id']], self.nodes[e['right_id']], e.get('difficulty', self.edge_difficulty), e.get('owner', 'NEUTRAL'))
+            owner = 'NEUTRAL'
+            if self.nodes[e['left_id']].owner == self.nodes[e['right_id']].owner:
+                owner = self.nodes[e['left_id']].owner
+            edge = Edge(self.nodes[e['left_id']], self.nodes[e['right_id']], e.get('difficulty', self.edge_difficulty), owner)
             self.nodes[e['left_id']].right.append(edge)
             self.nodes[e['right_id']].left.append(edge)
 

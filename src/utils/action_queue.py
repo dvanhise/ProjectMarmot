@@ -5,12 +5,16 @@ class ActionQueue:
     ACTIONS = {
         'add_card': 2,  # name, hand/draw/discard
         'draw_cards': 1,   # count
+        'delete_cards': 2,  # LEFT/RIGHT, count
         'change_player_health': 1,  # +/-HP change
         'change_enemy_health': 1,  # +/-HP change
         'execute_script': 0,
         'change_energy': 1,  # +/- energy change
         'add_player_tag': 2,  # tag class, count   TODO: Could be tags with more arguments
         'add_enemy_tag': 2,  # tag class, count
+        'card_updates_ward': 1,  # Change amount
+        'card_updates_power': 1,  # Change amount
+        'add_script_slot': 1,  # card type
     }
 
     def __init__(self):
