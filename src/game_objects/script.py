@@ -1,4 +1,3 @@
-import copy
 import logging
 from game_objects.card import Card
 from game_objects.card_type import CardType

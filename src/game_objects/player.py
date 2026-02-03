@@ -33,10 +33,12 @@ class Player:
 
     def start_turn(self):
         self.draw(self.draw_count)
-        self.energy = self.max_energy
+        self.energy += self.max_energy
 
     def init_round(self):
         self.all_cards_temp = copy.deepcopy(self.all_cards)
+        for card in self.all_cards_temp:
+            self.tags.on_temp_card_creation(card, self.get_player_info_dict())
 
     def change_health(self, change):
         self.health = min(self.max_health, max(0, self.health + change))
@@ -49,6 +51,7 @@ class Player:
 
     def end_turn(self):
         self.discard_hand()
+        self.energy = 0
 
     def get_dragged_card(self):
         return self.all_cards_temp[self.dragged]

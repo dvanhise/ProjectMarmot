@@ -10,7 +10,8 @@ class BattleAxe(Card):
     rarity = 'intermediate'
     image_id = 'payload',
     cost = 1
-    description = ['1 power per card', 'in hand when executed']
+    description = ['1 Power per card', 'in hand when executed']
+    tooltips = []
 
     def on_script_activation(self, script: Script, player_info):
         script.power += player_info['cards_in_hand']

@@ -1,9 +1,10 @@
 from render.card import CARD_WIDTH, CARD_HEIGHT
+from render.network import NETWORK_HEIGHT
 from constants import *
 from utils.image_loader import img_fetch
 
 
-SCREEN_OFFSET = (20, SCREEN_HEIGHT // 2 + 80)
+SCREEN_OFFSET = (20, NETWORK_HEIGHT + 10)
 ZONE_SIZE = (CARD_WIDTH, CARD_HEIGHT)
 
 FONT_SIZE = 24

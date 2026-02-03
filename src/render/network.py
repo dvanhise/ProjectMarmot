@@ -4,6 +4,7 @@ from game_objects.level import Level
 from game_objects.route import Route
 from game_objects.script import Script
 from render.vector import render_vector, VECTOR_WIDTH
+from render.tag import gen_tag, TAG_ICON_SIZE
 from utils.image_loader import img_fetch
 from utils.mouse_check import Tooltip
 from utils.text_helper import draw_text_with_outline
@@ -11,7 +12,7 @@ from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 NETWORK_WIDTH = SCREEN_WIDTH
-NETWORK_HEIGHT = SCREEN_HEIGHT // 2 + 40
+NETWORK_HEIGHT = SCREEN_HEIGHT // 2 + 20
 
 ICON_SIZE = (70, 70)
 ICON_HITBOX_SIZE = (60, 60)
@@ -72,7 +73,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
     y_cells = level.network_height
 
     cell_width = NETWORK_WIDTH // x_cells
-    cell_height = NETWORK_HEIGHT // y_cells
+    cell_height = (NETWORK_HEIGHT-20) // y_cells  # 20 to give space at the bottom to render things
 
     node_img = img_fetch().get('server-icon')
     node_img = pygame.transform.smoothscale(node_img, ICON_SIZE)
@@ -91,6 +92,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                 next_node_x_center = edge.right.position[0]*cell_width + cell_width//2
                 next_node_y_center = edge.right.position[1]*cell_height + cell_height//2
 
+                # Draw edges
                 # I don't know why the alpha gets messed up here and nowhere else
                 c = color_map[edge.owner]
                 c.a = 255
@@ -124,7 +126,20 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                 if edge in edge_choices:
                     draw_dashed_line(s, c, LINE_WIDTH+2, (x_center, y_center),(next_node_x_center, next_node_y_center))
 
+        # Draw node image
         s.blit(recolor(node_img, color_map[node.owner]), (x_center-ICON_SIZE[0]//2, y_center-ICON_SIZE[1]//2))
+
+        # Draw node tags
+        width = len(node.tags)*TAG_ICON_SIZE[0]
+        tag_left_offset = x_center - width//2
+        tag_top_offset = y_center + ICON_SIZE[1]//2
+        for ndx, tag in enumerate(node.tags):
+            s.blit(gen_tag(tag), tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset)
+
+            mouseovers.append(Tooltip(
+                pygame.Rect((tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset), TAG_ICON_SIZE),
+                tag.get_tooltip()
+            ))
 
         # Draw selectable node identification circles
         if node in node_choices:

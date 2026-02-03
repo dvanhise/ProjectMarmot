@@ -10,7 +10,7 @@ class Spike(Card):
     rarity = 'built-in'
     image_id = 'payload',
     cost = 1
-    power = 2
+    power = 50  # fixme
     description = ['{power} power']
 
     def on_script_activation(self, script: Script, player_info):

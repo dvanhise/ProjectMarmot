@@ -2,13 +2,14 @@ import pygame
 from game_objects.script import ScriptBuilder
 from game_objects.card_type import CardType
 from render.card import CARD_HEIGHT, CARD_WIDTH, generate as gen_card
+from render.network import NETWORK_HEIGHT
 from utils.image_loader import img_fetch
 from utils.text_helper import draw_text_with_outline
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ENERGY_COLOR
 
 
-SCREEN_X_OFFSET = SCREEN_WIDTH // 2 - 70
-SCREEN_Y_OFFSET = SCREEN_HEIGHT // 2 + 80
+SCREEN_Y_OFFSET = NETWORK_HEIGHT + 10
+RIGHT_OFFSET = 180
 
 SPACING = 2
 ARROW_WIDTH = 25
@@ -28,7 +29,8 @@ LABEL_MAP = {
 
 def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
     interactables = {}
-    current_x_offset = SCREEN_X_OFFSET
+    slots = len(builder.slots)
+    current_x_offset = SCREEN_WIDTH - RIGHT_OFFSET - slots*(CARD_WIDTH+ARROW_WIDTH)
 
     empty_img = img_fetch().get('empty-space')
     empty_img = pygame.transform.smoothscale(empty_img, (CARD_WIDTH, CARD_HEIGHT))
@@ -52,7 +54,7 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
 
         current_x_offset += CARD_WIDTH + SPACING
 
-        s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2))
+        s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2 - 3))
         current_x_offset += ARROW_WIDTH + SPACING
 
     current_x_offset += CARD_WIDTH + 40

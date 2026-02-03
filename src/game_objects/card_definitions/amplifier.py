@@ -11,4 +11,5 @@ class Amplifier(Card):
     rarity = 'built-in'
     cost = 1
     description = ['Install Vector:', '  Boost 2']
+    tooltips = [Boost]
     vector = Vector(name='Amp', default_ward=0, tags=[Boost(2)])

@@ -39,7 +39,6 @@ class Tag:
         pass
 
     def on_vector_install(self, node, vector, player_info):
-        # TODO: not implemented
         pass
 
     def on_turn_end_node(self, node):
@@ -57,16 +56,11 @@ class Tag:
     def on_turn_start_player(self, player):
         pass
 
-    def on_vector_install(self):
-        # TODO: Has not been set up
-        pass
-
     def on_script_execution(self, script):
         pass
 
-    def on_temp_card_creation(self, card):
-        # TODO: Not yet implemented
-        # When temp cards are created before a level starts
+    def on_temp_card_creation(self, card, player_info):
+        # When temp cards are created before a level starts and during play
         pass
 
 
@@ -143,11 +137,22 @@ class TagManager(list):
             tag.on_turn_end_vector(vector, node)
         self.remove_depleted_tags()
 
-    def on_vector_install(self):
-        # TODO: Has not been set up
-        pass
+    def on_turn_start_player(self, player):
+        for tag in self:
+            tag.on_turn_start_player(player)
+        self.remove_depleted_tags()
+
+    def on_vector_install(self, node, vector, player_info):
+        for tag in self:
+            tag.on_vector_install(node, vector, player_info)
+        self.remove_depleted_tags()
 
     def on_script_execution(self, script):
         for tag in self:
             tag.on_script_execution(script)
+        self.remove_depleted_tags()
+
+    def on_temp_card_creation(self, card, player_info):
+        for tag in self:
+            tag.on_temp_card_creation(card, player_info)
         self.remove_depleted_tags()

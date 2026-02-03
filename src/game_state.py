@@ -4,6 +4,7 @@ from statemachine import StateMachine, State
 
 class GameState(StateMachine):
     loading = State(initial=True)  # Init player, init game objects, load everything
+    intro_screen = State()
     setup_level = State()  # Load the level and draw up for player's hand
     pre_turn_prep = State()
     wait_for_player = State()
@@ -18,7 +19,8 @@ class GameState(StateMachine):
     exit_game = State(final=True)
 
 
-    loading_complete = loading.to(setup_level)
+    loading_complete = loading.to(intro_screen)
+    start_selected = intro_screen.to(setup_level)
     setup_level_complete = setup_level.to(pre_turn_prep)
     pre_turn_prep_complete = pre_turn_prep.to(wait_for_player)
 

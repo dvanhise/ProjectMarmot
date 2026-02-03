@@ -22,6 +22,7 @@ from render.info_section import render_info
 from render.terminal import render_terminal
 from render.card_pick import render_card_pick
 from render.help_text import render_help_text
+from render.intro_screen import render_intro_screen
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
 
 from utils.image_loader import img_fetch
@@ -38,7 +39,6 @@ class Game:
     def __init__(self, screen: pygame.Surface, clock: pygame.time.Clock):
         self.screen = screen
         self.clock = clock
-        self.level = None
         self.mouse_check = MouseCheck()
         self.mouseover_text = None
         self.click_down = None
@@ -54,15 +54,22 @@ class Game:
         self.level_ndx = 0
         self.level_order = [level1_def, level2_def]
 
+        # Initialize level here to ensure rendering doesn't break
+        self.level = Level(self.level_order[self.level_ndx])
+        self.enemy = Enemy(self.level_order[self.level_ndx])
+
     def on_enter_state(self, event, state):
         logging.info(f"Entering '{state.id}' state from '{event}' event.")
 
     def after_setup_level_complete(self):
         self.player.init_round()
         self.script_builder.init_round()
+        self.run_action_queue()
 
     def after_pre_turn_prep_complete(self):
         self.player.start_turn()
+        self.player.tags.on_turn_start_player(self.player)
+        self.run_action_queue()
 
     def after_end_turn(self):
         self.player.end_turn()
@@ -176,6 +183,9 @@ class Game:
                 elif get_state() == GameState.game_end_win:
                     # quit game
                     pass
+                elif get_state() == GameState.intro_screen:
+                    if mouse_on == 'START_BUTTON':
+                        change_state('start_selected')
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if get_state() == GameState.wait_for_player:
@@ -207,12 +217,15 @@ class Game:
                         self.node_selected(mouse_on)
                     if mouse_on.startswith('INSTALL_VECTOR') and self.click_down == mouse_on:
                         vector_ndx = int(mouse_on.replace('INSTALL_VECTOR', ''))
-                        self.player_route.node_path[-1].install_vector(self.player.script.vector.pop(vector_ndx))
+                        installed_vector = self.player.script.vector.pop(vector_ndx)
+                        self.player_route.node_path[-1].install_vector(installed_vector)
+                        self.player.script.tags.on_vector_install(self.player_route.node_path[-1], installed_vector, self.player.get_player_info_dict())
 
                 elif get_state() == GameState.card_pick:
                     if mouse_on.startswith('PICK_CARD') and self.click_down == mouse_on:
                         pick_card_ndx = int(mouse_on.replace('PICK_CARD', ''))
                         self.player.add_card(self.card_choices.pop(pick_card_ndx))
+                        change_state('end_of_level_progress')
                     elif mouse_on == 'NEXT_BUTTON' and self.click_down == mouse_on:
                         change_state('end_of_level_progress')
                 elif get_state() == GameState.game_end_loss:
@@ -274,6 +287,10 @@ class Game:
         # Render card pick screen
         if get_state() == GameState.card_pick:
             interactables = render_card_pick(self.screen, self.card_choices)
+            self.mouse_check.register_rect(interactables)
+
+        if get_state() == GameState.intro_screen:
+            interactables = render_intro_screen(self.screen)
             self.mouse_check.register_rect(interactables)
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -389,7 +406,9 @@ class Game:
         action = queue.get_action()
         while action:
             if action[0] == 'add_card':
-                self.player.add_temp_card(get_new_card(action[1]), to=action[2])
+                new_card = get_new_card(action[1])
+                self.player.tags.on_temp_card_creation(new_card, self.player.get_player_info_dict())
+                self.player.add_temp_card(new_card, to=action[2])
             elif action[0] == 'draw_cards':
                 self.player.draw(action[1])
             elif action[0] == 'delete_cards':

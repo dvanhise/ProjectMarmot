@@ -98,6 +98,13 @@ def get_card_stats():
 
 
 def random_card_choices(count):
-    available_cards = [c for c in list(card_registry.values()) if c.rarity in ['simple', 'intermediate', 'elite']]
-    card_sample = random.sample(available_cards, count)
-    return [c() for c in card_sample]
+    distribution = ['simple'*4, 'intermediate'*2, 'elite'*1]
+    counts = Counter()
+    for _ in count:
+        counts[random.choice(distribution)] += 1
+
+    card_options = []
+    for rarity, num in counts.items():
+        card_options += [c for c in list(card_registry.values()) if c.rarity == rarity]
+
+    return [c() for c in card_options]

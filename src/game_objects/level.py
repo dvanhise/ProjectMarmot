@@ -33,7 +33,7 @@ class Level:
         return None
 
     def remove_depleted_vectors(self):
-        for node in self.nodes:
+        for node in self.nodes.values():
             if node.vector and len(node.vector.tags) == 0:
                 node.vector = None
 
