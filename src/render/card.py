@@ -22,14 +22,15 @@ DESC_LEFT_OFFSET = 12
 DESC_FONT_SIZE = 9
 CARD_TYPE_BOX_SIZE = (100, 15)
 IMAGE_VERT_OFFSET = 30
-IMAGE_SIZE = (CARD_WIDTH-BORDER_WIDTH*2, 60)
+IMAGE_BORDER_OVERLAP = 3
+IMAGE_SIZE = (CARD_WIDTH-BORDER_WIDTH*2+IMAGE_BORDER_OVERLAP*2, 60)
 
 RARITY_COLOR_MAP = {
-    'built-in': '',
-    'simple': '',
+    'built-in': '#666666',
+    'simple': '#ACF55F',
     'intermediate': '#ABFAFF',
     'elite': '#FFFB14',
-    'special': '#ABABAB'
+    'special': '#DDDDDD'
 }
 
 
@@ -43,7 +44,10 @@ def generate(card: Card):
     # Draw image
     image = img_fetch().get(card.image_id) or img_fetch().get('default')
     image = pygame.transform.smoothscale(image, IMAGE_SIZE)
-    s.blit(image, (BORDER_WIDTH, IMAGE_VERT_OFFSET))
+    s.blit(image, (BORDER_WIDTH-IMAGE_BORDER_OVERLAP, IMAGE_VERT_OFFSET))
+
+    # Draw rarity color on border
+    pygame.draw.rect(s, RARITY_COLOR_MAP[card.rarity], pygame.Rect((BORDER_WIDTH-IMAGE_BORDER_OVERLAP, IMAGE_VERT_OFFSET), IMAGE_SIZE), width=4)
 
     # Draw title
     if len(card.name) <= 12:
@@ -67,10 +71,6 @@ def generate(card: Card):
         text = font.render(line, True, TERMINAL_GREEN)
         text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET + ndx*DESC_LINE_OFFSET))
         s.blit(text, text_rect)
-    # else:
-    #     text = font.render(card.description, True, TERMINAL_GREEN)
-    #     text_rect = text.get_rect(topleft=(DESC_LEFT_OFFSET, DESC_VERT_OFFSET))
-    #     s.blit(text, text_rect)
 
     # Draw energy
     pygame.draw.circle(s, ENERGY_COLOR, ENERGY_CENTER, ENERGY_CIRCLE_RADIUS)

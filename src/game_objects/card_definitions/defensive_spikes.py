@@ -11,4 +11,4 @@ class DefensiveSpikes(Card):
     rarity = 'intermediate'
     cost = 1
     description = ['Install Vector:', '  Has Ablative Spikes']
-    vector = Vector(name='Amp', default_ward=1, tags=[Fortify(1)])
+    vector = Vector(name='Spike', default_ward=1, tags=[Fortify(1)])

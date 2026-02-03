@@ -71,6 +71,7 @@ class Game:
         self.enemy.script = None
         self.enemy_temp_route = None
         self.enemy_route = None
+        self.level.remove_depleted_vectors()
 
     def after_player_script_complete(self):
         self.player.script = None
@@ -80,6 +81,7 @@ class Game:
                 self.player.deleted_pile.append(card_id)
             else:
                 self.player.discard_pile.append(card_id)
+        self.level.remove_depleted_vectors()
 
     def on_exit_end_of_level(self):
         self.level_ndx += 1
@@ -125,11 +127,6 @@ class Game:
             self.enemy.next_script()
             self.enemy_temp_route = generate_route(self.level.get_source('ENEMY'), self.enemy.script)
             change_state('pre_turn_prep_complete')
-
-            # Card status right before player turn
-            # logging.info(self.player.current_hand)
-            # logging.info(self.player.draw_pile)
-            # logging.info(self.player.discard_pile)
 
         elif get_state() == GameState.run_enemy_script:
             if not self.enemy_route:
@@ -179,7 +176,6 @@ class Game:
                 elif get_state() == GameState.game_end_win:
                     # quit game
                     pass
-
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if get_state() == GameState.wait_for_player:
@@ -300,9 +296,7 @@ class Game:
         self.screen.blit(text, (2, 2))
 
         pygame.display.flip()  # Displays changed on screen
-
         self.clock.tick(30)  # limits FPS to 30
-
         return True
 
     def node_selected(self, selection_id):
@@ -389,7 +383,6 @@ class Game:
         self.run_action_queue()
 
         change_state('end_turn')
-
 
     def run_action_queue(self):
         queue = get_aq()

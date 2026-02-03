@@ -8,14 +8,20 @@ from game_objects.card_definitions.bulwark import Bulwark
 from game_objects.card_definitions.decoy_server import DecoyServer
 from game_objects.card_definitions.defensive_nanobots import DefensiveNanobots
 from game_objects.card_definitions.defensive_spikes import DefensiveSpikes
+from game_objects.card_definitions.desync import Desync
+from game_objects.card_definitions.encryption import Encryption
 from game_objects.card_definitions.fireball import Fireball
+from game_objects.card_definitions.hackjob import Hackjob
 from game_objects.card_definitions.halberd import Halberd
 from game_objects.card_definitions.lance import Lance
 from game_objects.card_definitions.mod_extender import ModExtender
 from game_objects.card_definitions.modular_polearm import ModularPolearm
+from game_objects.card_definitions.monitoring import Monitoring
 from game_objects.card_definitions.multitasking import Multitasking
 from game_objects.card_definitions.neural_interface import NeuralInterface
+from game_objects.card_definitions.overcharge import Overcharge
 from game_objects.card_definitions.overclock import Overclock
+from game_objects.card_definitions.override import Override
 from game_objects.card_definitions.patch import Patch
 from game_objects.card_definitions.payload_extender import PayloadExtender
 from game_objects.card_definitions.popup_ad import PopupAd
@@ -25,6 +31,7 @@ from game_objects.card_definitions.remote_miner import RemoteMiner
 from game_objects.card_definitions.sandbox import Sandbox
 from game_objects.card_definitions.security_group import SecurityGroup
 from game_objects.card_definitions.shiv import Shiv
+from game_objects.card_definitions.signal_enhancement import SignalEnhancement
 from game_objects.card_definitions.spike import Spike
 from game_objects.card_definitions.super_amplifier import SuperAmplifier
 from game_objects.card_definitions.vector_extender import VectorExtender
@@ -39,14 +46,20 @@ card_list = [
     DecoyServer,
     DefensiveSpikes,
     DefensiveNanobots,
+    Desync,
+    Encryption,
     Fireball,
+    Hackjob,
     Halberd,
     Lance,
     ModExtender,
     ModularPolearm,
+    Monitoring,
     Multitasking,
     NeuralInterface,
+    Overcharge,
     Overclock,
+    Override,
     Patch,
     PayloadExtender,
     PopupAd,
@@ -56,6 +69,7 @@ card_list = [
     Sandbox,
     SecurityGroup,
     Shiv,
+    SignalEnhancement,
     Spike,
     SuperAmplifier,
     VectorExtender,

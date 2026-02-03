@@ -7,8 +7,12 @@ class BoostLoss(Tag):
     icon = 'power'
     tooltip = 'On turn end, reduce boost by {count}.'
     count = 0
+    positive = False
 
     def on_turn_end_vector(self, vector, node):
         boost_tag = vector.tags.find_tag(Boost)
         if boost_tag:
             boost_tag.count -= 1
+
+        if boost_tag.count <= 0:
+            self.count = 0

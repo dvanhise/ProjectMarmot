@@ -13,13 +13,17 @@ class Script:
         self.vector = []
         self.tags = []
 
+        # Properties that should be tags, but it's easier to put them here
+        self.destroy_vector_on_capture = True
+        self.edge_difficulty_reduction = 0
+
     def on_node_advance(self, edge: Edge, node: Node, opponent, autoplay_vector = False):
         # 'edge' can be None if approaching the source node
         # Return True if script is still running, return False if it was defeated
 
         # Interact with edge
         if edge and self.owner != edge.owner:
-            self.power -= edge.difficulty
+            self.power -= max(0, edge.difficulty - self.edge_difficulty_reduction)
 
         if self.power < 0:
             return False
@@ -38,7 +42,8 @@ class Script:
                 node.tags.on_node_captured(node)
                 node.tags.after_successful_script_node_encounter(self, node)
 
-            node.vector = None
+            if self.destroy_vector_on_capture:
+                node.vector = None
             if node.source:
                 opponent.change_health(-self.power)
             else:

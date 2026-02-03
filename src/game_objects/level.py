@@ -30,8 +30,12 @@ class Level:
         for node in self.nodes.values():
             if node.owner == owner and node.source:
                 return node
-
         return None
+
+    def remove_depleted_vectors(self):
+        for node in self.nodes:
+            if node.vector and len(node.vector.tags) == 0:
+                node.vector = None
 
     def check_win(self):
         return self.health <= 0

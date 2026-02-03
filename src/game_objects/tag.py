@@ -4,6 +4,7 @@ class Tag:
     tooltip = ''
     count = 0
     card = ''
+    positive = True
 
     part_of_vector = False
     remove_on_vector_change = False
@@ -18,6 +19,7 @@ class Tag:
         return self.id
 
     def on_change(self, change):
+        # Any time a tag is modified
         pass
 
     def before_script_node_encounter(self, script, node):
@@ -34,6 +36,10 @@ class Tag:
 
     def on_node_captured(self, node):
         # When an opponent captures a node
+        pass
+
+    def on_vector_install(self, node, vector, player_info):
+        # TODO: not implemented
         pass
 
     def on_turn_end_node(self, node):

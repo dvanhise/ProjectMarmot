@@ -5,6 +5,7 @@ class NetBurn(Tag):
     id = 'net-burn'
     icon = 'burn'
     tooltip = 'Reduce ward by {count} at end of turn.'
+    positive = False
 
     def on_turn_end_node(self, node):
         node.ward = max(0, node.ward - self.count)

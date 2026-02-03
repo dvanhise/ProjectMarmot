@@ -12,4 +12,4 @@ class DecoyServer(Card):
     image_id = 'vector',
     cost = 1
     description = ['Install Vector:', '  On capture,', '  shuffle Lance', '  into draw pile']
-    vector = Vector(name='Amp', tags=[CardMine(count=1, card='lance')])
+    vector = Vector(name='Decoy', tags=[CardMine(count=1, card='lance')])

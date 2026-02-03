@@ -27,5 +27,8 @@ class Card:
     def on_ward_install(self, node):
         pass
 
+    def on_vector_install(self, node, vector, player_info):
+        pass
+
     def on_script_replacement(self):
         pass

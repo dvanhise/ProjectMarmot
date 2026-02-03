@@ -4,14 +4,15 @@ from utils.action_queue import get_aq
 from game_objects.card import Card
 
 
-class Multitasking(Card):
-    id = 'multitasking'
-    name = 'Multi-tasking'
+class Monitoring(Card):
+    id = 'monitoring'
+    name = 'Monitoring'
     type = CardType.UTILITY
-    rarity = 'simple'
+    rarity = 'intermediate'
     image_id = 'query',
     cost = 1
-    description = ['When executing a script,', 'draw 1 card']
+    description = ['When a friendly node', 'is captured,', 'gain 1 energy']
 
     def on_play(self):
+        # FIXME
         get_aq().queue_action('add_player_tag', MultitaskingTag, 1)
