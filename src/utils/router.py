@@ -109,9 +109,9 @@ def get_all_paths(source_node, owner):
     complete_routes = []
     while len(routes):
         for r in routes:
-            for ndx in range(len(r.get_next_node_options())):
-                new_route = copy.deepcopy(r)
-                new_route.choose_next_node(new_route.get_next_node_options()[ndx])
+            for node in r.get_next_node_options():
+                new_route = r.create_copy()
+                new_route.choose_next_node(node)
 
                 if new_route.is_path_complete():
                     complete_routes.append(new_route)

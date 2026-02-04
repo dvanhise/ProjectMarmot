@@ -138,10 +138,14 @@ class Player:
         self.dragged = None
         card = self.all_cards_temp[card_id]
         card.on_play()
+        self.post_card_played(card_id)
+
+    def post_card_played(self, card_id):
+        card = self.all_cards_temp[card_id]
         if card.delete_on_play:
             self.deleted_pile.append(card_id)
         else:
-            self.discard_pile.append(card_id)
+            self.add_card_to_discard(card_id)
 
     def check_defeat(self):
         return self.health <= 0

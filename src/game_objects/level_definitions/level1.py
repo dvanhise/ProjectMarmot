@@ -17,7 +17,7 @@ definition = {
     'network_width': 5,
     'network_height': 5,
     'portrait': 'avatar2',
-    'health': 5,
+    'health': 4,
     'nodes': [
         {
             'id': 1,
@@ -54,8 +54,8 @@ definition = {
             'name': 'Database',
             'position': (3, 3),
             'owner': 'ENEMY',
-            'ward': 4,
-            'vector': Vector(name='Amp', tags=[Boost(2)])
+            'ward': 2,
+            'vector': Vector(name='Amp', tags=[Boost(1)])
         },
         {
             'id': 9,
@@ -125,7 +125,7 @@ definition = {
         },
         {
             'pattern_id': 2,
-            'power': 5,
+            'power': 4,
             'pathing': PathType.TAKE_OPPONENT_NODES,
             'next': 1
         }

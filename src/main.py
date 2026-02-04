@@ -89,7 +89,7 @@ class Game:
             if self.player.all_cards[card_id].delete_on_execution:
                 self.player.deleted_pile.append(card_id)
             else:
-                self.player.discard_pile.append(card_id)
+                self.player.add_card_to_discard(card_id)
         self.level.remove_depleted_vectors()
 
     def on_exit_end_of_level(self):
@@ -135,7 +135,6 @@ class Game:
         elif get_state() == GameState.pre_turn_prep:
             self.enemy.next_script()
             self.enemy_temp_route = generate_route(self.level.get_source('ENEMY'), self.enemy.script)
-            logging.info([node for node in self.enemy_temp_route.node_path])
             change_state('pre_turn_prep_complete')
 
         elif get_state() == GameState.run_enemy_script:
@@ -367,6 +366,7 @@ class Game:
             self.player.pay_energy(card.cost)
             node.apply_ward_from_card(card)
             self.run_action_queue()
+            self.player.post_card_played(self.player.dragged)
 
     def play_card_on_script_builder(self, script_ndx, card):
         if not self.script_builder.is_valid_play(card, script_ndx):

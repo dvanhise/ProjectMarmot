@@ -12,7 +12,7 @@ class Spike(Card):
     tooltips = [Power]
     image_id = 'payload',
     cost = 1
-    power = 3
+    power = 30  # fixme
     description = ['{power} power']
 
     def on_script_activation(self, script: Script, player_info):

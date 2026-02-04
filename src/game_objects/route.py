@@ -1,4 +1,5 @@
 import logging
+import copy
 from game_objects.graph import Node, Edge
 
 
@@ -9,10 +10,6 @@ class Route:
         self.edge_path = []
 
         self.node_path.append(source_node)
-
-        if not len(self.node_path):
-            logging.critical(f'Failed to found source node with owner "{self.owner}"')
-            raise ValueError('No source node found.')
 
     def get_next_node_options(self) -> list[Node]:
         if self.owner == 'PLAYER':
@@ -52,6 +49,13 @@ class Route:
 
     def is_path_complete(self):
         return len(self.node_path) > 1 and self.node_path[0].source and self.node_path[-1].source
+
+    def create_copy(self):
+        # copy.copy() and copy.deepcopy() over the whole object had unintended side effects
+        route_copy = Route(None, self.owner)
+        route_copy.node_path = copy.copy(self.node_path)
+        route_copy.edge_path = copy.copy(self.edge_path)
+        return route_copy
 
 
 # Given two nodes, find the edge that connects them

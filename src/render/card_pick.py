@@ -30,7 +30,7 @@ def render_card_pick(s: pygame.Surface, card_choices):
 
     # Instruction text
     font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', TEXT_FONT_SIZE)
-    text = font.render('Hack successful, new tools found', True, 'white')
+    text = font.render('Infiltration successful, found new tools:', True, 'white')
     text_rect = text.get_rect(center=(WINDOW_LEFT+WINDOW_WIDTH//2, WINDOW_TOP+TEXT_VERT_OFFSET))
     s.blit(text, text_rect)
 
@@ -38,17 +38,17 @@ def render_card_pick(s: pygame.Surface, card_choices):
     card_x_offset = WINDOW_LEFT + WINDOW_WIDTH//2 - card_pick_width//2
 
     # Draw pickable cards
-    for n, card_render in enumerate([gen_card(c) for c in card_choices]):
-        horizontal_offset = card_x_offset + n*CARD_WIDTH + n*CARD_GAP
+    for ndx, card_render in enumerate([gen_card(c) for c in card_choices]):
+        horizontal_offset = card_x_offset + ndx*CARD_WIDTH + ndx*CARD_GAP
         s.blit(card_render, (horizontal_offset, WINDOW_TOP+CARD_VERT_OFFSET))
-        interactables[f'PICK_CARD{n}'] = pygame.Rect(horizontal_offset, WINDOW_TOP+CARD_VERT_OFFSET, CARD_WIDTH, CARD_HEIGHT)
+        interactables[f'PICK_CARD{ndx}'] = pygame.Rect(horizontal_offset, WINDOW_TOP+CARD_VERT_OFFSET, CARD_WIDTH, CARD_HEIGHT)
 
     # Next button
     button_rect = pygame.Rect((WINDOW_LEFT+WINDOW_WIDTH//2-BUTTON_SIZE[0]//2, WINDOW_TOP+BUTTON_VERT_OFFSET), BUTTON_SIZE)
     pygame.draw.rect(s, '#5CC9D4', button_rect)
     pygame.draw.rect(s, '#444444', button_rect, width=2)
     font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 20)
-    outline_text = draw_text_with_outline('Skip Cards', font, 'white', 2, 'black')
+    outline_text = draw_text_with_outline('Skip Cards' if len(card_choices) else 'Continue', font, 'white', 2, 'black')
     text_rect = outline_text.get_rect(center=(WINDOW_LEFT+WINDOW_WIDTH//2, WINDOW_TOP+BUTTON_VERT_OFFSET+BUTTON_SIZE[1]//2))
     s.blit(outline_text, text_rect)
     interactables['NEXT_BUTTON'] = button_rect

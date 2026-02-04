@@ -72,7 +72,7 @@ card_list = [
     SignalEnhancement,
     Spike,
     SuperAmplifier,
-    VectorExtender,
+    VectorExtender
 ]
 
 card_registry = {}
@@ -98,13 +98,17 @@ def get_card_stats():
 
 
 def random_card_choices(count):
-    distribution = ['simple'*4, 'intermediate'*2, 'elite'*1]
-    counts = Counter()
-    for _ in count:
-        counts[random.choice(distribution)] += 1
+    weight_map = {
+        'simple': 4,
+        'intermediate': 2,
+        'elite': 1,
+        'built-in': 0,
+        'special': 0
+    }
 
-    card_options = []
-    for rarity, num in counts.items():
-        card_options += [c for c in list(card_registry.values()) if c.rarity == rarity]
+    card_options = random.choices(
+        list(card_registry.values()),
+        weights=[weight_map[c.rarity] for c in card_registry.values()],
+        k=count)
 
     return [c() for c in card_options]

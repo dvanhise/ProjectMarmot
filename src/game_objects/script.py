@@ -1,4 +1,5 @@
 import logging
+import copy
 from game_objects.card import Card
 from game_objects.card_type import CardType
 from game_objects.graph import Edge, Node
@@ -25,14 +26,14 @@ class Script:
         if edge and self.owner != edge.owner:
             self.power -= max(0, edge.difficulty - self.edge_difficulty_reduction)
 
-        if self.power < 0:
+        if self.power <= 0:
             return False
 
         node.tags.before_script_node_encounter(self, node)
 
         # Interact with non-friendly node
         if self.owner != node.owner:
-            if node.ward > self.power:
+            if node.ward >= self.power:
                 node.ward -= self.power
                 node.tags.after_failed_script_node_encounter(self, node)
                 return False
@@ -103,7 +104,7 @@ class ScriptBuilder:
         self.slots = self.slots[0:loc+1] + [new_slot] + self.slots[loc+1:]
 
     def clear(self):
-        return [slot.reset() for slot in self.slots if slot.card_id]
+        return [slot.reset() for slot in self.slots if slot.card_id is not None]
 
     def is_valid_play(self, card: Card, slot_ndx):
         return self.slots[slot_ndx].type == card.type
@@ -118,7 +119,7 @@ class ScriptBuilder:
             if not slot.card:
                 continue
             if slot.card.vector:
-                script.vector.append(slot.card.vector)
+                script.vector.append(copy.deepcopy(slot.card.vector))
             if slot.card.on_script_activation:
                 slot.card.on_script_activation(script, player_info)
 

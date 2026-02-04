@@ -1,3 +1,4 @@
+import copy
 from game_objects.script import Script
 from game_objects.tag import TagManager
 
@@ -35,7 +36,7 @@ class Enemy:
 
         vectors = p.get('vectors', [])
         for vector in vectors:
-            self.script.vector.append(vector)
+            self.script.vector.append(copy.deepcopy(vector))
 
         return self.script
 
