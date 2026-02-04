@@ -1,5 +1,6 @@
 import random
 import copy
+import logging
 from enum import StrEnum, auto
 from game_objects.graph import Node
 from game_objects.route import Route
@@ -18,6 +19,8 @@ class PathType(StrEnum):
 def generate_route(source_node: Node, script: Script):
     all_paths = get_all_paths(source_node, script.owner)
     stats = [get_expected_stats(route, script) for route in all_paths]
+
+    logging.info(f'{len(all_paths)} potential paths generated.')
 
     if script.pathing == PathType.RANDOM:
         route = Route(source_node, script.owner)
@@ -69,9 +72,10 @@ def get_expected_stats(route, script):
             if node.owner == route.owner:
                 stats['nodes_touched'] += 1
                 if node.vector:
-                    for tag in [t for t in node.vector.tags if type(t) is Boost]:
-                        stats['boost_gained'] += tag.count
-                        power += tag.count
+                    boost_tag = node.vector.tags.find_tag(Boost)
+                    if boost_tag:
+                        stats['boost_gained'] += boost_tag.count
+                        power += boost_tag.count
             else:
                 if node.owner not in ['NEUTRAL', route.owner] and stats['distance_at_first_enemy_node'] == 0:
                     stats['distance_at_first_enemy_node'] = ndx
@@ -88,9 +92,10 @@ def get_expected_stats(route, script):
                         stats['power_at_enemy_source'] = power
 
         if not node_check:
-            edge = route.edge_path[ndx]
-            if edge.owner != route.owner:
-                power -= edge.difficulty
+            if ndx < len(route.edge_path):
+                edge = route.edge_path[ndx]
+                if edge.owner != route.owner:
+                    power -= edge.difficulty
             ndx += 1
 
         node_check = not node_check

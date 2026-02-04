@@ -4,6 +4,7 @@ from utils.action_queue import get_aq
 
 class DelayedEnergy(Tag):
     id = 'delayed-energy'
+    name = 'Delayed Energy'
     icon = 'power'
     tooltip = 'At the start of next turn, gain {count} energy.'
 

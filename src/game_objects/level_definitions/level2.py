@@ -1,4 +1,6 @@
+from game_objects.tags.boost import Boost
 from game_objects.vector import Vector
+from utils.router import PathType
 
 """
      0      1       2       3       4       5
@@ -119,16 +121,15 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 4,
-            'vector': Vector(name='TODO', default_ward=4),
-            'pathing': 'RANDOM',
+            'power': 2,
+            'vectors': [Vector(name='Shield', default_ward=4, tags=[Boost(1)]), Vector(name='Spear', tags=[Boost(2)])],
+            'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 6,
-            'self_tag': [],
-            'pathing': 'RANDOM',
+            'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': 1
         }
     ]

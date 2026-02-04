@@ -14,4 +14,4 @@ class RemoteMiner(Card):
     description = ['Gain 1 energy for', 'each node captured']
 
     def on_script_activation(self, script: Script, player_info):
-        script.tags.append(EnergyDrain(1))
+        script.tags.add_tag(EnergyDrain(1))

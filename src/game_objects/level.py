@@ -1,13 +1,10 @@
+import logging
 from game_objects.graph import Node, Edge
-from game_objects.script import Script
 from game_objects.tag import TagManager
 
 
 class Level:
     def __init__(self, definition):
-        self.pattern = {action['pattern_id']: action for action in definition['pattern']}
-        self.current_pattern_id = None
-        self.planned_script = None
         self.edge_difficulty = definition.get('edge_difficulty', 1)
         self.network_width = definition['network_width']
         self.network_height = definition['network_height']
@@ -30,7 +27,7 @@ class Level:
         for node in self.nodes.values():
             if node.owner == owner and node.source:
                 return node
-        return None
+        raise ValueError(f'Source node for "{owner}" could not be found.')
 
     def remove_depleted_vectors(self):
         for node in self.nodes.values():

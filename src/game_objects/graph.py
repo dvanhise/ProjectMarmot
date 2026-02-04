@@ -16,6 +16,8 @@ class Node:
         self.left = []
         self.right = []
         self.tags = TagManager()
+        for tag in kwargs.get('tags', []):
+            self.tags.add_tag(tag)
 
     def apply_ward_from_card(self, card: Card):
         if card.ward:

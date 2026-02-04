@@ -5,6 +5,7 @@ from utils.action_queue import get_aq
 
 class ChargeUp(Tag):
     id = 'charge-up'
+    name = 'Charge Up'
     icon = 'power'
     tooltip = 'On vector install, use all energy(X), gain {count+1}*X Boost.'
 

@@ -28,8 +28,13 @@ class Enemy:
         p = self.pattern[self.current_pattern_id]
         self.script.power = p.get('power', 0)
         self.script.pathing = p['pathing']
-        vector = p.get('vector')
-        if vector:
+
+        tags = p.get('tags', [])
+        for tag in tags:
+            self.script.tags.add_tag(tag)
+
+        vectors = p.get('vectors', [])
+        for vector in vectors:
             self.script.vector.append(vector)
 
         return self.script

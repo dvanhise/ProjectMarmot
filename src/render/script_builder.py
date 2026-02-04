@@ -54,7 +54,7 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
 
         current_x_offset += CARD_WIDTH + SPACING
 
-        s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2 - 3))
+        s.blit(arrow_img, (current_x_offset, SCREEN_Y_OFFSET + CARD_HEIGHT // 2 - 10))
         current_x_offset += ARROW_WIDTH + SPACING
 
     current_x_offset += CARD_WIDTH + 40

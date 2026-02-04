@@ -3,6 +3,7 @@ from game_objects.tag import Tag
 
 class WardBuilder(Tag):
     id = 'ward-builder'
+    name = 'Ward Builder'
     icon = 'power'
     tooltip = 'Applies {count} ward to each friendly node encountered.'
     count = 0

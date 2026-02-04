@@ -4,6 +4,7 @@ from utils.action_queue import get_aq
 
 class EnergyDrain(Tag):
     id = 'energy-drain'
+    name = 'Energy Drain'
     icon = 'power'
     tooltip = 'Gain {count} energy when capturing a node.'
 

@@ -2,6 +2,7 @@ from game_objects.card_type import CardType
 from game_objects.card import Card
 from game_objects.tags.delayed_energy import DelayedEnergy
 from utils.action_queue import get_aq
+from game_objects.tags.ward import Ward
 
 
 class Desync(Card):
@@ -10,6 +11,7 @@ class Desync(Card):
     type = CardType.WARD
     rarity = 'simple'
     image_id = 'ward',
+    tooltips = [Ward]
     cost = 1
     description = ['{ward} ward,', 'next turn', 'gain 1 energy']
     ward = 2

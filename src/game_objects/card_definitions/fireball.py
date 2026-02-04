@@ -9,9 +9,10 @@ class Fireball(Card):
     name = 'Fireball'
     type = CardType.SCRIPT_MOD
     rarity = 'simple'
-    image_id = 'mod',
+    tooltips = [NetBurn]
+    image_id = 'mod'
     cost = 0
     description = ['Add Netburn to script']
 
     def on_script_activation(self, script: Script, player_info):
-        script.tags.append(NetBurn(2))
+        script.tags.add_tag(NetBurn(2))

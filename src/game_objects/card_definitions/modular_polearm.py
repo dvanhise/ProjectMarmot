@@ -1,6 +1,7 @@
 from game_objects.script import Script
 from game_objects.card_type import CardType
 from game_objects.card import Card
+from game_objects.tags.power import Power
 
 
 class ModularPolearm(Card):
@@ -8,6 +9,7 @@ class ModularPolearm(Card):
     name = 'Modulear Polarm'
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'intermediate'
+    tooltips = [Power]
     image_id = 'payload',
     cost = 1
     power = 6

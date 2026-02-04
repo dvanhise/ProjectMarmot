@@ -5,6 +5,7 @@ from utils.action_queue import get_aq
 
 class Harden(Tag):
     id = 'harden'
+    name = 'Harden'
     icon = 'power'
     tooltip = 'Increases all card ward values by {count}.'
 

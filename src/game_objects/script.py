@@ -2,6 +2,7 @@ import logging
 from game_objects.card import Card
 from game_objects.card_type import CardType
 from game_objects.graph import Edge, Node
+from game_objects.tag import TagManager
 
 
 class Script:
@@ -10,7 +11,7 @@ class Script:
         self.power = 0
         self.pathing = None
         self.vector = []
-        self.tags = []
+        self.tags = TagManager()
 
         # Properties that should be tags, but it's easier to put them here
         self.destroy_vector_on_capture = True

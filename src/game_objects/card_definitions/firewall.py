@@ -1,6 +1,7 @@
 from game_objects.tags.netburn import NetBurn
 from game_objects.card_type import CardType
 from game_objects.card import Card
+from game_objects.tags.ward import Ward
 
 
 class Firewall(Card):
@@ -8,9 +9,10 @@ class Firewall(Card):
     name = 'Firewall'
     type = CardType.WARD
     rarity = 'simple'
+    tooltips = [Ward, NetBurn]
     image_id = 'ward',
     cost = 1
-    description = ['{ward} ward, netburn']
+    description = ['{ward} Ward, Netburn 1']
     ward = 6
 
     def on_ward_install(self, node):

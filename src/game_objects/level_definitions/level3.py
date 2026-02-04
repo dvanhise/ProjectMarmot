@@ -1,5 +1,8 @@
+from game_objects.tags.fortify import Fortify
+from game_objects.tags.surge import Surge
 from game_objects.vector import Vector
 from game_objects.tags.boost import Boost
+from game_objects.tags.netburn import NetBurn
 from utils.router import PathType
 
 """
@@ -35,40 +38,33 @@ definition = {
         },
         {
             'id': 4,
-            'position': (2, 0),
-            'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'position': (2, 0)
         },
         {
             'id': 5,
             'position': (2, 2),
-            'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'tags': [NetBurn(1)],
+            'owner': 'ENEMY'
         },
         {
             'id': 6,
-            'position': (2, 4),
-            'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'position': (2, 4)
         },
         {
             'id': 7,
             'position': (3, 1),
-            'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'owner': 'ENEMY'
         },
         {
             'id': 8,
             'name': 'Database',
             'position': (3, 3),
-            'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'owner': 'ENEMY'
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
-            'vector': Vector(name='Amp', tags=[Boost(1)]),
             'source': True
         }
     ],
@@ -126,14 +122,28 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 4,
+            'power': 3,
+            'vectors': [
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)]),
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)]),
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)])
+            ],
             'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
-            'power': 5,
-            'pathing': PathType.RANDOM,
+            'power': 6,
+            'tags': [NetBurn(2)],
+            'pathing': PathType.CLOSEST_ENEMY_NODE,
+            'next': 3
+        },
+        {
+            'pattern_id': 3,
+            'power': 4,
+            'tags': [Surge(1)],
+            'vectors': [Vector(name='Smoke', default_ward=6, tags=[Boost(3), Fortify(1), NetBurn(1)])],
+            'pathing': PathType.TAKE_OPPONENT_NODES,
             'next': 1
         }
     ]

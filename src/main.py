@@ -3,6 +3,7 @@ import pygame
 
 from game_objects.level_definitions.level1 import definition as level1_def
 from game_objects.level_definitions.level2 import definition as level2_def
+from game_objects.level_definitions.level3 import definition as level3_def
 from game_objects.level import Level
 from game_objects.enemy import Enemy
 from game_objects.player import Player
@@ -23,6 +24,7 @@ from render.terminal import render_terminal
 from render.card_pick import render_card_pick
 from render.help_text import render_help_text
 from render.intro_screen import render_intro_screen
+from render.end_screen import render_end_screen
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
 
 from utils.image_loader import img_fetch
@@ -52,11 +54,11 @@ class Game:
         self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
         self.level_ndx = 0
-        self.level_order = [level1_def, level2_def]
+        self.level_order = [level1_def, level2_def, level3_def]
 
         # Initialize level here to ensure rendering doesn't break
-        self.level = Level(self.level_order[self.level_ndx])
-        self.enemy = Enemy(self.level_order[self.level_ndx])
+        self.level = Level(level1_def)
+        self.enemy = Enemy(level1_def)
 
     def on_enter_state(self, event, state):
         logging.info(f"Entering '{state.id}' state from '{event}' event.")
@@ -133,6 +135,7 @@ class Game:
         elif get_state() == GameState.pre_turn_prep:
             self.enemy.next_script()
             self.enemy_temp_route = generate_route(self.level.get_source('ENEMY'), self.enemy.script)
+            logging.info([node for node in self.enemy_temp_route.node_path])
             change_state('pre_turn_prep_complete')
 
         elif get_state() == GameState.run_enemy_script:
@@ -225,7 +228,7 @@ class Game:
                     if mouse_on.startswith('PICK_CARD') and self.click_down == mouse_on:
                         pick_card_ndx = int(mouse_on.replace('PICK_CARD', ''))
                         self.player.add_card(self.card_choices.pop(pick_card_ndx))
-                        change_state('end_of_level_progress')
+                        # change_state('end_of_level_progress')  # FIXME: Limit to one card pick
                     elif mouse_on == 'NEXT_BUTTON' and self.click_down == mouse_on:
                         change_state('end_of_level_progress')
                 elif get_state() == GameState.game_end_loss:
@@ -292,6 +295,11 @@ class Game:
         if get_state() == GameState.intro_screen:
             interactables = render_intro_screen(self.screen)
             self.mouse_check.register_rect(interactables)
+
+        if get_state() == GameState.game_end_loss:
+            render_end_screen(self.screen, win=False)
+        elif get_state() == GameState.game_end_win:
+            render_end_screen(self.screen, win=True)
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
 

@@ -23,7 +23,7 @@ class Player:
         self.max_energy = 3
         self.max_hand_size = 10
         self.draw_count = 4
-        self.card_reward_count = 4
+        self.card_reward_count = 3
         self.tags = TagManager()
         self.script = None
 

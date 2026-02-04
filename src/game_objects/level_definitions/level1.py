@@ -119,7 +119,7 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 3,
-            'vector': Vector(name='Amp', default_ward=1, tags=[Boost(2)]),
+            'vectors': [Vector(name='Amp', default_ward=1, tags=[Boost(2)])],
             'pathing': PathType.RANDOM,
             'next': 2
         },

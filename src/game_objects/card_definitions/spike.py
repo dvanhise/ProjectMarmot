@@ -1,6 +1,7 @@
 from game_objects.script import Script
 from game_objects.card_type import CardType
 from game_objects.card import Card
+from game_objects.tags.power import Power
 
 
 class Spike(Card):
@@ -8,9 +9,10 @@ class Spike(Card):
     name = 'Spike'
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'built-in'
+    tooltips = [Power]
     image_id = 'payload',
     cost = 1
-    power = 50  # fixme
+    power = 3
     description = ['{power} power']
 
     def on_script_activation(self, script: Script, player_info):

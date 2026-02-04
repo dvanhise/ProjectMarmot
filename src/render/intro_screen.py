@@ -8,7 +8,7 @@ INTRO_TEXT = """Hello... Again...
 It's time to begin your quest to become the greatest hacker of all time.
 You must go toe-to-toe with shady megacorps and other hackers trying to prove themselves.
 
-Each level had a network of interconnected servers between the player and the enemy.
+Each level has a network of interconnected servers between the player and an opponent.
 Nodes = The locations in the network
 Edges = The connections between the nodes
 
@@ -37,7 +37,7 @@ Wards
 
 Payloads
     - A component of scripts
-    - Impact the script's power
+    - Increases the script's power
 
 Mods
     - A component of scripts
@@ -50,12 +50,12 @@ Vectors
     
 Dictionary:
 tags = buffs/debuffs on nodes, vectors, and players
-delete = exhaust in StS
+delete = Equivalent to exhaust in StS
 """
 
 
 PADDING = 50
-LINE_HEIGHT = 15
+LINE_HEIGHT = 16
 BUTTON_SIZE = (160, 40)
 
 
@@ -65,7 +65,7 @@ def render_intro_screen(s: pygame.Surface):
     pygame.draw.rect(s, '#444444', pygame.Rect(PADDING, PADDING, SCREEN_WIDTH-2*PADDING, SCREEN_HEIGHT-2*PADDING), width=5, border_radius=5)
     pygame.draw.rect(s, '#CCCCCC', pygame.Rect(PADDING, PADDING, SCREEN_WIDTH-2*PADDING, SCREEN_HEIGHT-2*PADDING), width=2, border_radius=5)
 
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 14)
+    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 16)
     for ndx, line in enumerate(INTRO_TEXT.split('\n')):
         text = font.render(line, True, TERMINAL_GREEN)
         text_rect = text.get_rect(topleft=(PADDING+20, PADDING+20+ndx*LINE_HEIGHT))

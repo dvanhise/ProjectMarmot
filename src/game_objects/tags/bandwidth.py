@@ -4,6 +4,7 @@ from utils.action_queue import get_aq
 
 class Bandwidth(Tag):
     id = 'bandwidth'
+    name = 'Bandwidth'
     icon = 'power'
     tooltip = 'When a friendly node is captured, gain {count} energy.'
 

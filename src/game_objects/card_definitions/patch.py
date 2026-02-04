@@ -2,6 +2,7 @@ from game_objects.card_type import CardType
 from utils.action_queue import get_aq
 from game_objects.card import Card
 from game_objects.tags.harden import Harden
+from game_objects.tags.ward import Ward
 
 
 class Patch(Card):
@@ -9,9 +10,10 @@ class Patch(Card):
     name = 'Patch'
     type = CardType.UTILITY
     rarity = 'intermediate'
+    tooltips = [Ward]
     image_id = 'query',
     cost = 1
-    description = ['Increase all ward', 'values by 1']
+    description = ['Increase all ward', 'values by 1', 'during the encounter']
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', Harden, 1)

@@ -3,6 +3,7 @@ from game_objects.tag import Tag
 
 class NetBurn(Tag):
     id = 'net-burn'
+    name = 'Netburn'
     icon = 'burn'
     tooltip = 'Reduce ward by {count} at end of turn.'
     positive = False

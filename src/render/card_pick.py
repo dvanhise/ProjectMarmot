@@ -30,7 +30,7 @@ def render_card_pick(s: pygame.Surface, card_choices):
 
     # Instruction text
     font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', TEXT_FONT_SIZE)
-    text = font.render('Choose Cards', True, 'white')
+    text = font.render('Hack successful, new tools found', True, 'white')
     text_rect = text.get_rect(center=(WINDOW_LEFT+WINDOW_WIDTH//2, WINDOW_TOP+TEXT_VERT_OFFSET))
     s.blit(text, text_rect)
 

@@ -2,6 +2,7 @@ from game_objects.card_type import CardType
 from utils.action_queue import get_aq
 from game_objects.card import Card
 from game_objects.tags.surge import Surge
+from game_objects.tags.power import Power
 
 
 class Overclock(Card):
@@ -9,9 +10,10 @@ class Overclock(Card):
     name = 'Overclock'
     type = CardType.UTILITY
     rarity = 'intermediate'
+    tooltips = [Power]
     image_id = 'query',
     cost = 1
-    description = ['Increase all payload', 'power by 1']
+    description = ['Increase all payload', 'power by 1', 'during the encounter']
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', Surge, 1)

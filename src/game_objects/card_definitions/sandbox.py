@@ -10,9 +10,10 @@ class Sandbox(Card):
     name = 'Sandbox'
     type = CardType.WARD
     rarity = 'intermediate'
+    tooltips = [Fortify]
     image_id = 'query',
     cost = 3
-    description = ['Apply fortify 1,', 'next turn draw 2 cards']
+    description = ['Apply Fortify 1,', 'next turn draw 2 cards']
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', DelayedDraw, 2)

@@ -3,6 +3,7 @@ from game_objects.tag import Tag
 
 class TagMultiplier(Tag):
     id = 'tag-multiplier'
+    name = 'Tag Multiplier'
     icon = 'power'
     tooltip = 'Increases all friendly node and vector tags by {count+1}x.'
 

@@ -1,7 +1,8 @@
 class Tag:
     id = ''
+    name = 'TODO'
     icon = ''
-    tooltip = ''
+    tooltip = 'TODO'
     count = 0
     card = ''
     positive = True
@@ -13,7 +14,10 @@ class Tag:
         self.count = count
 
     def get_tooltip(self):
-        return self.tooltip.format(count=self.count, card=self.card)
+        return f'{self.name}: {self.tooltip.format(count=self.count, card=self.card)}'
+
+    def get_generic_tooltip(self):
+        return f'{self.name}: {self.tooltip.format(count='N', card='Card')}'
 
     def get_full_name(self):
         return self.id

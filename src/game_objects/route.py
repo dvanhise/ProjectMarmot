@@ -37,8 +37,6 @@ class Route:
         self.node_path.append(node)
         self.edge_path.append(get_connecting_edge(self.node_path[-2], self.node_path[-1]))
 
-        # TODO: Methods for undoing choices or skipping nodes
-
     def choose_next_node_from_route(self, route: 'Route'):
         next_node = None
         for ndx, node in enumerate(route.node_path):

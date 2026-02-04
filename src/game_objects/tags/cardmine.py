@@ -4,8 +4,9 @@ from utils.action_queue import get_aq
 
 class CardMine(Tag):
     id = 'card-mine'
+    name = 'Card Mine'
     icon = 'power'
-    tooltip = 'Add {card} to draw pile when vector is captured.'
+    tooltip = 'Add {count} copy of {card} to draw pile when vector is captured.'
     card = ''
 
     part_of_vector = True

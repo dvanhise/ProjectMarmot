@@ -1,5 +1,5 @@
 from game_objects.card_type import CardType
-from game_objects.tags.multitasking import Multitasking as MultitaskingTag
+from game_objects.tags.bandwidth import Bandwidth
 from utils.action_queue import get_aq
 from game_objects.card import Card
 
@@ -14,5 +14,4 @@ class Monitoring(Card):
     description = ['When a friendly node', 'is captured,', 'gain 1 energy']
 
     def on_play(self):
-        # FIXME
-        get_aq().queue_action('add_player_tag', MultitaskingTag, 1)
+        get_aq().queue_action('add_player_tag', Bandwidth, 1)
