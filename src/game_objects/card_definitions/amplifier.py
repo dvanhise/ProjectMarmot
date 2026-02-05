@@ -10,6 +10,7 @@ class Amplifier(Card):
     name = 'Amplifier'
     type = CardType.SCRIPT_VECTOR
     rarity = 'built-in'
+    image_id = 'amplifier'
     cost = 1
     description = ['Install Vector:', '  Boost 2']
     tooltips = [VectorTag, Boost]

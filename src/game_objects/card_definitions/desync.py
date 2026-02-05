@@ -10,7 +10,7 @@ class Desync(Card):
     name = 'Desync'
     type = CardType.WARD
     rarity = 'simple'
-    image_id = 'ward',
+    image_id = 'desync'
     tooltips = [Ward]
     cost = 1
     description = ['{ward} ward,', 'next turn', 'gain 1 energy']

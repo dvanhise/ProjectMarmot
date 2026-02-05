@@ -10,7 +10,7 @@ class Halberd(Card):
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'simple'
     tooltips = [Power]
-    image_id = 'payload',
+    image_id = 'payload'
     cost = 2
     power = 6
     description = ['{power} power']

@@ -9,7 +9,7 @@ class Monitoring(Card):
     name = 'Monitoring'
     type = CardType.UTILITY
     rarity = 'intermediate'
-    image_id = 'query',
+    image_id = 'query'
     cost = 1
     description = ['When a friendly node', 'is captured,', 'gain 1 energy']
 

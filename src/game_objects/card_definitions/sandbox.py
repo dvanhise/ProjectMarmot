@@ -11,7 +11,7 @@ class Sandbox(Card):
     type = CardType.WARD
     rarity = 'intermediate'
     tooltips = [Fortify]
-    image_id = 'query',
+    image_id = 'query'
     cost = 3
     description = ['Apply Fortify 1,', 'next turn draw 2 cards']
 

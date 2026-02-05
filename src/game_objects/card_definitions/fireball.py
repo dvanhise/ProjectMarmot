@@ -10,7 +10,7 @@ class Fireball(Card):
     type = CardType.SCRIPT_MOD
     rarity = 'simple'
     tooltips = [NetBurn]
-    image_id = 'mod'
+    image_id = 'fireball'
     cost = 0
     description = ['Add Netburn to script']
 

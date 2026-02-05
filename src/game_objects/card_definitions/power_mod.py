@@ -10,7 +10,7 @@ class PowerMod(Card):
     type = CardType.SCRIPT_MOD
     rarity = 'simple'
     tooltips = [Power]
-    image_id = 'mod',
+    image_id = 'mod'
     cost = 1
     description = ['+3 Power']
 

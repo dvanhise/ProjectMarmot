@@ -93,6 +93,7 @@ class Player:
         self.deleted_pile = []
         self.draw_pile = list(self.all_cards.keys())
         shuffle(self.draw_pile)
+        self.energy = 0
 
     def discard_hand(self):
         discarded = self.current_hand

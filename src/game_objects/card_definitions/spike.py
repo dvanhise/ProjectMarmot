@@ -10,10 +10,10 @@ class Spike(Card):
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'built-in'
     tooltips = [Power]
-    image_id = 'payload',
+    image_id = 'payload'
     cost = 1
-    power = 30  # fixme
-    description = ['{power} power']
+    power = 3
+    description = ['{power} Power']
 
     def on_script_activation(self, script: Script, player_info):
         script.power += self.power

@@ -20,7 +20,7 @@ class Tag:
         return f'{self.name}: {self.tooltip.format(count='N', card='Card')}'
 
     def get_full_name(self):
-        return self.id
+        return self.name
 
     def on_change(self, change):
         # Any time a tag is modified

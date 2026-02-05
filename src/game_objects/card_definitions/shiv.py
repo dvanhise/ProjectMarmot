@@ -10,7 +10,7 @@ class Shiv(Card):
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'simple'
     tooltips = [Power]
-    image_id = 'payload',
+    image_id = 'payload'
     cost = 0
     power = 2
     description = ['{power} power']

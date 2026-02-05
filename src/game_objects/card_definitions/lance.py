@@ -10,7 +10,7 @@ class Lance(Card):
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'special'
     tooltips = [Power]
-    image_id = 'payload',
+    image_id = 'payload'
     cost = 0
     power = 6
     description = ['{power} Power', 'Delete when executed']

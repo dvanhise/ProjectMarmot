@@ -7,7 +7,7 @@ class Override(Card):
     name = 'Override'
     type = CardType.SCRIPT_MOD
     rarity = 'elite'
-    image_id = 'query',
+    image_id = 'query'
     cost = 2
     description = ['Convert enemy vectors', 'on defeated nodes']
 

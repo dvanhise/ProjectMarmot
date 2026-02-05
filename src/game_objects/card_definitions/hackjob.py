@@ -13,5 +13,5 @@ class Hackjob(Card):
     rarity = 'simple'
     tooltips = [VectorTag, Boost]
     cost = 1
-    description = ['Install Vector:', '  Boost 4', 'at end of turn', 'reduce boost by 1']
+    description = ['Install Vector:', '  Boost 4', '  at end of turn,', '  reduce boost by 1']
     vector = Vector(name='Hack', default_ward=0, tags=[Boost(4), BoostLoss(1)])

@@ -8,7 +8,7 @@ class NeuralInterface(Card):
     name = 'Neutal Interface'
     type = CardType.UTILITY
     rarity = 'intermediate'
-    image_id = 'query',
+    image_id = 'query'
     cost = 0
     description = ['Take 1 damage', 'Gain 2 energy', 'Execute script for free']
 

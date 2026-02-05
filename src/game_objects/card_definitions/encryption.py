@@ -8,7 +8,7 @@ class Encryption(Card):
     name = 'Encryption'
     type = CardType.SCRIPT_MOD
     rarity = 'simple'
-    image_id = 'mod',
+    image_id = 'encryption'
     cost = 1
     description = ['Reduce script', 'edge penalty by 1']
 

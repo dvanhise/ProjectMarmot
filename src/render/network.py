@@ -132,9 +132,9 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
         # Draw node tags
         width = len(node.tags)*TAG_ICON_SIZE[0]
         tag_left_offset = x_center - width//2
-        tag_top_offset = y_center + ICON_SIZE[1]//2
+        tag_top_offset = y_center - ICON_SIZE[1]//2-10
         for ndx, tag in enumerate(node.tags):
-            s.blit(gen_tag(tag), tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset)
+            s.blit(gen_tag(tag), (tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset))
 
             mouseovers.append(Tooltip(
                 pygame.Rect((tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset), TAG_ICON_SIZE),

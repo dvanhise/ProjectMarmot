@@ -7,6 +7,6 @@ class PopupAd(Card):
     name = 'Popup Ad'
     type = CardType.NULL
     rarity = 'special'
-    image_id = 'placeholder',
+    image_id = 'placeholder'
     cost = 0
     description = ['Unplayable']

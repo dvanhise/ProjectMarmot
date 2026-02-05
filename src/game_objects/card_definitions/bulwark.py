@@ -9,11 +9,11 @@ class Bulwark(Card):
     name = 'Bulwark'
     type = CardType.WARD
     rarity = 'simple'
-    image_id = 'ward'
+    image_id = 'bulwark'
     tooltips = [Ward]
     cost = 1
     description = ['Ward {ward}']
-    ward = 4
+    ward = 3
     delete_on_play = True
 
     def on_ward_install(self, node):

@@ -6,7 +6,7 @@ class CardMine(Tag):
     id = 'card-mine'
     name = 'Card Mine'
     icon = 'power'
-    tooltip = 'Add {count} copy of {card} to draw pile when vector is captured.'
+    tooltip = 'Add {count} copy of {card} to draw pile when node is captured.'
     card = ''
 
     part_of_vector = True
@@ -17,7 +17,11 @@ class CardMine(Tag):
         self.card = kwargs['card']
 
     def get_full_name(self):
-        return f'{self.id}_{self.card}'
+        return f'{self.name} ({self.card})'
 
     def on_node_captured(self, node):
         get_aq().queue_action('add_card', self.card, 'draw')
+
+    def on_vector_install(self, node, vector, player_info):
+        # Move the tag to the node when the vector is installed
+        node.tags.add_tag(vector.tags.pop(self))

@@ -8,7 +8,7 @@ class PayloadExtender(Card):
     name = 'Payload Extender'
     type = CardType.UTILITY
     rarity = 'elite'
-    image_id = 'query',
+    image_id = 'query'
     cost = 1
     description = ['Gain an additional', 'payload slot', 'delete']
 

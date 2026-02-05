@@ -12,7 +12,7 @@ class DecoyServer(Card):
     type = CardType.SCRIPT_VECTOR
     rarity = 'simple'
     tooltips = [VectorTag, CardMine]
-    image_id = 'vector',
+    image_id = 'decoy-server'
     cost = 1
     description = ['Install Vector:', '  On capture,', '  shuffle Lance', '  into draw pile']
     vector = Vector(name='Decoy', tags=[CardMine(count=1, card='lance')])

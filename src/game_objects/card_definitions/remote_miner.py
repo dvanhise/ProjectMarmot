@@ -9,7 +9,7 @@ class RemoteMiner(Card):
     name = 'Remote Miner'
     type = CardType.SCRIPT_MOD
     rarity = 'intermediate'
-    image_id = 'mod',
+    image_id = 'mod'
     cost = 2
     description = ['Gain 1 energy for', 'each node captured']
 

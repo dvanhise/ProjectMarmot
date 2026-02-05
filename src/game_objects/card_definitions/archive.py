@@ -8,10 +8,10 @@ class Archive(Card):
     name = 'Archive'
     type = CardType.UTILITY
     rarity = 'simple'
-    image_id = 'query',
+    image_id = 'archive'
     cost = 1
     description = ['Delete right-most card,', 'draw 2 cards']
 
     def on_play(self):
-        get_aq().queue_action('delete_card', 'RIGHT', 1)
+        get_aq().queue_action('delete_cards', 'RIGHT', 1)
         get_aq().queue_action('draw_cards', 2)

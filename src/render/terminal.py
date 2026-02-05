@@ -27,6 +27,8 @@ def render_terminal(s: pygame.Surface, char):
 
         for vector in char.script.vector:
             t = f'>> set vector {vector.name}'
+            if vector.default_ward:
+                t += f' ward={vector.default_ward}'
             if vector.tags:
                 t += f' tags={",".join([t.get_full_name() for t in vector.tags])}'
             text = font.render(t, True, TERMINAL_GREEN)

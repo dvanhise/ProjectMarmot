@@ -165,6 +165,11 @@ class Game:
             if event.type == pygame.QUIT:  # Window X clicked
                 pygame.quit()
 
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFTBRACKET:
+                self.player.health -= 1
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHTBRACKET:
+                self.enemy.health -= 1
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if get_state() == GameState.wait_for_player:
                     if mouse_on in ['SEND_SCRIPT', 'END_TURN']:
@@ -198,6 +203,8 @@ class Game:
 
                 if get_state() == GameState.card_drag:
                     card = self.player.get_dragged_card()
+                    logging.info(f'No longer dragging "{self.player.dragged}"')
+                    change_state('card_drop')
                     if mouse_on.startswith('SCRIPT'):
                         ndx = int(mouse_on.replace('SCRIPT', ''))
                         self.play_card_on_script_builder(ndx, card)
@@ -209,9 +216,7 @@ class Game:
                         self.play_generic_card(card)
                     else:
                         self.player.add_card_to_hand(self.player.dragged)  # Card drop in invalid location
-                    logging.info(f'No longer dragging "{self.player.dragged}"')
                     self.player.dragged = None
-                    change_state('card_drop')
 
                 elif get_state() == GameState.run_player_script:
                     if mouse_on.startswith('NODE') and self.click_down == mouse_on:
@@ -437,9 +442,9 @@ class Game:
             elif action[0] == 'change_energy':
                 self.player.energy += action[1]
             elif action[0] == 'add_player_tag':
-                self.player.tags.append(action[1](action[2]))
+                self.player.tags.add_tag(action[1](action[2]))
             elif action[0] == 'add_enemy_tag':
-                self.enemy.tags.append(action[1](action[2]))
+                self.enemy.tags.add_tag(action[1](action[2]))
             elif action[0] == 'card_updates_ward':
                 for card in self.player.all_cards_temp.values():
                     if card.type == CardType.WARD and card.ward:

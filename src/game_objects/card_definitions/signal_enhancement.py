@@ -9,7 +9,7 @@ class SignalEnhancement(Card):
     name = 'Signal Enhancement'
     type = CardType.SCRIPT_MOD
     rarity = 'intermediate'
-    image_id = 'mod',
+    image_id = 'mod'
     cost = 2
     description = ['Double positive tags', 'on each friendly node', 'and vector encountered']
 

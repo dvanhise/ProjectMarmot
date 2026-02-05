@@ -10,9 +10,9 @@ class Firewall(Card):
     type = CardType.WARD
     rarity = 'simple'
     tooltips = [Ward, NetBurn]
-    image_id = 'ward',
+    image_id = 'firewall'
     cost = 1
-    description = ['{ward} Ward, Netburn 1']
+    description = ['{ward} Ward', 'Netburn 1']
     ward = 6
 
     def on_ward_install(self, node):

@@ -9,7 +9,7 @@ class BattleAxe(Card):
     name = 'Battle-axe'
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'intermediate'
-    image_id = 'payload',
+    image_id = 'battleaxe'
     cost = 1
     description = ['1 Power per card', 'in hand when executed']
     tooltips = [Power]

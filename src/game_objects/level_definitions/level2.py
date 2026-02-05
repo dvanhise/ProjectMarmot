@@ -11,11 +11,11 @@ from utils.router import PathType
 
 
 definition = {
-    'edge_difficulty': 3,
+    'edge_difficulty': 2,
     'network_width': 6,
     'network_height': 3,
     'portrait': 'placeholder',
-    'health': 2,
+    'health': 3,
     'nodes': [
         {
             'id': 1,
@@ -33,9 +33,7 @@ definition = {
         },
         {
             'id': 4,
-            'position': (2, 0),
-            'owner': 'ENEMY',
-            'ward': 1
+            'position': (2, 0)
         },
         {
             'id': 5,
@@ -47,32 +45,32 @@ definition = {
             'id': 6,
             'position': (3, 0),
             'owner': 'ENEMY',
-            'ward': 2
+            'ward': 1
         },
         {
             'id': 7,
             'position': (3, 2),
             'owner': 'ENEMY',
-            'ward': 2
+            'ward': 1
         },
         {
             'id': 8,
             'position': (4, 0),
             'owner': 'ENEMY',
-            'ward': 3
+            'ward': 1
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
-            'ward': 3
+            'ward': 1
         },
         {
             'id': 10,
             'position': (5, 1),
             'owner': 'ENEMY',
             'source': True,
-            'ward': 4
+            'ward': 1
         }
     ],
     'edges': [
@@ -122,13 +120,13 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 2,
-            'vectors': [Vector(name='Shield', default_ward=4, tags=[Boost(1)]), Vector(name='Spear', tags=[Boost(2)])],
+            'vectors': [Vector(name='Shield', default_ward=3, tags=[Boost(1)]), Vector(name='Spear', tags=[Boost(2)])],
             'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
-            'power': 6,
+            'power': 5,
             'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': 1
         }

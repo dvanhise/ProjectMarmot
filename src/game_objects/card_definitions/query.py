@@ -8,7 +8,7 @@ class Query(Card):
     name = 'Query'
     type = CardType.UTILITY
     rarity = 'simple'
-    image_id = 'query',
+    image_id = 'query'
     cost = 1
     description = ['Draw 3 cards']
 

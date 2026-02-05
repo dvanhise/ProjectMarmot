@@ -8,7 +8,7 @@ class ModExtender(Card):
     name = 'Mod Extender'
     type = CardType.UTILITY
     rarity = 'elite'
-    image_id = 'query',
+    image_id = 'query'
     cost = 1
     description = ['Gain an additional', 'mod slot', 'delete']
 

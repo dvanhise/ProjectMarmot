@@ -10,7 +10,7 @@ class DefensiveNanobots(Card):
     type = CardType.WARD
     rarity = 'simple'
     tooltips = [SelfBuilding, Ward]
-    image_id = 'query',
+    image_id = 'defensive-nanobots'
     cost = 1
     description = ['Apply Self-Building 1']
 

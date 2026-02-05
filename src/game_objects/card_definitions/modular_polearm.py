@@ -10,7 +10,7 @@ class ModularPolearm(Card):
     type = CardType.SCRIPT_PAYLOAD
     rarity = 'intermediate'
     tooltips = [Power]
-    image_id = 'payload',
+    image_id = 'payload'
     cost = 1
     power = 6
     description = ['{power} power,', 'increase power by 2', 'when replacing a', 'script payload']

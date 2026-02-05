@@ -20,8 +20,6 @@ def generate_route(source_node: Node, script: Script):
     all_paths = get_all_paths(source_node, script.owner)
     stats = [get_expected_stats(route, script) for route in all_paths]
 
-    logging.info(f'{len(all_paths)} potential paths generated.')
-
     if script.pathing == PathType.RANDOM:
         route = Route(source_node, script.owner)
         while not route.is_path_complete():

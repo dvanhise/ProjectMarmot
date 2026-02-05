@@ -9,7 +9,7 @@ class SecurityGroup(Card):
     type = CardType.WARD
     rarity = 'built-in'
     tooltips = [Ward]
-    image_id = 'ward',
+    image_id = 'ward'
     cost = 1
     description = ['Ward {ward}']
     ward = 2

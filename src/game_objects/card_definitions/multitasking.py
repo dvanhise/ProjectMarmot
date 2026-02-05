@@ -9,7 +9,7 @@ class Multitasking(Card):
     name = 'Multi-tasking'
     type = CardType.UTILITY
     rarity = 'simple'
-    image_id = 'query',
+    image_id = 'query'
     cost = 1
     description = ['When executing a script,', 'draw 1 card']
 

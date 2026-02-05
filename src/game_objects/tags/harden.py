@@ -7,7 +7,7 @@ class Harden(Tag):
     id = 'harden'
     name = 'Harden'
     icon = 'power'
-    tooltip = 'Increases all card ward values by {count}.'
+    tooltip = 'Increase all card ward values by {count}.'
 
     def on_change(self, change):
         get_aq().queue_action('card_updates_ward', change)

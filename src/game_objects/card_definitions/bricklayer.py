@@ -11,7 +11,7 @@ class Bricklayer(Card):
     name = 'Bricklayer'
     type = CardType.SCRIPT_MOD
     rarity = 'elite'
-    image_id = 'ward',
+    image_id = 'bricklayer'
     tooltips = [Ward]
     cost = 1
     description = ['Apply 2 ward to', 'each node encountered']
