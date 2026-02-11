@@ -1,11 +1,14 @@
 import os
 import pygame
+import __main__
 
 
+# This shold work when running the raw project directly or from the bundled exe
+BASE_DIR = os.path.dirname(__main__.__file__)
 image_loader = None
 
 class ImageLoader:
-    IMAGES_DIR = './assets/images'
+    IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'images')
 
     def __init__(self):
         self.registry = {}
@@ -24,3 +27,14 @@ def img_fetch():
     if not image_loader:
         image_loader = ImageLoader()
     return image_loader
+
+
+def get_font(name: str, style: str):
+    font_map = {
+        'brassmono': {
+            'regular': 'BrassMono-Regular.ttf',
+            'bold': 'BrassMono-Bold.ttf'
+        }
+    }
+
+    return os.path.join(BASE_DIR, 'assets', 'fonts', font_map[name.lower()][style.lower()])

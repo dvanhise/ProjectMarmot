@@ -1,7 +1,7 @@
-from game_objects.script import Script
-from game_objects.card_type import CardType
-from game_objects.card import Card
-from game_objects.tags.power import Power
+from src.game_objects.script import Script
+from src.game_objects.card_type import CardType
+from src.game_objects.card import Card
+from src.game_objects.tags.power import Power
 
 
 class Shiv(Card):

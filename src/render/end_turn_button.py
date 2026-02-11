@@ -1,5 +1,5 @@
-from utils.image_loader import img_fetch
-from constants import *
+from src.utils.asset_loader import img_fetch
+from src.constants import *
 
 
 BUTTON_SIZE = (80, 80)

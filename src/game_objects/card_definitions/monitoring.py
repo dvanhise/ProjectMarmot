@@ -1,7 +1,7 @@
-from game_objects.card_type import CardType
-from game_objects.tags.bandwidth import Bandwidth
-from utils.action_queue import get_aq
-from game_objects.card import Card
+from src.game_objects.card_type import CardType
+from src.game_objects.tags.bandwidth import Bandwidth
+from src.utils.action_queue import get_aq
+from src.game_objects.card import Card
 
 
 class Monitoring(Card):

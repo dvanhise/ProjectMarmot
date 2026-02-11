@@ -55,3 +55,20 @@ class GameState(StateMachine):
         game_end_loss.to(exit_game) |
         game_end_win.to(exit_game)
     )
+
+
+game_state = None
+
+def get_game_state(*args):
+    global game_state
+    if not game_state:
+        game_state = GameState(*args)
+    return game_state
+
+def change_state(new_state):
+    global game_state
+    game_state.send(new_state)
+
+def get_state():
+    global game_state
+    return game_state.current_state

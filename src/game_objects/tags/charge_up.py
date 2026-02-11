@@ -1,6 +1,6 @@
-from game_objects.tag import Tag
-from game_objects.tags.boost import Boost
-from utils.action_queue import get_aq
+from src.game_objects.tag import Tag
+from src.game_objects.tags.boost import Boost
+from src.utils.action_queue import get_aq
 
 
 class ChargeUp(Tag):

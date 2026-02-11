@@ -1,6 +1,6 @@
 import copy
-from game_objects.script import Script
-from game_objects.tag import TagManager
+from src.game_objects.script import Script
+from src.game_objects.tag import TagManager
 
 
 class Enemy:

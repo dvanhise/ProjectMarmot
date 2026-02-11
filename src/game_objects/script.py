@@ -1,9 +1,9 @@
 import logging
 import copy
-from game_objects.card import Card
-from game_objects.card_type import CardType
-from game_objects.graph import Edge, Node
-from game_objects.tag import TagManager
+from src.game_objects.card import Card
+from src.game_objects.card_type import CardType
+from src.game_objects.graph import Edge, Node
+from src.game_objects.tag import TagManager
 
 
 class Script:

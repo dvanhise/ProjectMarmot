@@ -1,6 +1,6 @@
-from game_objects.vector import Vector
-from game_objects.tags.boost import Boost
-from utils.router import PathType
+from src.game_objects.vector import Vector
+from src.game_objects.tags.boost import Boost
+from src.utils.router import PathType
 
 """
      0   1   2   3   4

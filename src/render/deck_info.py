@@ -1,8 +1,8 @@
 import pygame
-from game_objects.player import Player
-from render.card import CARD_WIDTH, CARD_HEIGHT
-from utils.image_loader import img_fetch
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.game_objects.player import Player
+from src.render.card import CARD_WIDTH, CARD_HEIGHT
+from src.utils.asset_loader import img_fetch, get_font
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 TEXT_FONT_SIZE = 14
@@ -13,7 +13,7 @@ def render_deck_info(s: pygame.Surface, player: Player):
     back = img_fetch().get('cardback')
     card_surface = pygame.transform.smoothscale(back, INFO_CARD_SIZE)
 
-    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', TEXT_FONT_SIZE)
+    font = pygame.font.Font(get_font('BrassMono', 'bold'), TEXT_FONT_SIZE)
 
     text = font.render(f'Draw: {len(player.draw_pile)}', True, 'white')
     text_rect = text.get_rect(center=(INFO_CARD_SIZE[0]//2, INFO_CARD_SIZE[1]//4))

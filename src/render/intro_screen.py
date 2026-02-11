@@ -1,7 +1,7 @@
 import pygame
-from utils.text_helper import draw_text_with_outline
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DARK_TERMINAL, TERMINAL_GREEN
-
+from src.utils.text_helper import draw_text_with_outline
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DARK_TERMINAL, TERMINAL_GREEN
+from src.utils.asset_loader import get_font
 
 INTRO_TEXT = """Hello... Again...
  
@@ -65,7 +65,7 @@ def render_intro_screen(s: pygame.Surface):
     pygame.draw.rect(s, '#444444', pygame.Rect(PADDING, PADDING, SCREEN_WIDTH-2*PADDING, SCREEN_HEIGHT-2*PADDING), width=5, border_radius=5)
     pygame.draw.rect(s, '#CCCCCC', pygame.Rect(PADDING, PADDING, SCREEN_WIDTH-2*PADDING, SCREEN_HEIGHT-2*PADDING), width=2, border_radius=5)
 
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 16)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), 16)
     for ndx, line in enumerate(INTRO_TEXT.split('\n')):
         text = font.render(line, True, TERMINAL_GREEN)
         text_rect = text.get_rect(topleft=(PADDING+20, PADDING+20+ndx*LINE_HEIGHT))
@@ -74,7 +74,7 @@ def render_intro_screen(s: pygame.Surface):
     button_rect = pygame.Rect((PADDING+20, SCREEN_HEIGHT-PADDING-20-BUTTON_SIZE[1]), BUTTON_SIZE)
     pygame.draw.rect(s, '#5CC9D4', button_rect)
     pygame.draw.rect(s, '#444444', button_rect, width=2)
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 20)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), 20)
     outline_text = draw_text_with_outline('Start', font, 'white', 2, 'black')
     text_rect = outline_text.get_rect(center=(PADDING+20+BUTTON_SIZE[0]//2, SCREEN_HEIGHT-PADDING-20-BUTTON_SIZE[1]//2))
     s.blit(outline_text, text_rect)

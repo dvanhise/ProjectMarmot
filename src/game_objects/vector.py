@@ -1,4 +1,4 @@
-from game_objects.tag import TagManager
+from src.game_objects.tag import TagManager
 
 
 class Vector:

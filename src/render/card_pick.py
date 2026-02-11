@@ -1,7 +1,8 @@
 import pygame
-from render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
-from utils.text_helper import draw_text_with_outline
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DARK_TERMINAL
+from src.render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
+from src.utils.text_helper import draw_text_with_outline
+from src.utils.asset_loader import get_font
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DARK_TERMINAL
 
 
 WINDOW_WIDTH = 800
@@ -29,7 +30,7 @@ def render_card_pick(s: pygame.Surface, card_choices):
     pygame.draw.rect(s, '#CCCCCC', pygame.Rect(WINDOW_LEFT, WINDOW_TOP, WINDOW_WIDTH, WINDOW_HEIGHT), width=2, border_radius=5)
 
     # Instruction text
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', TEXT_FONT_SIZE)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), TEXT_FONT_SIZE)
     text = font.render('Infiltration successful, found new tools:', True, 'white')
     text_rect = text.get_rect(center=(WINDOW_LEFT+WINDOW_WIDTH//2, WINDOW_TOP+TEXT_VERT_OFFSET))
     s.blit(text, text_rect)
@@ -47,7 +48,7 @@ def render_card_pick(s: pygame.Surface, card_choices):
     button_rect = pygame.Rect((WINDOW_LEFT+WINDOW_WIDTH//2-BUTTON_SIZE[0]//2, WINDOW_TOP+BUTTON_VERT_OFFSET), BUTTON_SIZE)
     pygame.draw.rect(s, '#5CC9D4', button_rect)
     pygame.draw.rect(s, '#444444', button_rect, width=2)
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 20)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), 20)
     outline_text = draw_text_with_outline('Skip Cards' if len(card_choices) else 'Continue', font, 'white', 2, 'black')
     text_rect = outline_text.get_rect(center=(WINDOW_LEFT+WINDOW_WIDTH//2, WINDOW_TOP+BUTTON_VERT_OFFSET+BUTTON_SIZE[1]//2))
     s.blit(outline_text, text_rect)

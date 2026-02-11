@@ -1,14 +1,14 @@
 import pygame
 import math
-from game_objects.level import Level
-from game_objects.route import Route
-from game_objects.script import Script
-from render.vector import render_vector, VECTOR_WIDTH
-from render.tag import gen_tag, TAG_ICON_SIZE
-from utils.image_loader import img_fetch
-from utils.mouse_check import Tooltip
-from utils.text_helper import draw_text_with_outline
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.game_objects.level import Level
+from src.game_objects.route import Route
+from src.game_objects.script import Script
+from src.render.vector import render_vector, VECTOR_WIDTH
+from src.render.tag import gen_tag, TAG_ICON_SIZE
+from src.utils.asset_loader import img_fetch, get_font
+from src.utils.mouse_check import Tooltip
+from src.utils.text_helper import draw_text_with_outline
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 NETWORK_WIDTH = SCREEN_WIDTH
@@ -102,7 +102,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                 midpoint_x = (x_center+next_node_x_center)//2
                 midpoint_y = (y_center+next_node_y_center)//2
                 pygame.draw.circle(s, c, (midpoint_x, midpoint_y), EDGE_DEGREDATION_RADIUS)
-                font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 14)
+                font = pygame.font.Font(get_font('BrassMono', 'bold'), 14)
                 text = font.render(str(edge.difficulty), True, 'black')
                 text_rect = text.get_rect(center=(midpoint_x, midpoint_y))
                 s.blit(text, text_rect)
@@ -163,7 +163,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
             pygame.draw.circle(s, WARD_COLOR, (x_center, y_center), WARD_RADIUS, width=2)
 
             # Draw ward value
-            font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', WARD_FONT_SIZE)
+            font = pygame.font.Font(get_font('BrassMono', 'bold'), WARD_FONT_SIZE)
             text = font.render(f'{node.ward}W', True, WARD_COLOR)
             text_rect = text.get_rect(center=(x_center, y_center+WARD_RADIUS + 6))
             s.blit(text, text_rect)
@@ -188,7 +188,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
 
                 # Add help text above vector box
                 action_text = 'Overwrite Vector?' if node.vector else 'Install Vector?'
-                font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', 14)
+                font = pygame.font.Font(get_font('BrassMono', 'regular'), 14)
                 text = font.render(action_text, True, 'white')
                 text_rect = text.get_rect(center=(x_center, box_top+VECTOR_SIZE[1]+20))
                 s.blit(text, text_rect)
@@ -196,7 +196,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
             # Draw info on the executing player script
             s.blit(script_img, (x_center+SCRIPT_X_OFFSET, y_center+SCRIPT_Y_OFFSET))
 
-            font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 24)
+            font = pygame.font.Font(get_font('BrassMono', 'bold'), 24)
             power_text = draw_text_with_outline(str(script.power), font, 'white', 1, 'black')
             text_rect = power_text.get_rect(center=(x_center+SCRIPT_X_OFFSET+SCRIPT_POWER_SIZE[0]//2, y_center+SCRIPT_Y_OFFSET+SCRIPT_POWER_SIZE[1]//2))
             s.blit(power_text, text_rect)
@@ -205,7 +205,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
         if enemy_route and node == enemy_route.node_path[-1] and enemy_script:
             s.blit(script_img, (x_center+ENEMY_SCRIPT_X_OFFSET, y_center+ENEMY_SCRIPT_Y_OFFSET))
 
-            font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 24)
+            font = pygame.font.Font(get_font('BrassMono', 'bold'), 24)
             power_text = draw_text_with_outline(str(enemy_script.power), font, 'white', 1, 'black')
             text_rect = power_text.get_rect(center=(x_center+ENEMY_SCRIPT_X_OFFSET+SCRIPT_POWER_SIZE[0]//2, y_center+ENEMY_SCRIPT_Y_OFFSET+SCRIPT_POWER_SIZE[1]//2))
             s.blit(power_text, text_rect)

@@ -1,40 +1,40 @@
 import logging
 import pygame
 
-from game_objects.level_definitions.level1 import definition as level1_def
-from game_objects.level_definitions.level2 import definition as level2_def
-from game_objects.level_definitions.level3 import definition as level3_def
-from game_objects.level import Level
-from game_objects.enemy import Enemy
-from game_objects.player import Player
-from game_objects.script import ScriptBuilder
-from game_objects.route import Route
-from game_objects.card_type import CardType
+from src.game_objects.level_definitions.level1 import definition as level1_def
+from src.game_objects.level_definitions.level2 import definition as level2_def
+from src.game_objects.level_definitions.level3 import definition as level3_def
+from src.game_objects.level import Level
+from src.game_objects.enemy import Enemy
+from src.game_objects.player import Player
+from src.game_objects.script import ScriptBuilder
+from src.game_objects.route import Route
+from src.game_objects.card_type import CardType
 
-from render.hand import render_hand
-from render.script_builder import render_script_builder
-from render.network import render_network
-from render.card import CARD_WIDTH, CARD_HEIGHT, generate as gen_card
-from render.deck_info import render_deck_info
-from render.end_turn_button import render_end_turn
-from render.playzone import render_playzone
-from render.energy_tracker import render_energy_tracker
-from render.info_section import render_info
-from render.terminal import render_terminal
-from render.card_pick import render_card_pick
-from render.help_text import render_help_text
-from render.intro_screen import render_intro_screen
-from render.end_screen import render_end_screen
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
+from src.render.hand import render_hand
+from src.render.script_builder import render_script_builder
+from src.render.network import render_network
+from src.render.card import CARD_WIDTH, CARD_HEIGHT, generate as gen_card
+from src.render.deck_info import render_deck_info
+from src.render.end_turn_button import render_end_turn
+from src.render.playzone import render_playzone
+from src.render.energy_tracker import render_energy_tracker
+from src.render.info_section import render_info
+from src.render.terminal import render_terminal
+from src.render.card_pick import render_card_pick
+from src.render.help_text import render_help_text
+from src.render.intro_screen import render_intro_screen
+from src.render.end_screen import render_end_screen
 
-from utils.image_loader import img_fetch
-from utils.router import generate_route
-from utils.mouse_check import MouseCheck
-from utils.card_registry import get_new_card, random_card_choices, get_card_stats
-from utils.action_queue import get_aq
+from src.utils.asset_loader import img_fetch, get_font
+from src.utils.router import generate_route
+from src.utils.mouse_check import MouseCheck
+from src.utils.card_registry import get_new_card, random_card_choices, get_card_stats
+from src.utils.action_queue import get_aq
 
-from game_state import GameState
-from starter_deck import add_starter_cards
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
+from src.game_state import GameState, get_game_state
+from src.starter_deck import add_starter_cards
 
 
 class Game:
@@ -122,22 +122,23 @@ class Game:
         self.player = Player()
         self.script_builder = ScriptBuilder()
         add_starter_cards(self.player)
+        get_game_state().send('loading_complete')
 
     def level_update(self):
         # Load new level
-        if get_state() == GameState.setup_level:
+        if get_game_state().current_state == GameState.setup_level:
             self.level = Level(self.level_order[self.level_ndx])
             self.enemy = Enemy(self.level_order[self.level_ndx])
             self.script_builder.clear()
             self.player.reset()
-            change_state('setup_level_complete')
+            get_game_state().send('setup_level_complete')
 
-        elif get_state() == GameState.pre_turn_prep:
+        elif get_game_state().current_state == GameState.pre_turn_prep:
             self.enemy.next_script()
             self.enemy_temp_route = generate_route(self.level.get_source('ENEMY'), self.enemy.script)
-            change_state('pre_turn_prep_complete')
+            get_game_state().send('pre_turn_prep_complete')
 
-        elif get_state() == GameState.run_enemy_script:
+        elif get_game_state().current_state == GameState.run_enemy_script:
             if not self.enemy_route:
                 self.enemy_route = Route(self.level.get_source('ENEMY'), 'ENEMY')
                 self.enemy.script.on_node_advance(None, self.enemy_route.node_path[-1], self.player, autoplay_vector=True)
@@ -147,12 +148,12 @@ class Game:
             self.enemy_route.choose_next_node_from_route(self.enemy_temp_route)
             success = self.enemy.script.on_node_advance(self.enemy_route.edge_path[-1], self.enemy_route.node_path[-1], self.player, autoplay_vector=True)
             if not success or self.enemy_route.is_path_complete():
-                change_state('enemy_script_complete')
+                get_game_state().send('enemy_script_complete')
 
-        elif get_state() == GameState.end_of_level:
+        elif get_game_state().current_state == GameState.end_of_level:
             # Placeholder state for end of a level
             pygame.time.wait(1500)
-            change_state('end_of_level_progress')
+            get_game_state().send('end_of_level_progress')
 
     def check_events(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -171,40 +172,40 @@ class Game:
                 self.enemy.health -= 1
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if get_state() == GameState.wait_for_player:
+                if get_game_state().current_state == GameState.wait_for_player:
                     if mouse_on in ['SEND_SCRIPT', 'END_TURN']:
                         self.click_down = mouse_on
                     elif mouse_on.startswith('CARD'):
                         card_id = self.player.current_hand[int(mouse_on.replace('CARD', ''))]
                         self.player.start_drag(card_id)
-                        change_state('start_drag')
+                        get_game_state().send('start_drag')
 
-                elif get_state() == GameState.card_pick and (mouse_on == 'NEXT_BUTTON' or mouse_on.startswith('PICK_CARD')):
+                elif get_game_state().current_state == GameState.card_pick and (mouse_on == 'NEXT_BUTTON' or mouse_on.startswith('PICK_CARD')):
                     self.click_down = mouse_on
-                elif get_state() == GameState.run_player_script and (mouse_on.startswith('NODE') or mouse_on.startswith('INSTALL_VECTOR')):
+                elif get_game_state().current_state == GameState.run_player_script and (mouse_on.startswith('NODE') or mouse_on.startswith('INSTALL_VECTOR')):
                     self.click_down = mouse_on
 
-                elif get_state() == GameState.game_end_loss:
+                elif get_game_state().current_state == GameState.game_end_loss:
                     # quit game
                     pass
-                elif get_state() == GameState.game_end_win:
+                elif get_game_state().current_state == GameState.game_end_win:
                     # quit game
                     pass
-                elif get_state() == GameState.intro_screen:
+                elif get_game_state().current_state == GameState.intro_screen:
                     if mouse_on == 'START_BUTTON':
-                        change_state('start_selected')
+                        get_game_state().send('start_selected')
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                if get_state() == GameState.wait_for_player:
+                if get_game_state().current_state == GameState.wait_for_player:
                     if mouse_on == 'END_TURN' and self.click_down == 'END_TURN':
                         self.end_turn()
                     elif mouse_on == 'SEND_SCRIPT' and self.click_down == 'SEND_SCRIPT':
                         self.send_script()
 
-                if get_state() == GameState.card_drag:
+                if get_game_state().current_state == GameState.card_drag:
                     card = self.player.get_dragged_card()
                     logging.info(f'No longer dragging "{self.player.dragged}"')
-                    change_state('card_drop')
+                    get_game_state().send('card_drop')
                     if mouse_on.startswith('SCRIPT'):
                         ndx = int(mouse_on.replace('SCRIPT', ''))
                         self.play_card_on_script_builder(ndx, card)
@@ -218,7 +219,7 @@ class Game:
                         self.player.add_card_to_hand(self.player.dragged)  # Card drop in invalid location
                     self.player.dragged = None
 
-                elif get_state() == GameState.run_player_script:
+                elif get_game_state().current_state == GameState.run_player_script:
                     if mouse_on.startswith('NODE') and self.click_down == mouse_on:
                         # Select the next node in the path
                         self.node_selected(mouse_on)
@@ -228,16 +229,16 @@ class Game:
                         self.player_route.node_path[-1].install_vector(installed_vector)
                         self.player.script.tags.on_vector_install(self.player_route.node_path[-1], installed_vector, self.player.get_player_info_dict())
 
-                elif get_state() == GameState.card_pick:
+                elif get_game_state().current_state == GameState.card_pick:
                     if mouse_on.startswith('PICK_CARD') and self.click_down == mouse_on:
                         pick_card_ndx = int(mouse_on.replace('PICK_CARD', ''))
                         self.player.add_card(self.card_choices.pop(pick_card_ndx))
-                        # change_state('end_of_level_progress')  # FIXME: Limit to one card pick
+                        # get_game_state().send('end_of_level_progress')  # FIXME: Limit to one card pick
                     elif mouse_on == 'NEXT_BUTTON' and self.click_down == mouse_on:
-                        change_state('end_of_level_progress')
-                elif get_state() == GameState.game_end_loss:
+                        get_game_state().send('end_of_level_progress')
+                elif get_game_state().current_state == GameState.game_end_loss:
                     pass
-                elif get_state() == GameState.game_end_win:
+                elif get_game_state().current_state == GameState.game_end_win:
                     pass
 
                 self.click_down = None
@@ -250,7 +251,7 @@ class Game:
         self.mouse_check.reset()
 
         # Render the network
-        if get_state() == GameState.run_enemy_script:
+        if get_game_state().current_state == GameState.run_enemy_script:
             render_network(self.screen, self.level, self.player.script, self.enemy.script, [self.enemy_route, self.player_route])
         else:
             interactables, mouseovers = render_network(self.screen, self.level, self.player.script, None, [self.enemy_temp_route, self.player_route])
@@ -292,17 +293,17 @@ class Game:
         render_energy_tracker(self.screen, self.player)
 
         # Render card pick screen
-        if get_state() == GameState.card_pick:
+        if get_game_state().current_state == GameState.card_pick:
             interactables = render_card_pick(self.screen, self.card_choices)
             self.mouse_check.register_rect(interactables)
 
-        if get_state() == GameState.intro_screen:
+        if get_game_state().current_state == GameState.intro_screen:
             interactables = render_intro_screen(self.screen)
             self.mouse_check.register_rect(interactables)
 
-        if get_state() == GameState.game_end_loss:
+        if get_game_state().current_state == GameState.game_end_loss:
             render_end_screen(self.screen, win=False)
-        elif get_state() == GameState.game_end_win:
+        elif get_game_state().current_state == GameState.game_end_win:
             render_end_screen(self.screen, win=True)
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -313,14 +314,14 @@ class Game:
         self.mouseover_text = None
 
         # Render dragged card to mouse position
-        if get_state() == GameState.card_drag and self.player.dragged is not None:
+        if get_game_state().current_state == GameState.card_drag and self.player.dragged is not None:
             self.screen.blit(
                 gen_card(self.player.get_dragged_card()),
                 (mouse_x - CARD_WIDTH//2, mouse_y - CARD_HEIGHT//2)
             )
 
         # Render version
-        font = pygame.font.SysFont("assets/fonts/BrassMono-Regular.ttf", 30)
+        font = pygame.font.Font(get_font('BrassMono', 'regular'), 30)
         text = font.render(DEVELOPMENT_VERSION, True, 'white')
         self.screen.blit(text, (2, 2))
 
@@ -340,7 +341,7 @@ class Game:
         self.run_action_queue()
 
         if not success or self.player_route.is_path_complete():
-            change_state('player_script_complete')
+            get_game_state().send('player_script_complete')
 
     def send_script(self, ignore_cost=False):
         if not ignore_cost and not self.player.has_energy(1):
@@ -355,7 +356,7 @@ class Game:
         self.run_action_queue()
         self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
         self.player.script.on_node_advance(None, self.player_route.node_path[-1], self.level)
-        change_state('send_script_selected')
+        get_game_state().send('send_script_selected')
 
     def play_card_on_node(self, node, card):
         if card.type != CardType.WARD:
@@ -412,7 +413,7 @@ class Game:
                 node.vector.tags.on_turn_end_vector(node.vector, node)
         self.run_action_queue()
 
-        change_state('end_turn')
+        get_game_state().send('end_turn')
 
     def run_action_queue(self):
         queue = get_aq()
@@ -459,41 +460,3 @@ class Game:
 
             # Get next action
             action = queue.get_action()
-
-
-# Hacky workaround to allow the Game class to modify GameState and define on-change methods
-game_state = None
-
-def change_state(new_state):
-    global game_state
-    game_state.send(new_state)
-
-def get_state():
-    global game_state
-    return game_state.current_state
-
-
-def main():
-    logging.getLogger().setLevel(logging.DEBUG)
-
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pygame.time.Clock()
-
-    game = Game(screen, clock)
-    
-    global game_state
-    game_state = GameState(game)
-    game.load_game()
-    change_state('loading_complete')
-
-    running = True
-    while running:
-        game.level_update()
-        game.check_events()
-        running = game.render_screen()
-    pygame.quit()
-
-
-if __name__ == '__main__':
-    main()

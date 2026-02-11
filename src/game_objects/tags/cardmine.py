@@ -1,5 +1,5 @@
-from game_objects.tag import Tag
-from utils.action_queue import get_aq
+from src.game_objects.tag import Tag
+from src.utils.action_queue import get_aq
 
 
 class CardMine(Tag):

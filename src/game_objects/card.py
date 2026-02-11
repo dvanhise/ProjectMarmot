@@ -1,4 +1,4 @@
-from game_objects.card_type import CardType
+from src.game_objects.card_type import CardType
 
 
 class Card:

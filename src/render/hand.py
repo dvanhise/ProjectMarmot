@@ -1,7 +1,7 @@
 import pygame
-from game_objects.player import Player
-from render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from src.game_objects.player import Player
+from src.render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 CARD_GAP = 5

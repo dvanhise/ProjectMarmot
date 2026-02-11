@@ -2,10 +2,10 @@ import random
 import copy
 import logging
 from enum import StrEnum, auto
-from game_objects.graph import Node
-from game_objects.route import Route
-from game_objects.script import Script
-from game_objects.tags.boost import Boost
+from src.game_objects.graph import Node
+from src.game_objects.route import Route
+from src.game_objects.script import Script
+from src.game_objects.tags.boost import Boost
 
 
 class PathType(StrEnum):

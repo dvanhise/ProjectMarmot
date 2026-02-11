@@ -1,4 +1,4 @@
-from game_objects.tag import Tag
+from src.game_objects.tag import Tag
 
 
 # Placeholder tag for tooltip functionality

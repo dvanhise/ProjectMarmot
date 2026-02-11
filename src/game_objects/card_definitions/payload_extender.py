@@ -1,6 +1,6 @@
-from game_objects.card_type import CardType
-from utils.action_queue import get_aq
-from game_objects.card import Card
+from src.game_objects.card_type import CardType
+from src.utils.action_queue import get_aq
+from src.game_objects.card import Card
 
 
 class PayloadExtender(Card):

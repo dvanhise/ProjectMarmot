@@ -1,6 +1,6 @@
-from game_objects.vector import Vector
-from game_objects.card import Card
-from game_objects.tag import TagManager
+from src.game_objects.vector import Vector
+from src.game_objects.card import Card
+from src.game_objects.tag import TagManager
 
 
 class Node:

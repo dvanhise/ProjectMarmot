@@ -1,8 +1,8 @@
-from game_objects.card_type import CardType
-from game_objects.tags.cardmine import CardMine
-from game_objects.vector import Vector
-from game_objects.card import Card
-from game_objects.tags.vector import Vector as VectorTag
+from src.game_objects.card_type import CardType
+from src.game_objects.tags.cardmine import CardMine
+from src.game_objects.vector import Vector
+from src.game_objects.card import Card
+from src.game_objects.tags.vector import Vector as VectorTag
 
 
 

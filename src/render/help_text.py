@@ -1,6 +1,6 @@
 import pygame
-from constants import TERMINAL_GREEN, DARK_TERMINAL
-
+from src.constants import TERMINAL_GREEN, DARK_TERMINAL
+from src.utils.asset_loader import get_font
 
 HELP_HEIGHT = 16
 HELP_TEXT_FONT = 12
@@ -8,7 +8,7 @@ TEXT_PADDING = 2
 
 
 def render_help_text(s: pygame.Surface, text, left, top):
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', HELP_TEXT_FONT)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), HELP_TEXT_FONT)
     text = font.render(text, True, TERMINAL_GREEN)
     text_size = text.get_size()
 

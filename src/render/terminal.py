@@ -1,6 +1,7 @@
 import pygame
-from render.network import NETWORK_HEIGHT
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, TERMINAL_GREEN, DARK_TERMINAL, CRT_TAN
+from src.render.network import NETWORK_HEIGHT
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TERMINAL_GREEN, DARK_TERMINAL, CRT_TAN
+from src.utils.asset_loader import get_font
 
 TERM_SIZE = (250, 120)
 TERM_FONT_SIZE = 11
@@ -16,7 +17,7 @@ def render_terminal(s: pygame.Surface, char):
     term_surface.fill(DARK_TERMINAL)
     pygame.draw.rect(term_surface, CRT_TAN, term_surface.get_rect(), width=5)
 
-    font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', TERM_FONT_SIZE)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), TERM_FONT_SIZE)
 
     if char.owner == 'ENEMY' and char.script:
         vert_offset = TERM_PADDING

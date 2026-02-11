@@ -1,4 +1,4 @@
-from utils.card_registry import get_new_card
+from src.utils.card_registry import get_new_card
 
 
 def add_starter_cards(player):

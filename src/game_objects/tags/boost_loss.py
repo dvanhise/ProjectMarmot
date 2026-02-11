@@ -1,5 +1,5 @@
-from game_objects.tag import Tag
-from game_objects.tags.boost import Boost
+from src.game_objects.tag import Tag
+from src.game_objects.tags.boost import Boost
 
 
 class BoostLoss(Tag):

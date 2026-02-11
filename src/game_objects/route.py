@@ -1,6 +1,6 @@
 import logging
 import copy
-from game_objects.graph import Node, Edge
+from src.game_objects.graph import Node, Edge
 
 
 class Route:

@@ -1,6 +1,6 @@
-from game_objects.tag import Tag
-from game_objects.card_type import CardType
-from utils.action_queue import get_aq
+from src.game_objects.tag import Tag
+from src.game_objects.card_type import CardType
+from src.utils.action_queue import get_aq
 
 
 class Harden(Tag):

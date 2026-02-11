@@ -1,8 +1,8 @@
-from game_objects.card_type import CardType
-from game_objects.card import Card
-from game_objects.tags.delayed_energy import DelayedEnergy
-from utils.action_queue import get_aq
-from game_objects.tags.ward import Ward
+from src.game_objects.card_type import CardType
+from src.game_objects.card import Card
+from src.game_objects.tags.delayed_energy import DelayedEnergy
+from src.utils.action_queue import get_aq
+from src.game_objects.tags.ward import Ward
 
 
 class Desync(Card):

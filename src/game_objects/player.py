@@ -1,8 +1,8 @@
 import copy
 from random import shuffle
 import logging
-from game_objects.card import Card
-from game_objects.tag import TagManager
+from src.game_objects.card import Card
+from src.game_objects.tag import TagManager
 
 
 class Player:

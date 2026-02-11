@@ -1,6 +1,6 @@
 import logging
-from game_objects.graph import Node, Edge
-from game_objects.tag import TagManager
+from src.game_objects.graph import Node, Edge
+from src.game_objects.tag import TagManager
 
 
 class Level:

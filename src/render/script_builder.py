@@ -1,11 +1,11 @@
 import pygame
-from game_objects.script import ScriptBuilder
-from game_objects.card_type import CardType
-from render.card import CARD_HEIGHT, CARD_WIDTH, generate as gen_card
-from render.network import NETWORK_HEIGHT
-from utils.image_loader import img_fetch
-from utils.text_helper import draw_text_with_outline
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, ENERGY_COLOR
+from src.game_objects.script import ScriptBuilder
+from src.game_objects.card_type import CardType
+from src.render.card import CARD_HEIGHT, CARD_WIDTH, generate as gen_card
+from src.render.network import NETWORK_HEIGHT
+from src.utils.asset_loader import img_fetch, get_font
+from src.utils.text_helper import draw_text_with_outline
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, ENERGY_COLOR
 
 
 SCREEN_Y_OFFSET = NETWORK_HEIGHT + 10
@@ -38,7 +38,7 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
     arrow_img = img_fetch().get('arrow')
     arrow_img = pygame.transform.smoothscale(arrow_img, (ARROW_WIDTH, ARROW_HEIGHT))
 
-    label_font = pygame.font.Font('assets/fonts/BrassMono-Regular.ttf', LABEL_FONT_SIZE)
+    label_font = pygame.font.Font(get_font('BrassMono', 'regular'), LABEL_FONT_SIZE)
 
     for ndx, slot in enumerate(builder.slots):
         if not slot.card:
@@ -66,7 +66,7 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
 
     # Add energy cost to button
     pygame.draw.circle(s, ENERGY_COLOR, (SCREEN_WIDTH-BUTTON_SIZE[0]+45, SCREEN_Y_OFFSET+60), 16)
-    font = pygame.font.Font('assets/fonts/BrassMono-Bold.ttf', 26)
+    font = pygame.font.Font(get_font('BrassMono', 'bold'), 26)
     outline_text = draw_text_with_outline('1', font, 'white', 2, 'black')
     text_rect = outline_text.get_rect(center=(SCREEN_WIDTH - BUTTON_SIZE[0] +45, SCREEN_Y_OFFSET+60))
     s.blit(outline_text, text_rect)
