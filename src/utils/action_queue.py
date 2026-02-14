@@ -5,7 +5,7 @@ class ActionQueue:
     ACTIONS = {
         'add_card': 2,  # name, hand/draw/discard
         'draw_cards': 1,   # count
-        'delete_cards': 2,  # LEFT/RIGHT, count
+        'delete_cards': 2,  # LEFT/RIGHT/RANDOM, count
         'change_player_health': 1,  # +/-HP change
         'change_enemy_health': 1,  # +/-HP change
         'execute_script': 0,

@@ -1,0 +1,83 @@
+from src.game_objects.vector import Vector
+from src.game_objects.tags.boost import Boost
+from src.game_objects.tags.surge import Surge
+from src.utils.router import PathType
+
+
+"""
+Small network with unbalanced edge difficulty
+
+     0   1   2
+0       [2]
+1   [1p]    [4e]
+2       [3]
+"""
+
+
+definition = {
+    'edge_difficulty': 2,
+    'network_width': 3,
+    'network_height': 3,
+    'portrait': 'placeholder',
+    'health': 8,
+    'nodes': [
+        {
+            'id': 1,
+            'position': (0, 1),
+            'owner': 'PLAYER',
+            'source': True
+        },
+        {
+            'id': 2,
+            'position': (1, 0)
+        },
+        {
+            'id': 3,
+            'position': (1, 2)
+        },
+        {
+            'id': 4,
+            'position': (2, 1),
+            'owner': 'ENEMY',
+            'source': True
+        }
+    ],
+    'edges': [
+        {
+            'left_id': 1,
+            'right_id': 2
+        },
+        {
+            'left_id': 1,
+            'right_id': 3,
+            'difficulty': 4
+        },
+        {
+            'left_id': 2,
+            'right_id': 4,
+            'difficulty': 4
+        },
+        {
+            'left_id': 3,
+            'right_id': 4
+        }
+    ],
+    'pattern': [
+        {
+            'pattern_id': 1,
+            'start': True,
+            'power': 4,
+            'vectors': [Vector(name='Amp', tags=[Boost(2)])],
+            'pathing': PathType.TAKE_NODES,
+            'next': 2
+        },
+        {
+            'pattern_id': 2,
+            'power': 2,
+            'self_tags': [Surge(1)],
+            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
+            'pathing': PathType.RANDOM,
+            'next': 1
+        }
+    ]
+}

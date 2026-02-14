@@ -3,7 +3,7 @@ from src.game_objects.tag import Tag
 from src.utils.asset_loader import img_fetch, get_font
 from src.utils.text_helper import draw_text_with_outline
 
-TAG_ICON_SIZE = (13, 13)
+TAG_ICON_SIZE = (16, 16)
 
 
 def gen_tag(tag: Tag):

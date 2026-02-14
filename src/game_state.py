@@ -13,7 +13,6 @@ class GameState(StateMachine):
     run_enemy_script = State()
     end_of_level = State()
     card_pick = State()
-    # hardware_pick = State()
     game_end_win = State()
     game_end_loss = State()
     exit_game = State(final=True)

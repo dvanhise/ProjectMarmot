@@ -11,6 +11,7 @@ class ModExtender(Card):
     image_id = 'query'
     cost = 1
     description = ['Gain an additional', 'mod slot', 'delete']
+    delete_on_play = True
 
     def on_play(self):
         get_aq().queue_action('add_script_slot', CardType.SCRIPT_MOD)

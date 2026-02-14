@@ -8,5 +8,5 @@ class Multitasking(Tag):
     icon = 'power'
     tooltip = 'When executing a script, draw {count} card{"s" if count > 1 else ""}.'
 
-    def on_script_execution(self, script):
+    def on_script_creation(self, script):
         get_aq().queue_action('draw_cards', self.count)

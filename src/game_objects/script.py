@@ -59,11 +59,13 @@ class Script:
 
         # Interact with friendly node
         elif node.vector:
+            self.tags.on_friendly_script_node_encounter(self, node)
+            node.tags.on_friendly_script_node_encounter(self, node)
             node.vector.tags.on_friendly_script_node_encounter(self, node)
 
         # Automatically install a vector if node doesn't have one installed
         if autoplay_vector and len(self.vector) and not node.vector:
-            node.install_vector(self.vector.pop(-1))
+            node.install_vector(self.vector.pop(0))
 
         return True
 

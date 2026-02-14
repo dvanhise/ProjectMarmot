@@ -1,5 +1,6 @@
 import random
 from collections import Counter
+
 from src.game_objects.card_definitions.amplifier import Amplifier
 from src.game_objects.card_definitions.archive import Archive
 from src.game_objects.card_definitions.battleaxe import BattleAxe
@@ -31,7 +32,9 @@ from src.game_objects.card_definitions.remote_miner import RemoteMiner
 from src.game_objects.card_definitions.sandbox import Sandbox
 from src.game_objects.card_definitions.security_group import SecurityGroup
 from src.game_objects.card_definitions.shiv import Shiv
+from src.game_objects.card_definitions.shovelware import Shovelware
 from src.game_objects.card_definitions.signal_enhancement import SignalEnhancement
+from src.game_objects.card_definitions.spam import Spam
 from src.game_objects.card_definitions.spike import Spike
 from src.game_objects.card_definitions.super_amplifier import SuperAmplifier
 from src.game_objects.card_definitions.vector_extender import VectorExtender
@@ -69,7 +72,9 @@ card_list = [
     Sandbox,
     SecurityGroup,
     Shiv,
+    Shovelware,
     SignalEnhancement,
+    Spam,
     Spike,
     SuperAmplifier,
     VectorExtender

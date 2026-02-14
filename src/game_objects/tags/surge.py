@@ -16,6 +16,6 @@ class Surge(Tag):
         if card.type == CardType.SCRIPT_PAYLOAD and card.power:
             card.power += self.count
 
-    def on_script_execution(self, script):
+    def on_script_creation(self, script):
         if script.owner == 'ENEMY':
             script.power += self.count

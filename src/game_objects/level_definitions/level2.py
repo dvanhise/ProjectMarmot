@@ -3,6 +3,8 @@ from src.game_objects.vector import Vector
 from src.utils.router import PathType
 
 """
+Lots of enemy starting nodes with high ward
+
      0      1       2       3       4       5
 0          [2]     [4]     [6]     [8]
 1   [1p]                                    [10e]

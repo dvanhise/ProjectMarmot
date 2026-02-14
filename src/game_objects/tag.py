@@ -60,7 +60,7 @@ class Tag:
     def on_turn_start_player(self, player):
         pass
 
-    def on_script_execution(self, script):
+    def on_script_creation(self, script):
         pass
 
     def on_temp_card_creation(self, card, player_info):
@@ -151,9 +151,9 @@ class TagManager(list):
             tag.on_vector_install(node, vector, player_info)
         self.remove_depleted_tags()
 
-    def on_script_execution(self, script):
+    def on_script_creation(self, script):
         for tag in self:
-            tag.on_script_execution(script)
+            tag.on_script_creation(script)
         self.remove_depleted_tags()
 
     def on_temp_card_creation(self, card, player_info):

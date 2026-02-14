@@ -2,7 +2,10 @@ from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
 from src.utils.router import PathType
 
+
 """
+Generic test level with minimal powers
+
      0   1   2   3   4
 0           [4]
 1       [2]     [7]
@@ -55,7 +58,7 @@ definition = {
             'position': (3, 3),
             'owner': 'ENEMY',
             'ward': 2,
-            'vector': Vector(name='Amp', tags=[Boost(1)])
+            'vector': Vector(name='Amp', tags=[Boost(2)])
         },
         {
             'id': 9,
@@ -125,9 +128,25 @@ definition = {
         },
         {
             'pattern_id': 2,
+            'power': 3,
+            'pathing': PathType.TAKE_OPPONENT_NODES,
+            'next': 3
+        },
+        {
+            'pattern_id': 3,
+            'power': 3,
+            'vectors': [
+                Vector(name='Amp', default_ward=1, tags=[Boost(2)]),
+                Vector(name='S Amp', tags=[Boost(1)])
+            ],
+            'pathing': PathType.RANDOM,
+            'next': 4
+        },
+        {
+            'pattern_id': 4,
             'power': 4,
             'pathing': PathType.TAKE_OPPONENT_NODES,
-            'next': 1
+            'next': 3
         }
     ]
 }

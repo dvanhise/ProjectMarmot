@@ -38,7 +38,7 @@ def render_terminal(s: pygame.Surface, char):
             vert_offset += TERM_LINE_SPACING
 
         if char.script.tags:
-            text = font.render(f'>> set {" ".join([t.get_full_name() for t in char.script.tags])}', True, TERMINAL_GREEN)
+            text = font.render(f'>> set {" ".join([t.get_full_name()+str(t.count) for t in char.script.tags])}', True, TERMINAL_GREEN)
             text_rect = text.get_rect(topleft=(TERM_PADDING, vert_offset))
             term_surface.blit(text, text_rect)
 

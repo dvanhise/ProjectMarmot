@@ -1,4 +1,6 @@
 import copy
+from typing import Callable
+
 from src.game_objects.script import Script
 from src.game_objects.tag import TagManager
 
@@ -9,6 +11,7 @@ class Enemy:
     def __init__(self, definition):
         self.pattern = {action['pattern_id']: action for action in definition['pattern']}
         self.current_pattern_id = None
+        self.previous_pattern_id = None
         self.script = None
         self.portrait = definition['portrait']
         self.health = definition['health']
@@ -22,13 +25,21 @@ class Enemy:
         if self.current_pattern_id is None:
             self.current_pattern_id = [k for k,v in self.pattern.items() if v.get('start')][0]
         else:
-            # TODO: Allow for RNG-based pattern changes
-            self.current_pattern_id = self.pattern[self.current_pattern_id]['next']
+            next_pattern = self.pattern[self.current_pattern_id]['next']
+            prev = self.previous_pattern_id
+            self.previous_pattern_id = self.current_pattern_id
+            if type(next_pattern) is Callable:
+                self.current_pattern_id = next_pattern(prev)
+            elif type(next_pattern) is int:
+                self.current_pattern_id = next_pattern
+            else:
+                raise ValueError(f'Unexpected type for next pattern "{type(next_pattern)}"')
 
         self.script = Script('ENEMY')
         p = self.pattern[self.current_pattern_id]
         self.script.power = p.get('power', 0)
         self.script.pathing = p['pathing']
+        self.tags.on_script_creation(self.script)
 
         tags = p.get('tags', [])
         for tag in tags:

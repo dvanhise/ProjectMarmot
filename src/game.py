@@ -1,9 +1,9 @@
 import logging
+import random
+
 import pygame
 
 from src.game_objects.level_definitions.level1 import definition as level1_def
-from src.game_objects.level_definitions.level2 import definition as level2_def
-from src.game_objects.level_definitions.level3 import definition as level3_def
 from src.game_objects.level import Level
 from src.game_objects.enemy import Enemy
 from src.game_objects.player import Player
@@ -35,6 +35,7 @@ from src.utils.action_queue import get_aq
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
 from src.game_state import GameState, get_game_state
 from src.starter_deck import add_starter_cards
+from src.level_manager import get_level_order
 
 
 class Game:
@@ -54,9 +55,9 @@ class Game:
         self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
         self.level_ndx = 0
-        self.level_order = [level1_def, level2_def, level3_def]
+        self.level_order = get_level_order()
 
-        # Initialize level here to ensure rendering doesn't break
+        # Initialize arbitrary level and enemy here so rendering doesn't break
         self.level = Level(level1_def)
         self.enemy = Enemy(level1_def)
 
@@ -75,6 +76,10 @@ class Game:
 
     def after_end_turn(self):
         self.player.end_turn()
+
+    def on_enter_run_enemy_script(self):
+        for tag in self.enemy.pattern[self.enemy.current_pattern_id].get('self_tags', []):
+            self.enemy.tags.add_tag(tag)
 
     def after_enemy_script_complete(self):
         self.enemy.script = None
@@ -156,92 +161,76 @@ class Game:
             get_game_state().send('end_of_level_progress')
 
     def check_events(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        mouse_on = self.mouse_check.on_interactable_object(mouse_x, mouse_y)
-
-        self.mouseover_text = self.mouse_check.on_mouseover_object(mouse_x, mouse_y)
+        m_x, m_y = pygame.mouse.get_pos()
+        self.mouseover_text = self.mouse_check.on_mouseover_object(m_x, m_y)
 
         # Poll for events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:  # Window X clicked
                 pygame.quit()
 
+            # Debug actions to change player/opponent health
             if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFTBRACKET:
                 self.player.health -= 1
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHTBRACKET:
                 self.enemy.health -= 1
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if get_game_state().current_state == GameState.wait_for_player:
-                    if mouse_on in ['SEND_SCRIPT', 'END_TURN']:
-                        self.click_down = mouse_on
-                    elif mouse_on.startswith('CARD'):
-                        card_id = self.player.current_hand[int(mouse_on.replace('CARD', ''))]
-                        self.player.start_drag(card_id)
-                        get_game_state().send('start_drag')
-
-                elif get_game_state().current_state == GameState.card_pick and (mouse_on == 'NEXT_BUTTON' or mouse_on.startswith('PICK_CARD')):
-                    self.click_down = mouse_on
-                elif get_game_state().current_state == GameState.run_player_script and (mouse_on.startswith('NODE') or mouse_on.startswith('INSTALL_VECTOR')):
-                    self.click_down = mouse_on
-
-                elif get_game_state().current_state == GameState.game_end_loss:
-                    # quit game
-                    pass
-                elif get_game_state().current_state == GameState.game_end_win:
-                    # quit game
-                    pass
-                elif get_game_state().current_state == GameState.intro_screen:
-                    if mouse_on == 'START_BUTTON':
-                        get_game_state().send('start_selected')
+                self.mouse_check.mouse_down(m_x, m_y)
+                if (get_game_state().current_state == GameState.wait_for_player and
+                        ((card_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'CARD', False)) is not None)):
+                    self.player.start_drag(self.player.current_hand[card_ndx])
+                    get_game_state().send('start_drag')
 
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if get_game_state().current_state == GameState.wait_for_player:
-                    if mouse_on == 'END_TURN' and self.click_down == 'END_TURN':
+                    if self.mouse_check.has_selected(m_x, m_y, 'END_TURN'):
                         self.end_turn()
-                    elif mouse_on == 'SEND_SCRIPT' and self.click_down == 'SEND_SCRIPT':
+                    elif self.mouse_check.has_selected(m_x, m_y, 'SEND_SCRIPT'):
                         self.send_script()
 
                 if get_game_state().current_state == GameState.card_drag:
                     card = self.player.get_dragged_card()
                     logging.info(f'No longer dragging "{self.player.dragged}"')
                     get_game_state().send('card_drop')
-                    if mouse_on.startswith('SCRIPT'):
-                        ndx = int(mouse_on.replace('SCRIPT', ''))
-                        self.play_card_on_script_builder(ndx, card)
-                    elif mouse_on.startswith('NODE'):
-                        node_id = int(mouse_on.replace('NODE', ''))
+                    if (script_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'SCRIPT', False)) is not None:
+                        self.play_card_on_script_builder(script_ndx, card)
+                    elif (node_id := self.mouse_check.has_selected_prefix(m_x, m_y, 'NODE', False)) is not None:
                         node = self.level.nodes[node_id]
                         self.play_card_on_node(node, card)
-                    elif mouse_on == 'PLAYZONE':
+                    elif self.mouse_check.has_selected(m_x, m_y, 'PLAYZONE', False):
                         self.play_generic_card(card)
                     else:
                         self.player.add_card_to_hand(self.player.dragged)  # Card drop in invalid location
                     self.player.dragged = None
 
                 elif get_game_state().current_state == GameState.run_player_script:
-                    if mouse_on.startswith('NODE') and self.click_down == mouse_on:
+                    if (node_id := self.mouse_check.has_selected_prefix(m_x, m_y, 'NODE')) is not None:
                         # Select the next node in the path
-                        self.node_selected(mouse_on)
-                    if mouse_on.startswith('INSTALL_VECTOR') and self.click_down == mouse_on:
-                        vector_ndx = int(mouse_on.replace('INSTALL_VECTOR', ''))
+                        node = self.level.nodes[node_id]
+                        self.node_selected(node)
+                    if (vector_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'INSTALL_VECTOR')) is not None:
                         installed_vector = self.player.script.vector.pop(vector_ndx)
                         self.player_route.node_path[-1].install_vector(installed_vector)
                         self.player.script.tags.on_vector_install(self.player_route.node_path[-1], installed_vector, self.player.get_player_info_dict())
 
                 elif get_game_state().current_state == GameState.card_pick:
-                    if mouse_on.startswith('PICK_CARD') and self.click_down == mouse_on:
-                        pick_card_ndx = int(mouse_on.replace('PICK_CARD', ''))
+                    if (pick_card_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'PICK_CARD')) is not None:
                         self.player.add_card(self.card_choices.pop(pick_card_ndx))
                         # get_game_state().send('end_of_level_progress')  # FIXME: Limit to one card pick
-                    elif mouse_on == 'NEXT_BUTTON' and self.click_down == mouse_on:
+                    elif self.mouse_check.has_selected(m_x, m_y, 'NEXT_BUTTON'):
                         get_game_state().send('end_of_level_progress')
+
+                elif get_game_state().current_state == GameState.intro_screen:
+                    if self.mouse_check.has_selected(m_x, m_y, 'START_BUTTON'):
+                        get_game_state().send('start_selected')
+
                 elif get_game_state().current_state == GameState.game_end_loss:
                     pass
                 elif get_game_state().current_state == GameState.game_end_win:
                     pass
 
-                self.click_down = None
+                self.mouse_check.mouse_up()
 
     def render_screen(self):
         # Clear screen from last frame
@@ -306,18 +295,17 @@ class Game:
         elif get_game_state().current_state == GameState.game_end_win:
             render_end_screen(self.screen, win=True)
 
-        mouse_x, mouse_y = pygame.mouse.get_pos()
+        m_x, m_y = pygame.mouse.get_pos()
 
         # Render mouseover text
         if self.mouseover_text:
-            render_help_text(self.screen, self.mouseover_text, mouse_x, mouse_y)
-        self.mouseover_text = None
+            render_help_text(self.screen, self.mouseover_text, m_x, m_y)
 
         # Render dragged card to mouse position
         if get_game_state().current_state == GameState.card_drag and self.player.dragged is not None:
             self.screen.blit(
                 gen_card(self.player.get_dragged_card()),
-                (mouse_x - CARD_WIDTH//2, mouse_y - CARD_HEIGHT//2)
+                (m_x - CARD_WIDTH//2, m_y - CARD_HEIGHT//2)
             )
 
         # Render version
@@ -329,9 +317,7 @@ class Game:
         self.clock.tick(30)  # limits FPS to 30
         return True
 
-    def node_selected(self, selection_id):
-        node_id = int(selection_id.replace('NODE', ''))
-        node = self.level.nodes[node_id]
+    def node_selected(self, node):
         if node not in self.player_route.get_next_node_options():
             logging.warning(f'Selected node "{node.id}" not an option for next node.')
             return
@@ -352,7 +338,7 @@ class Game:
             self.player.pay_energy(1)
         self.player.script = self.script_builder.build_script(self.player.get_player_info_dict())
         self.run_action_queue()
-        self.player.tags.on_script_execution(self.player.script)
+        self.player.tags.on_script_creation(self.player.script)
         self.run_action_queue()
         self.player_route = Route(self.level.get_source('PLAYER'), 'PLAYER')
         self.player.script.on_node_advance(None, self.player_route.node_path[-1], self.level)
@@ -421,19 +407,24 @@ class Game:
         while action:
             if action[0] == 'add_card':
                 new_card = get_new_card(action[1])
-                self.player.tags.on_temp_card_creation(new_card, self.player.get_player_info_dict())
                 self.player.add_temp_card(new_card, to=action[2])
             elif action[0] == 'draw_cards':
                 self.player.draw(action[1])
             elif action[0] == 'delete_cards':
-                if action[1] == 'RIGHT':
-                    ndx = -1
-                elif action[1] == 'LEFT':
-                    ndx = 0
-                else:
-                    raise ValueError(f'Unknown card delete argument "{action[1]}"')
-                for _ in range(action[2]):
-                    self.player.deleted_pile.append(self.player.current_hand.pop(ndx))
+                card_id_to_delete = []
+                for i in range(min(action[2], len(self.player.current_hand))):
+                    if action[1] == 'RIGHT':
+                        card_id_to_delete.append(self.player.current_hand[-1-i])
+                    elif action[1] == 'LEFT':
+                        card_id_to_delete.append(self.player.current_hand[i])
+                    elif action[1] == 'RANDOM':
+                        card_id_to_delete.append(random.choice(
+                            [c for c in self.player.current_hand if c not in card_id_to_delete]))
+                    else:
+                        raise ValueError(f'Unknown card delete argument "{action[1]}"')
+                for card_id in card_id_to_delete:
+                    self.player.current_hand.remove(card_id)
+                    self.player.deleted_pile.append(card_id)
             elif action[0] == 'change_player_health':
                 self.player.change_health(action[1])
             elif action[0] == 'change_enemy_health':
