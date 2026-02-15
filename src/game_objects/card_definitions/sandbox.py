@@ -13,10 +13,8 @@ class Sandbox(Card):
     tooltips = [Fortify]
     image_id = 'query'
     cost = 3
-    description = ['Apply Fortify 1,', 'next turn draw 2 cards']
-
-    def on_play(self):
-        get_aq().queue_action('add_player_tag', DelayedDraw, 2)
+    description = ['Apply Fortify 2,', 'next turn draw 2 cards']
 
     def on_ward_install(self, node):
-        node.tags.add_tag(Fortify(1))
+        node.tags.add_tag(Fortify(2))
+        get_aq().queue_action('add_player_tag', DelayedDraw, 2)

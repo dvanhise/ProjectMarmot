@@ -1,6 +1,6 @@
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
-from src.game_objects.tags.surge import Surge
+from src.game_objects.tags.enemy_surge import EnemySurge
 from src.utils.router import PathType
 
 
@@ -74,7 +74,7 @@ definition = {
         {
             'pattern_id': 2,
             'power': 2,
-            'self_tags': [Surge(1)],
+            'self_tags': [EnemySurge(1)],
             'vectors': [Vector(name='Amp', tags=[Boost(1)])],
             'pathing': PathType.RANDOM,
             'next': 1

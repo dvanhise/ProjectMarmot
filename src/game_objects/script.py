@@ -26,25 +26,55 @@ class Script:
         if edge and self.owner != edge.owner:
             self.power -= max(0, edge.difficulty - self.edge_difficulty_reduction)
 
-        if self.power <= 0:
-            return False
+            if self.power <= 0:
+                return False
 
-        node.tags.before_script_node_encounter(self, node)
-
-        # Interact with non-friendly node
+        # Interact with ward
         if self.owner != node.owner:
+
+            # Before interaction with ward
+            self.tags.before_ward_encounter_as_script(self, node)
+            node.tags.before_ward_encounter_as_node(self, node)
+            if node.vector:
+                node.vector.tags.before_ward_encounter_as_vector(self, node)
+
             if node.ward >= self.power:
                 node.ward -= self.power
-                node.tags.after_failed_script_node_encounter(self, node)
+
+                self.tags.on_failed_node_encounter_as_script(self, node)
+                node.tags.on_failed_node_encounter_as_node(self, node)
+                if node.vector:
+                    node.vector.tags.on_failed_node_encounter_as_vector(self, node)
+
                 return False
             else:
                 self.power -= node.ward
                 node.ward = 0
-                node.tags.on_node_captured(node)
-                node.tags.after_successful_script_node_encounter(self, node)
+
+        # Before interaction with node
+        self.tags.before_node_encounter_as_script(self, node)
+        node.tags.before_node_encounter_as_node(self, node)
+        if node.vector:
+            node.vector.tags.before_node_encounter_as_vector(self, node)
+
+        if self.power < 0:
+            # A script can fail here due to tags like Fortify
+            self.tags.on_failed_node_encounter_as_script(self, node)
+            node.tags.on_failed_node_encounter_as_node(self, node)
+            if node.vector:
+                node.vector.tags.on_failed_node_encounter_as_vector(self, node)
+            return False
+
+        # Interact with captured unfriendly node
+        if self.owner != node.owner:
+            self.tags.on_node_captured_as_script(self, node)
+            node.tags.on_node_captured_as_node(self, node)
+            if node.vector:
+                node.vector.tags.on_node_captured_as_vector(self, node)
 
             if self.destroy_vector_on_capture:
                 node.vector = None
+
             if node.source:
                 opponent.change_health(-self.power)
             else:
@@ -57,15 +87,17 @@ class Script:
                     else:
                         e.owner = 'NEUTRAL'
 
-        # Interact with friendly node
-        elif node.vector:
-            self.tags.on_friendly_script_node_encounter(self, node)
-            node.tags.on_friendly_script_node_encounter(self, node)
-            node.vector.tags.on_friendly_script_node_encounter(self, node)
+        # Interaction with friendly node
+        else:
+            self.tags.on_friendly_node_encounter_as_script(self, node)
+            node.tags.on_friendly_node_encounter_as_node(self, node)
+            if node.vector:
+                node.vector.tags.on_friendly_node_encounter_as_vector(self, node)
 
-        # Automatically install a vector if node doesn't have one installed
+        # Automatically install enemy vector if node doesn't have one installed
         if autoplay_vector and len(self.vector) and not node.vector:
             node.install_vector(self.vector.pop(0))
+            node.vector.tags.on_vector_install(node, node.vector, {})  # TODO: Add enemy info if ever needed
 
         return True
 

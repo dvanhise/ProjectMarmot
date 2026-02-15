@@ -10,9 +10,8 @@ class Player:
 
     def __init__(self):
         self.id_counter = 0
-        self.all_cards = {}
-        self.all_cards_temp = {}  # Temporary copy of all cards during a round that can be temporarily modified
-        self.temp_cards = {}  # Temporary cards during the round
+        self.all_cards = {}  # Store of permanent cards and their base stats
+        self.all_cards_temp = {}  # Copy of all cards during a round that can be temporarily modified
         self.draw_pile = []
         self.current_hand = []
         self.discard_pile = []
@@ -75,7 +74,7 @@ class Player:
 
     def add_temp_card(self, new_card: Card, to: str):
         self.tags.on_temp_card_creation(new_card, self.get_player_info_dict())
-        self.temp_cards[self.id_counter] = new_card
+        self.all_cards_temp[self.id_counter] = new_card
         if to == 'hand': self.current_hand.append(self.id_counter)
         elif to == 'discard': self.discard_pile.append(self.id_counter)
         elif to == 'draw': self.draw_pile.append(self.id_counter)

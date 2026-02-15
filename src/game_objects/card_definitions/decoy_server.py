@@ -7,7 +7,7 @@ from src.game_objects.tags.vector import Vector as VectorTag
 
 
 class DecoyServer(Card):
-    id = 'decoy_server'
+    id = 'decoy-server'
     name = 'Decoy Server'
     type = CardType.SCRIPT_VECTOR
     rarity = 'simple'

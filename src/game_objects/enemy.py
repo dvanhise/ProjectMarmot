@@ -51,5 +51,10 @@ class Enemy:
 
         return self.script
 
+    def get_enemy_info_dict(self):
+        return {
+            'health': self.health
+        }
+
     def check_defeat(self):
         return self.health <= 0

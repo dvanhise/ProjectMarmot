@@ -8,5 +8,5 @@ class WardBuilder(Tag):
     tooltip = 'Applies {count} ward to each friendly node encountered.'
     count = 0
 
-    def on_friendly_script_node_encounter(self, script, node):
+    def on_friendly_node_encounter_as_script(self, script, node):
         node.apply_ward(self.count)

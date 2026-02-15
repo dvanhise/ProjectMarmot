@@ -10,7 +10,7 @@ class BoostLoss(Tag):
     count = 0
     positive = False
 
-    def on_turn_end_vector(self, vector, node):
+    def on_turn_end_node(self, vector, node):
         boost_tag = vector.tags.find_tag(Boost)
         if boost_tag:
             boost_tag.count -= 1

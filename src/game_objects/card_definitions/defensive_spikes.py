@@ -6,7 +6,6 @@ from src.game_objects.tags.vector import Vector as VectorTag
 from src.game_objects.tags.ward import Ward
 
 
-
 class DefensiveSpikes(Card):
     id = 'defensive-spikes'
     name = 'Defensive Spikes'

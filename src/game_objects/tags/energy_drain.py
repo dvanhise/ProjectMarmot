@@ -8,5 +8,5 @@ class EnergyDrain(Tag):
     icon = 'power'
     tooltip = 'Gain {count} energy when capturing a node.'
 
-    def after_successful_script_node_encounter(self, script, node):
+    def on_node_captured_as_script(self, script, node):
         get_aq().queue_action('change_energy', self.count)

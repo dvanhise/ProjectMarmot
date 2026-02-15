@@ -7,10 +7,12 @@ class TagMultiplier(Tag):
     icon = 'power'
     tooltip = 'Increases all friendly node and vector tags by {count+1}x.'
 
-    def on_friendly_script_node_encounter(self, script, node):
+    def on_friendly_node_encounter_as_script(self, script, node):
         for tag in node.tags:
-            tag.count *= (self.count + 1)
+            if tag.positive:
+                tag.count *= (self.count + 1)
 
         if node.vector:
             for tag in node.vector.tags:
-                tag.count *= (self.count + 1)
+                if tag.positive:
+                    tag.count *= (self.count + 1)

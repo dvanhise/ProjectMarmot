@@ -1,4 +1,3 @@
-from src.game_objects.script import Script
 from src.game_objects.card_type import CardType
 from src.game_objects.card import Card
 
@@ -12,5 +11,5 @@ class Encryption(Card):
     cost = 1
     description = ['Reduce script', 'edge penalty by 1']
 
-    def on_script_activation(self, script: Script, player_info):
+    def on_script_activation(self, script, player_info):
         script.edge_difficulty_reduction += 1

@@ -91,7 +91,7 @@ class Game:
         self.player.script = None
         self.player_route = None
         for card_id in self.script_builder.clear():
-            if self.player.all_cards[card_id].delete_on_execution:
+            if self.player.all_cards_temp[card_id].delete_on_execution:
                 self.player.deleted_pile.append(card_id)
             else:
                 self.player.add_card_to_discard(card_id)
@@ -247,9 +247,10 @@ class Game:
             self.mouse_check.register_rect(interactables)
             self.mouse_check.register_mouseover_rect(mouseovers)
 
-        # Render info
+        # Render player/enemy info
         mouseovers = render_info(self.screen, self.player)
         self.mouse_check.register_mouseover_rect(mouseovers)
+
         mouseovers = render_info(self.screen, self.enemy)
         self.mouse_check.register_mouseover_rect(mouseovers)
 
@@ -357,6 +358,7 @@ class Game:
         else:
             self.player.pay_energy(card.cost)
             node.apply_ward_from_card(card)
+            card.on_ward_install(node)
             self.run_action_queue()
             self.player.post_card_played(self.player.dragged)
 
@@ -394,9 +396,9 @@ class Game:
         self.run_action_queue()
 
         for node in self.level.nodes.values():
-            node.tags.on_turn_end_node(node)
+            node.tags.on_turn_end_node(node.vector, node)
             if node.vector:
-                node.vector.tags.on_turn_end_vector(node.vector, node)
+                node.vector.tags.on_turn_end_node(node.vector, node)
         self.run_action_queue()
 
         get_game_state().send('end_turn')

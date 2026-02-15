@@ -1,7 +1,7 @@
 import random
 
 from src.game_objects.tags.boost import Boost
-from src.game_objects.tags.surge import Surge
+from src.game_objects.tags.enemy_surge import EnemySurge
 from src.game_objects.tags.cardmine import CardMine
 from src.game_objects.vector import Vector
 from src.utils.router import PathType
@@ -159,7 +159,7 @@ definition = {
             'pattern_id': 3,
             'start': True,
             'power': 4,
-            'self_tags': [Surge(1)],
+            'self_tags': [EnemySurge(1)],
             'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': lambda prev: random.choice([1, 2])
         }

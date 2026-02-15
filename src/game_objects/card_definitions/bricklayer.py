@@ -14,7 +14,7 @@ class Bricklayer(Card):
     image_id = 'bricklayer'
     tooltips = [Ward]
     cost = 1
-    description = ['Apply 2 ward to', 'each node encountered']
+    description = ['Apply 2 Ward to', 'each node encountered']
 
     def on_script_activation(self, script: Script, player_info):
         script.tags.add_tag(WardBuilder(2))

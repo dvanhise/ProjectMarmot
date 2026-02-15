@@ -5,10 +5,8 @@ class Tag:
     tooltip = 'TODO'
     count = 0
     card = ''
-    positive = True
-
-    part_of_vector = False
-    remove_on_vector_change = False
+    owner = ''
+    positive = True  # Whether the tag is good or bad for the node/vector/player it's applied to
 
     def __init__(self, count):
         self.count = count
@@ -20,32 +18,64 @@ class Tag:
         return f'{self.name}: {self.tooltip.format(count='N', card='Card')}'
 
     def get_full_name(self):
-        return self.name
+        return f'{self.id}{self.count}'
 
     def on_change(self, change):
         # Any time a tag is modified
         pass
 
-    def before_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_script(self, script, node):
+        # Only applies when approaching unfriendly nodes
         pass
 
-    def after_failed_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_node(self, script, node):
+        # Only applies when approaching unfriendly nodes
         pass
 
-    def after_successful_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_vector(self, script, node):
+        # Only applies when approaching unfriendly nodes
         pass
 
-    def on_friendly_script_node_encounter(self, script, node):
+    def before_node_encounter_as_script(self, script, node):
         pass
 
-    def on_node_captured(self, node):
-        # When an opponent captures a node
+    def before_node_encounter_as_node(self, script, node):
+        pass
+
+    def before_node_encounter_as_vector(self, script, node):
+        pass
+
+    def on_failed_node_encounter_as_script(self, script, node):
+        pass
+
+    def on_failed_node_encounter_as_node(self, script, node):
+        pass
+
+    def on_failed_node_encounter_as_vector(self, script, node):
+        pass
+
+    def on_node_captured_as_script(self, script, node):
+        # When an player captures a non-friendly node
+        pass
+
+    def on_node_captured_as_node(self, script, node):
+        # When an player captures a non-friendly node
+        pass
+
+    def on_node_captured_as_vector(self, script, node):
+        # When an player captures a non-friendly node
+        pass
+
+    def on_friendly_node_encounter_as_script(self, script, node):
+        pass
+
+    def on_friendly_node_encounter_as_node(self, script, node):
+        pass
+
+    def on_friendly_node_encounter_as_vector(self, script, node):
         pass
 
     def on_vector_install(self, node, vector, player_info):
-        pass
-
-    def on_turn_end_node(self, node):
         pass
 
     def on_turn_end_player(self, player):
@@ -54,7 +84,8 @@ class Tag:
     def on_turn_end_enemy(self, enemy):
         pass
 
-    def on_turn_end_vector(self, vector, node):
+    def on_turn_end_node(self, vector, node):
+        # Applies to both nodes and vectors
         pass
 
     def on_turn_start_player(self, player):
@@ -96,34 +127,79 @@ class TagManager(list):
             if tag.count <= 0:
                 self.remove(tag)
 
-    def before_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_script(self, script, node):
         for tag in self:
-            tag.before_script_node_encounter(script, node)
+            tag.before_ward_encounter_as_script(script, node)
         self.remove_depleted_tags()
 
-    def after_failed_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_node(self, script, node):
         for tag in self:
-            tag.after_failed_script_node_encounter(script, node)
+            tag.before_ward_encounter_as_node(script, node)
         self.remove_depleted_tags()
 
-    def after_successful_script_node_encounter(self, script, node):
+    def before_ward_encounter_as_vector(self, script, node):
         for tag in self:
-            tag.after_successful_script_node_encounter(script, node)
+            tag.before_ward_encounter_as_vector(script, node)
         self.remove_depleted_tags()
 
-    def on_friendly_script_node_encounter(self, script, node):
+    def before_node_encounter_as_script(self, script, node):
         for tag in self:
-            tag.on_friendly_script_node_encounter(script, node)
+            tag.before_node_encounter_as_script(script, node)
         self.remove_depleted_tags()
 
-    def on_node_captured(self, node):
+    def before_node_encounter_as_node(self, script, node):
         for tag in self:
-            tag.on_node_captured(node)
+            tag.before_node_encounter_as_node(script, node)
         self.remove_depleted_tags()
 
-    def on_turn_end_node(self, node):
+    def before_node_encounter_as_vector(self, script, node):
         for tag in self:
-            tag.on_turn_end_node(node)
+            tag.before_node_encounter_as_vector(script, node)
+        self.remove_depleted_tags()
+
+    def on_failed_node_encounter_as_script(self, script, node):
+        for tag in self:
+            tag.on_failed_node_encounter_as_script(script, node)
+        self.remove_depleted_tags()
+
+    def on_failed_node_encounter_as_node(self, script, node):
+        for tag in self:
+            tag.on_failed_node_encounter_as_node(script, node)
+        self.remove_depleted_tags()
+
+    def on_failed_node_encounter_as_vector(self, script, node):
+        for tag in self:
+            tag.on_failed_node_encounter_as_vector(script, node)
+        self.remove_depleted_tags()
+
+    def on_node_captured_as_script(self, script, node):
+        for tag in self:
+            tag.on_node_captured_as_script(script, node)
+        self.remove_depleted_tags()
+
+    def on_node_captured_as_node(self, script, node):
+        for tag in self:
+            tag.on_node_captured_as_node(script, node)
+        self.remove_depleted_tags()
+
+    def on_node_captured_as_vector(self, script, node):
+        for tag in self:
+            tag.on_node_captured_as_vector(script, node)
+        self.remove_depleted_tags()
+
+    def on_friendly_node_encounter_as_script(self, script, node):
+        for tag in self:
+            tag.on_friendly_node_encounter_as_script(script, node)
+        self.remove_depleted_tags()
+
+    def on_friendly_node_encounter_as_node(self, script, node):
+        for tag in self:
+            tag.on_friendly_node_encounter_as_node(script, node)
+        self.remove_depleted_tags()
+
+    def on_friendly_node_encounter_as_vector(self, script, node):
+        for tag in self:
+            tag.on_friendly_node_encounter_as_vector(script, node)
         self.remove_depleted_tags()
 
     def on_turn_end_player(self, player):
@@ -136,9 +212,9 @@ class TagManager(list):
             tag.on_turn_end_player(enemy)
         self.remove_depleted_tags()
 
-    def on_turn_end_vector(self, vector, node):
+    def on_turn_end_node(self, vector, node):
         for tag in self:
-            tag.on_turn_end_vector(vector, node)
+            tag.on_turn_end_node(vector, node)
         self.remove_depleted_tags()
 
     def on_turn_start_player(self, player):

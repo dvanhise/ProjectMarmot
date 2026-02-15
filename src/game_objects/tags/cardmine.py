@@ -9,17 +9,17 @@ class CardMine(Tag):
     tooltip = 'Add {count} copy of {card} to draw pile when node is captured.'
     card = ''
 
-    part_of_vector = True
-    remove_on_vector_change = False
-
     def __init__(self, *args, **kwargs):
         super().__init__(kwargs['count'])
         self.card = kwargs['card']
 
     def get_full_name(self):
-        return f'{self.name} ({self.card})'
+        return f'{self.id}{self.count}-{self.card}'
 
-    def on_node_captured(self, node):
+    def on_node_captured_as_node(self, script, node):
+        get_aq().queue_action('add_card', self.card, 'draw')
+
+    def on_node_captured_as_vector(self, script, node):
         get_aq().queue_action('add_card', self.card, 'draw')
 
     def on_vector_install(self, node, vector, player_info):

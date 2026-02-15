@@ -37,7 +37,7 @@ color_map = {
 }
 
 WARD_COLOR = pygame.Color('#B8EAFF')
-WARD_RADIUS = 40
+WARD_RADIUS = 42
 WARD_FONT_SIZE = 18
 
 SELECTABLE_NODE_RADIUS = 50
@@ -45,9 +45,11 @@ SELECTABLE_NODE_COLOR = pygame.Color('#FFFFFF')
 
 DASHED_LINE_SEGMENT = 20  # Desired length
 LINE_WIDTH = 3
-EDGE_DEGREDATION_RADIUS = 8
+EDGE_DEGREDATION_RADIUS = 9
 
 VERTICAL_PATH_OFFSET = 5
+
+VERTICAL_PADDING = 15
 
 
 def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script: Script, routes: list[Route]=None):
@@ -73,7 +75,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
     y_cells = level.network_height
 
     cell_width = NETWORK_WIDTH // x_cells
-    cell_height = (NETWORK_HEIGHT-20) // y_cells  # 20 to give space at the bottom to render things
+    cell_height = (NETWORK_HEIGHT-VERTICAL_PADDING*2) // y_cells
 
     node_img = img_fetch().get('server-icon')
     node_img = pygame.transform.smoothscale(node_img, ICON_SIZE)
@@ -85,7 +87,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
 
     for node_id, node in level.nodes.items():
         x_center = node.position[0]*cell_width + cell_width//2
-        y_center = node.position[1]*cell_height + cell_height//2
+        y_center = node.position[1]*cell_height + cell_height//2 + VERTICAL_PADDING
 
         if len(node.right):
             for edge in node.right:
@@ -102,7 +104,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                 midpoint_x = (x_center+next_node_x_center)//2
                 midpoint_y = (y_center+next_node_y_center)//2
                 pygame.draw.circle(s, c, (midpoint_x, midpoint_y), EDGE_DEGREDATION_RADIUS)
-                font = pygame.font.Font(get_font('BrassMono', 'bold'), 14)
+                font = pygame.font.Font(get_font('BrassMono', 'bold'), 16)
                 text = font.render(str(edge.difficulty), True, 'black')
                 text_rect = text.get_rect(center=(midpoint_x, midpoint_y))
                 s.blit(text, text_rect)

@@ -1,5 +1,4 @@
 from src.game_objects.tag import Tag
-from src.utils.action_queue import get_aq
 
 
 class DelayedDraw(Tag):

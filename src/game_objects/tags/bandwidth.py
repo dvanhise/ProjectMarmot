@@ -6,7 +6,8 @@ class Bandwidth(Tag):
     id = 'bandwidth'
     name = 'Bandwidth'
     icon = 'power'
-    tooltip = 'When a friendly node is captured, gain {count} energy.'
+    tooltip = 'When a node is captured, gain {count} energy.'
 
-    def on_node_captured(self, node):
+    def on_node_captured_as_script(self, script, node):
+        # FIXME: This needs to either check player tags or be applied to script
         get_aq().queue_action('change_energy', self.count)

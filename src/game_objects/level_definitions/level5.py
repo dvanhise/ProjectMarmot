@@ -1,7 +1,7 @@
 import random
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
-from src.game_objects.tags.surge import Surge
+from src.game_objects.tags.enemy_surge import EnemySurge
 from src.game_objects.tags.selfbuilding import SelfBuilding
 from src.utils.router import PathType
 
@@ -147,7 +147,7 @@ definition = {
             'power': 3,
             'vectors': [
                 Vector(name='Amp', tags=[Boost(1)]),
-                Vector(name='++', default_ward=1, tags=[SelfBuilding(1)])
+                Vector(name='++', default_ward=1, tags=[SelfBuilding(3)])
             ],
             'pathing': PathType.TAKE_NODES,
             'next': 2
@@ -163,7 +163,7 @@ definition = {
             'power': 4,
             'vectors': [
                 Vector(name='Amp', tags=[Boost(2)]),
-                Vector(name='++', default_ward=1, tags=[SelfBuilding(1)])
+                Vector(name='++', default_ward=1, tags=[SelfBuilding(3)])
             ],
             'pathing': PathType.TAKE_NODES,
             'next': 4
@@ -171,7 +171,7 @@ definition = {
         {
             'pattern_id': 4,
             'power': 3,
-            'self_tags': [Surge(1)],
+            'self_tags': [EnemySurge(1)],
             'vectors': [Vector(name='Amp', tags=[Boost(2)])],
             'pathing': PathType.RANDOM,
             'next': lambda prev: random.choice([2,3])

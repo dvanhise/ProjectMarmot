@@ -12,7 +12,7 @@ class DefensiveNanobots(Card):
     tooltips = [SelfBuilding, Ward]
     image_id = 'defensive-nanobots'
     cost = 1
-    description = ['Apply Self-Building 1']
+    description = ['Apply Self-Building 2']
 
     def on_ward_install(self, node):
-        node.tags.add_tag(SelfBuilding(1))
+        node.tags.add_tag(SelfBuilding(2))

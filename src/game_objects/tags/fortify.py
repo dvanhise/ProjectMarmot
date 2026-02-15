@@ -5,8 +5,8 @@ class Fortify(Tag):
     id = 'fortify'
     name = 'Fortify'
     icon = 'heal'
-    tooltip = 'Repels attacking script.  Remove 1 stack when attacked.'
+    tooltip = 'Automatically repels attacking script.  Remove 1 stack when attacked.'
 
-    def before_script_node_encounter(self, script, node):
+    def before_node_encounter_as_node(self, script, node):
         script.power = -1
         self.count -= 1

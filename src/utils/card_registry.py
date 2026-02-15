@@ -12,6 +12,7 @@ from src.game_objects.card_definitions.defensive_spikes import DefensiveSpikes
 from src.game_objects.card_definitions.desync import Desync
 from src.game_objects.card_definitions.encryption import Encryption
 from src.game_objects.card_definitions.fireball import Fireball
+from src.game_objects.card_definitions.firewall import Firewall
 from src.game_objects.card_definitions.hackjob import Hackjob
 from src.game_objects.card_definitions.halberd import Halberd
 from src.game_objects.card_definitions.lance import Lance
@@ -52,6 +53,7 @@ card_list = [
     Desync,
     Encryption,
     Fireball,
+    Firewall,
     Hackjob,
     Halberd,
     Lance,
