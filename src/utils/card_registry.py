@@ -119,3 +119,8 @@ def random_card_choices(count):
         k=count)
 
     return [c() for c in card_options]
+
+def get_random_card(rarity):
+    print(rarity)
+    card = random.choice([c for c in card_registry.values() if c.rarity == rarity])
+    return card()

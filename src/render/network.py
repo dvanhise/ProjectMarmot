@@ -52,7 +52,7 @@ VERTICAL_PATH_OFFSET = 5
 VERTICAL_PADDING = 15
 
 
-def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script: Script, routes: list[Route]=None):
+def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script: Script|None, routes: list[Route]=None):
     player_edges = []
     enemy_edges = []
     player_route = None

@@ -1,6 +1,6 @@
 import pygame
 from src.game_objects.player import Player
-from src.render.card import generate as gen_card, CARD_WIDTH, CARD_HEIGHT
+from src.render.card import gen_card, CARD_WIDTH, CARD_HEIGHT
 from src.utils.mouse_check import Tooltip
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 

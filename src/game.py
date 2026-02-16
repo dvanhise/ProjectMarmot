@@ -10,18 +10,19 @@ from src.game_objects.player import Player
 from src.game_objects.script import ScriptBuilder
 from src.game_objects.route import Route
 from src.game_objects.card_type import CardType
+from src.game_objects.round_end import RoundEndPick
 
 from src.render.hand import render_hand
 from src.render.script_builder import render_script_builder
 from src.render.network import render_network
-from src.render.card import CARD_WIDTH, CARD_HEIGHT, generate as gen_card
+from src.render.card import CARD_WIDTH, CARD_HEIGHT, gen_card
 from src.render.deck_info import render_deck_info
 from src.render.end_turn_button import render_end_turn
 from src.render.playzone import render_playzone
 from src.render.energy_tracker import render_energy_tracker
 from src.render.info_section import render_info
 from src.render.terminal import render_terminal
-from src.render.card_pick import render_card_pick
+from src.render.round_end_screen import render_round_end_screen
 from src.render.help_text import render_help_text
 from src.render.intro_screen import render_intro_screen
 from src.render.end_screen import render_end_screen
@@ -29,7 +30,7 @@ from src.render.end_screen import render_end_screen
 from src.utils.asset_loader import img_fetch, get_font
 from src.utils.router import generate_route
 from src.utils.mouse_check import MouseCheck
-from src.utils.card_registry import get_new_card, random_card_choices, get_card_stats
+from src.utils.card_registry import get_new_card, get_card_stats
 from src.utils.action_queue import get_aq
 
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, DEVELOPMENT_VERSION
@@ -49,7 +50,7 @@ class Game:
         self.player_route = None
         self.enemy_temp_route = None  # Pre-planned route of enemy
         self.enemy_route = None  # Route when running enemy script
-        self.card_choices = []
+        self.round_end_choices = None
 
         # Preload
         self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -98,10 +99,11 @@ class Game:
         self.level.remove_depleted_vectors()
 
     def on_exit_end_of_level(self):
+        self.player.cred += 2
         self.level_ndx += 1
 
-    def on_enter_card_pick(self):
-        self.card_choices = random_card_choices(self.player.card_reward_count)
+    def on_enter_round_end_pick(self):
+        self.round_end_choices = RoundEndPick(player=self.player)
 
     def before_hardware_pick(self):
         pass
@@ -214,10 +216,9 @@ class Game:
                         self.player_route.node_path[-1].install_vector(installed_vector)
                         self.player.script.tags.on_vector_install(self.player_route.node_path[-1], installed_vector, self.player.get_player_info_dict())
 
-                elif get_game_state().current_state == GameState.card_pick:
-                    if (pick_card_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'PICK_CARD')) is not None:
-                        self.player.add_card(self.card_choices.pop(pick_card_ndx))
-                        # get_game_state().send('end_of_level_progress')  # FIXME: Limit to one card pick
+                elif get_game_state().current_state == GameState.round_end_pick:
+                    if (pick_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'PICK')) is not None:
+                        self.round_end_choices.pick(pick_ndx)
                     elif self.mouse_check.has_selected(m_x, m_y, 'NEXT_BUTTON'):
                         get_game_state().send('end_of_level_progress')
 
@@ -284,8 +285,8 @@ class Game:
         render_energy_tracker(self.screen, self.player)
 
         # Render card pick screen
-        if get_game_state().current_state == GameState.card_pick:
-            interactables = render_card_pick(self.screen, self.card_choices)
+        if get_game_state().current_state == GameState.round_end_pick:
+            interactables = render_round_end_screen(self.screen, self.round_end_choices)
             self.mouse_check.register_rect(interactables)
 
         if get_game_state().current_state == GameState.intro_screen:
@@ -311,7 +312,7 @@ class Game:
             )
 
         # Render version
-        font = pygame.font.Font(get_font('BrassMono', 'regular'), 30)
+        font = pygame.font.Font(get_font('BrassMono', 'regular'), 20)
         text = font.render(DEVELOPMENT_VERSION, True, 'white')
         self.screen.blit(text, (2, 2))
 

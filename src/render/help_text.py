@@ -3,7 +3,7 @@ from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TERMINAL_GREEN, DARK_TERM
 from src.utils.asset_loader import get_font
 
 HELP_LINE_HEIGHT = 14
-HELP_TEXT_FONT = 12
+HELP_TEXT_FONT = 13
 TEXT_PADDING = 2
 SCREEN_EDGE_BUFFER = 20
 CURSOR_OFFSET = 15

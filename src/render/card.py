@@ -34,7 +34,7 @@ RARITY_COLOR_MAP = {
 }
 
 
-def generate(card: Card):
+def gen_card(card: Card):
     s = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
 
     # Draw card back
@@ -80,5 +80,22 @@ def generate(card: Card):
     s.blit(outline_text, text_rect)
 
     return s
+
+
+# Meta card render for health gain option at round end
+def gen_health_card(value):
+    s = pygame.Surface((CARD_WIDTH, CARD_HEIGHT))
+
+    # Draw card back
+    pygame.draw.rect(s, BORDER_COLOR, pygame.Rect(0, 0, CARD_WIDTH, CARD_HEIGHT), border_radius=5)
+    pygame.draw.rect(s, DARK_TERMINAL, pygame.Rect(BORDER_WIDTH, BORDER_WIDTH, CARD_WIDTH-2*BORDER_WIDTH, CARD_HEIGHT-2*BORDER_WIDTH), border_radius=1)
+
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), 26)
+    outline_text = draw_text_with_outline(f'+{value} HP', font, 'white', 2, 'black')
+    text_rect = outline_text.get_rect( center=(CARD_WIDTH//2, CARD_HEIGHT//2))
+    s.blit(outline_text, text_rect)
+
+    return s
+
 
 

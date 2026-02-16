@@ -29,7 +29,7 @@ class Player:
         self.portrait = 'avatar1'
         self.health = 6
         self.max_health = 6
-        self.cred = 1  # General currency
+        self.cred = 2  # General currency
 
     def start_turn(self):
         self.draw(self.draw_count)

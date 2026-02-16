@@ -12,7 +12,7 @@ class GameState(StateMachine):
     run_player_script = State()  # Build, enact, and animate script
     run_enemy_script = State()
     end_of_level = State()
-    card_pick = State()
+    round_end_pick = State()
     game_end_win = State()
     game_end_loss = State()
     exit_game = State(final=True)
@@ -46,8 +46,8 @@ class GameState(StateMachine):
 
     end_of_level_progress = (
         end_of_level.to(game_end_win, cond='player_won_game') |
-        end_of_level.to(card_pick, unless='player_won_game') |
-        card_pick.to(setup_level)
+        end_of_level.to(round_end_pick, unless='player_won_game') |
+        round_end_pick.to(setup_level)
     )
 
     select_exit_game = (

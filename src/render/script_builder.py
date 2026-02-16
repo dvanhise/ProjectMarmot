@@ -1,7 +1,7 @@
 import pygame
 from src.game_objects.script import ScriptBuilder
 from src.game_objects.card_type import CardType
-from src.render.card import CARD_HEIGHT, CARD_WIDTH, generate as gen_card
+from src.render.card import CARD_HEIGHT, CARD_WIDTH, gen_card
 from src.render.network import NETWORK_HEIGHT
 from src.utils.asset_loader import img_fetch, get_font
 from src.utils.text_helper import draw_text_with_outline
