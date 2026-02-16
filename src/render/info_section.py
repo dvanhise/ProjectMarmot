@@ -44,7 +44,7 @@ def render_info(s: pygame.Surface, entity: Player|Enemy):
         s.blit(gen_tag(tag), (offset[0]+ndx*TAG_ICON_SIZE[0], offset[1]+PORTRAIT_SIZE[1]))
         mouseover.append(Tooltip(
             pygame.Rect((offset[0]+ndx*TAG_ICON_SIZE[0], offset[1]+PORTRAIT_SIZE[1]), TAG_ICON_SIZE),
-            tag.get_tooltip())
+            [tag.get_tooltip()])
         )
 
     return mouseover

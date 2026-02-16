@@ -1,7 +1,7 @@
 class Tag:
     id = ''
     name = 'TODO'
-    icon = ''
+    icon = 'tag_placeholder'
     tooltip = 'TODO'
     count = 0
     card = ''
@@ -13,9 +13,6 @@ class Tag:
 
     def get_tooltip(self):
         return f'{self.name}: {self.tooltip.format(count=self.count, card=self.card)}'
-
-    def get_generic_tooltip(self):
-        return f'{self.name}: {self.tooltip.format(count='N', card='Card')}'
 
     def get_full_name(self):
         return f'{self.id}{self.count}'
@@ -54,15 +51,15 @@ class Tag:
     def on_failed_node_encounter_as_vector(self, script, node):
         pass
 
-    def on_node_captured_as_script(self, script, node):
+    def on_node_capture_as_script(self, script, node):
         # When an player captures a non-friendly node
         pass
 
-    def on_node_captured_as_node(self, script, node):
+    def on_node_capture_as_node(self, script, node):
         # When an player captures a non-friendly node
         pass
 
-    def on_node_captured_as_vector(self, script, node):
+    def on_node_capture_as_vector(self, script, node):
         # When an player captures a non-friendly node
         pass
 
@@ -172,19 +169,19 @@ class TagManager(list):
             tag.on_failed_node_encounter_as_vector(script, node)
         self.remove_depleted_tags()
 
-    def on_node_captured_as_script(self, script, node):
+    def on_node_capture_as_script(self, script, node):
         for tag in self:
-            tag.on_node_captured_as_script(script, node)
+            tag.on_node_capture_as_script(script, node)
         self.remove_depleted_tags()
 
-    def on_node_captured_as_node(self, script, node):
+    def on_node_capture_as_node(self, script, node):
         for tag in self:
-            tag.on_node_captured_as_node(script, node)
+            tag.on_node_capture_as_node(script, node)
         self.remove_depleted_tags()
 
-    def on_node_captured_as_vector(self, script, node):
+    def on_node_capture_as_vector(self, script, node):
         for tag in self:
-            tag.on_node_captured_as_vector(script, node)
+            tag.on_node_capture_as_vector(script, node)
         self.remove_depleted_tags()
 
     def on_friendly_node_encounter_as_script(self, script, node):

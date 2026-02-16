@@ -67,10 +67,10 @@ class Script:
 
         # Interact with captured unfriendly node
         if self.owner != node.owner:
-            self.tags.on_node_captured_as_script(self, node)
-            node.tags.on_node_captured_as_node(self, node)
+            self.tags.on_node_capture_as_script(self, node)
+            node.tags.on_node_capture_as_node(self, node)
             if node.vector:
-                node.vector.tags.on_node_captured_as_vector(self, node)
+                node.vector.tags.on_node_capture_as_vector(self, node)
 
             if self.destroy_vector_on_capture:
                 node.vector = None
@@ -125,6 +125,8 @@ class ScriptSlot:
 
 
 class ScriptBuilder:
+    MAX_SLOTS = 6
+
     def __init__(self):
         self.slots = [ScriptSlot(CardType.SCRIPT_PAYLOAD), ScriptSlot(CardType.SCRIPT_MOD), ScriptSlot(CardType.SCRIPT_VECTOR)]
 
@@ -133,6 +135,10 @@ class ScriptBuilder:
         self.slots = [slot for slot in self.slots if not slot.temp]
 
     def add_slot(self, card_type, temporary=False):
+        if len(self.slots) >= self.MAX_SLOTS:
+            logging.warning(f'Unable to add script slot.  Currently at {len(self.slots)}/{self.MAX_SLOTS} slots.')
+            return
+
         new_slot = ScriptSlot(card_type, temporary)
         loc = next(ndx for ndx, slot in enumerate(self.slots) if slot.type==card_type)
         self.slots = self.slots[0:loc+1] + [new_slot] + self.slots[loc+1:]

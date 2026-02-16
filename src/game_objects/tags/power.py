@@ -5,5 +5,5 @@ from src.game_objects.tag import Tag
 class Power(Tag):
     id = 'power'
     name = 'Power'
-    icon = 'power'
+    icon = 'tag_placeholder'
     tooltip = "Increases a script's ability to overcome enemy node defenses."

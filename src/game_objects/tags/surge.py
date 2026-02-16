@@ -6,8 +6,8 @@ from src.utils.action_queue import get_aq
 class Surge(Tag):
     id = 'surge'
     name = 'Surge'
-    icon = 'power'
-    tooltip = 'Increases all payload power by {count}.'
+    icon = 'surge'
+    tooltip = 'Increase all payload power by {count}.'
 
     def on_change(self, change):
         get_aq().queue_action('card_updates_power', change)

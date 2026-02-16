@@ -20,8 +20,8 @@ class Player:
 
         self.energy = 0
         self.max_energy = 3
-        self.max_hand_size = 10
-        self.draw_count = 4
+        self.max_hand_size = 8   # TODO: Change to 10 when screen is larger
+        self.draw_count = 5   # Default draw number at start of turn
         self.card_reward_count = 3
         self.tags = TagManager()
         self.script = None
@@ -29,6 +29,7 @@ class Player:
         self.portrait = 'avatar1'
         self.health = 6
         self.max_health = 6
+        self.cred = 1  # General currency
 
     def start_turn(self):
         self.draw(self.draw_count)
@@ -83,6 +84,7 @@ class Player:
         self.id_counter += 1
 
     def remove_card(self, card_id):
+        # Permanently remove card from the deck
         card = self.all_cards[card_id]
         del self.all_cards[card_id]
         return card

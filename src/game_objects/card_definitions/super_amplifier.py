@@ -12,5 +12,5 @@ class SuperAmplifier(Card):
     rarity = 'intermediate'
     tooltips = [Vector, Boost]
     cost = 1
-    description = ['Install Vector:', '  Boost 4']
-    vector = Vector(name='S. Amp', default_ward=0, tags=[Boost(4)])
+    description = ['Install Vector:', '  Boost 3']
+    vector = Vector(name='B Amp', default_ward=0, tags=[Boost(3)])

@@ -28,7 +28,7 @@ def render_vector(s: pygame.Surface, left, top, vector: Vector, color: pygame.Co
         s.blit(gen_tag(tag), (left+VECTOR_WIDTH//2-TAG_ICON_SIZE[0]//2, top+PADDING*2+VECTOR_NAME_OFFSET+ndx*TAG_ICON_SIZE[1]))
         mouseover.append(
             Tooltip(pygame.Rect((left+VECTOR_WIDTH//2-TAG_ICON_SIZE[0]//2, top+VECTOR_NAME_OFFSET+ndx*TAG_ICON_SIZE[1]), TAG_ICON_SIZE),
-                    tag.get_tooltip())
+                    [tag.get_tooltip()])
         )
 
     return mouseover

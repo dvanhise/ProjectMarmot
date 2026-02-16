@@ -12,7 +12,7 @@ from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 NETWORK_WIDTH = SCREEN_WIDTH
-NETWORK_HEIGHT = SCREEN_HEIGHT // 2 + 20
+NETWORK_HEIGHT = SCREEN_HEIGHT // 2 + 50
 
 ICON_SIZE = (70, 70)
 ICON_HITBOX_SIZE = (60, 60)
@@ -92,7 +92,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
         if len(node.right):
             for edge in node.right:
                 next_node_x_center = edge.right.position[0]*cell_width + cell_width//2
-                next_node_y_center = edge.right.position[1]*cell_height + cell_height//2
+                next_node_y_center = edge.right.position[1]*cell_height + cell_height//2 + VERTICAL_PADDING
 
                 # Draw edges
                 # I don't know why the alpha gets messed up here and nowhere else
@@ -113,7 +113,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
                     midpoint_y-EDGE_DEGREDATION_RADIUS//2,
                     EDGE_DEGREDATION_RADIUS,
                     EDGE_DEGREDATION_RADIUS
-                ), f'Edge penalty: Reduces power of non-friendly scripts by {edge.difficulty}.'))
+                ), [f'Edge penalty: Reduces power of non-friendly scripts by {edge.difficulty}.']))
 
                 # Draw planned routes
                 if edge in player_edges:
@@ -140,7 +140,7 @@ def render_network(s: pygame.Surface, level: Level, script: Script, enemy_script
 
             mouseovers.append(Tooltip(
                 pygame.Rect((tag_left_offset+ndx*TAG_ICON_SIZE[0], tag_top_offset), TAG_ICON_SIZE),
-                tag.get_tooltip()
+                [tag.get_tooltip()]
             ))
 
         # Draw selectable node identification circles

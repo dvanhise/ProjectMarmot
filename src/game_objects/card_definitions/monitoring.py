@@ -11,7 +11,8 @@ class Monitoring(Card):
     rarity = 'intermediate'
     image_id = 'query'
     cost = 1
-    description = ['When a friendly node', 'is captured,', 'gain 1 energy']
+    description = ['During this encounter,', 'gain 1 energy', 'when a friendly node', 'is captured.', 'Delete when played.']
+    delete_on_play = True
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', Bandwidth, 1)

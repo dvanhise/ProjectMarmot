@@ -4,7 +4,7 @@ from src.game_objects.tag import Tag
 class EnemySurge(Tag):
     id = 'surge'
     name = 'Surge'
-    icon = 'power'
+    icon = 'tag_placeholder'
     tooltip = 'Increases all payload power by {count}.'
 
     def on_script_creation(self, script):

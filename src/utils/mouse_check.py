@@ -43,7 +43,7 @@ class MouseCheck:
             if tooltip.rect.collidepoint(x, y):
                 return tooltip.text
 
-        return None
+        return []
 
     def register_rect(self, rects: dict[str, pygame.Rect]):
         self.rect_register.update(rects)
@@ -68,4 +68,4 @@ class Circle:
 @dataclass
 class Tooltip:
     rect: pygame.Rect
-    text: str
+    text: list[str]

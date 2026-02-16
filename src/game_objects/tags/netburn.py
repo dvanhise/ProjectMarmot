@@ -24,6 +24,6 @@ class NetBurn(Tag):
         if self.count > 1:
             script.tags.add_tag(NetBurn(self.count // 2))
 
-    def on_node_captured_as_node(self, script, node):
+    def on_node_capture_as_node(self, script, node):
         if self.count > 1:
             script.tags.add_tag(NetBurn(self.count // 2))

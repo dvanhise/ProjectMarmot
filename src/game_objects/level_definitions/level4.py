@@ -1,3 +1,4 @@
+from src.game_objects.tags.fortify import Fortify
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
 from src.game_objects.tags.enemy_surge import EnemySurge
@@ -73,9 +74,9 @@ definition = {
         },
         {
             'pattern_id': 2,
-            'power': 2,
+            'power': 3,
             'self_tags': [EnemySurge(1)],
-            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
+            'vectors': [Vector(name='Amp', tags=[Boost(1), Fortify(1)])],
             'pathing': PathType.RANDOM,
             'next': 1
         }

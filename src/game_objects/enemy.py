@@ -35,7 +35,7 @@ class Enemy:
             else:
                 raise ValueError(f'Unexpected type for next pattern "{type(next_pattern)}"')
 
-        self.script = Script('ENEMY')
+        self.script = Script(self.owner)
         p = self.pattern[self.current_pattern_id]
         self.script.power = p.get('power', 0)
         self.script.pathing = p['pathing']

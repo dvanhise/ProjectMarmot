@@ -12,11 +12,11 @@ class ModularPolearm(Card):
     tooltips = [Power]
     image_id = 'payload'
     cost = 1
-    power = 6
-    description = ['{power} power,', 'increase power by 2', 'when replacing a', 'script payload']
+    power = 2
+    description = ['{power} Power.', 'Increase power by 1', 'when replacing a', 'script payload']
 
     def on_script_activation(self, script: Script, player_info):
         script.power += self.power
 
     def on_script_replacement(self):
-        self.power += 2
+        self.power += 1

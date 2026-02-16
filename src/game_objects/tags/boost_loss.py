@@ -5,7 +5,7 @@ from src.game_objects.tags.boost import Boost
 class BoostLoss(Tag):
     id = 'boost-loss'
     name = 'Boost Loss'
-    icon = 'power'
+    icon = 'boost_loss'
     tooltip = 'On turn end, reduce boost by {count}.'
     count = 0
     positive = False

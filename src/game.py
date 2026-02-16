@@ -43,7 +43,7 @@ class Game:
         self.screen = screen
         self.clock = clock
         self.mouse_check = MouseCheck()
-        self.mouseover_text = None
+        self.mouseover_text_list = None
         self.click_down = None
 
         self.player_route = None
@@ -162,7 +162,7 @@ class Game:
 
     def check_events(self):
         m_x, m_y = pygame.mouse.get_pos()
-        self.mouseover_text = self.mouse_check.on_mouseover_object(m_x, m_y)
+        self.mouseover_text_list = self.mouse_check.on_mouseover_object(m_x, m_y)
 
         # Poll for events
         for event in pygame.event.get():
@@ -260,8 +260,9 @@ class Game:
 
         # Render hand
         if len(self.player.current_hand):
-            interactables = render_hand(self.screen, self.player)
+            interactables, mouseovers = render_hand(self.screen, self.player)
             self.mouse_check.register_rect(interactables)
+            self.mouse_check.register_mouseover_rect(mouseovers)
 
         # Render card counts in draw and discard
         interactables = render_deck_info(self.screen, self.player)
@@ -299,8 +300,8 @@ class Game:
         m_x, m_y = pygame.mouse.get_pos()
 
         # Render mouseover text
-        if self.mouseover_text:
-            render_help_text(self.screen, self.mouseover_text, m_x, m_y)
+        if self.mouseover_text_list:
+            render_help_text(self.screen, self.mouseover_text_list, m_x, m_y)
 
         # Render dragged card to mouse position
         if get_game_state().current_state == GameState.card_drag and self.player.dragged is not None:
@@ -372,9 +373,11 @@ class Game:
         else:
             self.player.pay_energy(card.cost)
             replaced = self.script_builder.add_card(self.player.dragged, card, script_ndx)
-            self.run_action_queue()
             if replaced:
+                card.on_script_replacement()
                 self.player.add_card_to_discard(replaced)
+
+            self.run_action_queue()
 
     def play_generic_card(self, card):
         if card.type != CardType.UTILITY:

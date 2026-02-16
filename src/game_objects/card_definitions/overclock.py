@@ -12,9 +12,9 @@ class Overclock(Card):
     rarity = 'intermediate'
     tooltips = [Power]
     image_id = 'query'
-    delete_on_play = True
     cost = 2
-    description = ['Increase all payload', 'power by 1', 'during the encounter.', 'Delete when played']
+    description = ['Increase all payload', 'power by 1', 'during the encounter.', 'Delete when played.']
+    delete_on_play = True
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', Surge, 1)

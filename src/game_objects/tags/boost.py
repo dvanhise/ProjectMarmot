@@ -4,7 +4,7 @@ from src.game_objects.tag import Tag
 class Boost(Tag):
     id = 'boost'
     name = 'Boost'
-    icon = 'power'
+    icon = 'boost'
     tooltip = 'Increase script power by {count}.  Remove 1 stack when used.'
     count = 0
 

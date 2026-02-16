@@ -14,7 +14,7 @@ class Overcharge(Card):
     tooltips = [VectorTag, Boost]
     cost = 1
     description = ['Install Vector:', '  Boost 2', '  On install,', '  use all energy(X),', '  gain 2*X Boost']
-    vector = Vector(name='Amp', default_ward=0, tags=[Boost(2)])
+    vector = Vector(name='OC', default_ward=0, tags=[Boost(2)])
 
     def on_script_activation(self, script, player_info):
         script.tags.add_tag(ChargeUp(1))

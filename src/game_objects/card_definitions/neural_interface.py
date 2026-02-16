@@ -10,7 +10,7 @@ class NeuralInterface(Card):
     rarity = 'intermediate'
     image_id = 'query'
     cost = 0
-    description = ['Take 1 damage', 'Gain 2 energy', 'Execute script for free']
+    description = ['Take 1 damage.', 'Gain 2 energy.', 'Immediately execute', 'script for free.']
 
     def on_play(self):
         queue = get_aq()

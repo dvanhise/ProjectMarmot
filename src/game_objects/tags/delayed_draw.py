@@ -4,7 +4,7 @@ from src.game_objects.tag import Tag
 class DelayedDraw(Tag):
     id = 'delayed-draw'
     name = 'Delayed Draw'
-    icon = 'power'
+    icon = 'delayed_draw'
     tooltip = 'At the start of next turn, draw {count} cards.'
 
     def on_turn_start_player(self, player):

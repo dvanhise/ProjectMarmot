@@ -12,7 +12,7 @@ class PowerMod(Card):
     tooltips = [Power]
     image_id = 'mod'
     cost = 1
-    description = ['+3 Power']
+    description = ['+2 Power']
 
     def on_script_activation(self, script: Script, player_info):
-        script.power += 3
+        script.power += 2

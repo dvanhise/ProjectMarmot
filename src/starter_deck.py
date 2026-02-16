@@ -10,9 +10,3 @@ def add_starter_cards(player):
     player.add_card(get_new_card('amplifier'))
     player.add_card(get_new_card('security-group'))
     player.add_card(get_new_card('security-group'))
-
-    # Test cards
-    player.add_card(get_new_card('firewall'))
-    player.add_card(get_new_card('firewall'))
-    player.add_card(get_new_card('firewall'))
-    player.add_card(get_new_card('firewall'))

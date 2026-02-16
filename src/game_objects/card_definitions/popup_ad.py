@@ -9,5 +9,5 @@ class PopupAd(Card):
     rarity = 'special'
     image_id = 'placeholder'
     cost = 1
-    description = ['Delete when played']
+    description = ['Delete when played.']
     delete_on_play = True

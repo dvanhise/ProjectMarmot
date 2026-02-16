@@ -12,9 +12,9 @@ class Patch(Card):
     rarity = 'intermediate'
     tooltips = [Ward]
     image_id = 'query'
-    delete_on_play = True
     cost = 2
-    description = ['Increase all ward', 'values by 1', 'during the encounter.', 'Delete when played']
+    description = ['Increase all ward', 'values by 1', 'during the encounter.', 'Delete when played.']
+    delete_on_play = True
 
     def on_play(self):
         get_aq().queue_action('add_player_tag', Harden, 1)

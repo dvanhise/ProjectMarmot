@@ -59,7 +59,7 @@ card_list = [
     Lance,
     ModExtender,
     ModularPolearm,
-    Monitoring,
+    # Monitoring,   # Temporarily removed due to bugs in implementation
     Multitasking,
     NeuralInterface,
     Overcharge,

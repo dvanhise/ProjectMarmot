@@ -121,14 +121,15 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 2,
-            'vectors': [Vector(name='Shield', default_ward=3, tags=[Boost(1)]), Vector(name='Spear', tags=[Boost(2)])],
+            'power': 3,
+            'vectors': [Vector(name='Spr', tags=[Boost(3)]), Vector(name='Shld', default_ward=4, tags=[Boost(1)])],
             'pathing': PathType.RANDOM,
             'next': 2
         },
         {
             'pattern_id': 2,
             'power': 5,
+            'vectors': [Vector(name='Knf', tags=[Boost(1)])],
             'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': 1
         }
