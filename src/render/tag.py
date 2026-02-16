@@ -16,7 +16,7 @@ def gen_tag(tag: Tag):
 
     font = pygame.font.Font(get_font('BrassMono', 'bold'), 10)
     outline_text = draw_text_with_outline(str(tag.count), font, 'white', 1, 'black')
-    text_rect = outline_text.get_rect(center=(TAG_ICON_SIZE[0] - 4, TAG_ICON_SIZE[1] - 4))
+    text_rect = outline_text.get_rect(center=(TAG_ICON_SIZE[0] - 5, TAG_ICON_SIZE[1] - 4))
     s.blit(outline_text, text_rect)
 
     return s

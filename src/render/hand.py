@@ -24,7 +24,7 @@ def render_hand(s: pygame.Surface, player: Player):
 
         mouseover.append(
             Tooltip(pygame.Rect(screen_offset[0] + horizontal_offset, screen_offset[1], CARD_WIDTH, CARD_HEIGHT),
-                    [f'{tag.name}: {tag.tooltip.format(count='N', card='Card')}' for tag in card.tooltips])
+                    [f'{tag.name}: {tag.tooltip.format(count='X', card='Card')}' for tag in card.tooltips])
         )
 
     s.blit(hand_surface, screen_offset)

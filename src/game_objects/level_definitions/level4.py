@@ -1,3 +1,4 @@
+import random
 from src.game_objects.tags.fortify import Fortify
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
@@ -20,7 +21,7 @@ definition = {
     'network_width': 3,
     'network_height': 3,
     'portrait': 'placeholder',
-    'health': 8,
+    'health': 6,
     'nodes': [
         {
             'id': 1,
@@ -68,15 +69,23 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 4,
-            'vectors': [Vector(name='Amp', tags=[Boost(2)])],
+            'vectors': [Vector(name='Amp', default_ward=1, tags=[Boost(2)])],
             'pathing': PathType.TAKE_NODES,
-            'next': 2
+            'next': lambda prev: random.choice([2,3])
         },
         {
             'pattern_id': 2,
+            'start': True,
+            'power': 5,
+            'vectors': [Vector(name='Amp', tags=[Boost(2)])],
+            'pathing': PathType.ATTACK_OPPONENT_SOURCE,
+            'next': 3
+        },
+        {
+            'pattern_id': 3,
             'power': 3,
             'self_tags': [EnemySurge(1)],
-            'vectors': [Vector(name='Amp', tags=[Boost(1), Fortify(1)])],
+            'vectors': [Vector(name='Stop', tags=[Boost(1), Fortify(1)])],
             'pathing': PathType.RANDOM,
             'next': 1
         }

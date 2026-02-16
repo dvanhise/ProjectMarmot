@@ -8,7 +8,6 @@ from src.utils.card_registry import get_random_card
 class RoundEndPick(list):
     WEIGHTS = [30, 18, 12, 27, 13]
     OPTIONS = ['card_simple', 'card_intermediate', 'card_elite', 'remove_card', 'health']
-
     COUNT = 7
     COSTS = [0, 0, random.choice([0,1]), 1, random.choice([1,2]), 2, 2]
 
@@ -21,8 +20,9 @@ class RoundEndPick(list):
             if choice.startswith('card'):
                 self.append(RoundEndChoice(choice_type='card', cost=self.COSTS[ndx], card=get_random_card(choice.replace('card_', ''))))
             elif choice == 'remove_card':
-                # FIXME: There could be a fatal error if the same card ID is picked for removal twice
-                card_id = random.choice(list(self.player.all_cards.keys()))
+                # Ensure we don't have two card removal choices for the same card
+                current_removals = [x.card_id for x in self if x.choice_type == 'remove_card']
+                card_id = random.choice([c for c in self.player.all_cards.keys() if c not in current_removals])
                 self.append(RoundEndChoice(choice_type='remove_card', cost=self.COSTS[ndx], card=self.player.all_cards[card_id], card_id=card_id))
             elif choice == 'health':
                 self.append(RoundEndChoice(choice_type='health', cost=self.COSTS[ndx], health=random.choice([1,2])))

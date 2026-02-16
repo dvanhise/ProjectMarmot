@@ -13,11 +13,21 @@ class Card:
     vector = None
     ward = 0
     power = 0
+    other1 = 0  # Generic other attributes that specific cards can use
+    other2 = 0
+    other3 = 0
     delete_on_execution = False
     delete_on_play = False
 
     def get_description(self):
-        return [line.format(ward=self.ward, power=self.power) for line in self.description]
+        return [
+            line.format(ward=self.ward,
+                        power=self.power,
+                        other1=self.other1,
+                        other2=self.other2,
+                        other3=self.other3)
+            for line in self.description
+        ]
 
     def on_play(self):
         pass

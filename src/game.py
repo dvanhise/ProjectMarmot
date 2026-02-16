@@ -1,3 +1,4 @@
+import copy
 import logging
 import random
 
@@ -79,8 +80,9 @@ class Game:
         self.player.end_turn()
 
     def on_enter_run_enemy_script(self):
+        # Apply pattern tags to enemy entity
         for tag in self.enemy.pattern[self.enemy.current_pattern_id].get('self_tags', []):
-            self.enemy.tags.add_tag(tag)
+            self.enemy.tags.add_tag(copy.deepcopy(tag))
 
     def after_enemy_script_complete(self):
         self.enemy.script = None
@@ -213,8 +215,11 @@ class Game:
                         self.node_selected(node)
                     if (vector_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'INSTALL_VECTOR')) is not None:
                         installed_vector = self.player.script.vector.pop(vector_ndx)
-                        self.player_route.node_path[-1].install_vector(installed_vector)
-                        self.player.script.tags.on_vector_install(self.player_route.node_path[-1], installed_vector, self.player.get_player_info_dict())
+                        node = self.player_route.node_path[-1]
+                        node.install_vector(installed_vector)
+                        self.player.script.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
+                        node.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
+                        installed_vector.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
 
                 elif get_game_state().current_state == GameState.round_end_pick:
                     if (pick_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'PICK')) is not None:

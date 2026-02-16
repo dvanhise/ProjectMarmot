@@ -85,20 +85,22 @@ def get_expected_stats(route, script):
                     stats['distance_at_first_enemy_node'] = ndx
 
                 power -= node.ward
-                if node.owner == 'NEUTRAL' and power >= 0:
-                    stats['nodes_taken'] += 1
-                    stats['nodes_touched'] += 1
-                elif power >= 0:
-                    stats['nodes_taken'] += 1
-                    stats['enemy_nodes_taken'] += 1
-                    stats['nodes_touched'] += 1
-                    if node.source:
-                        stats['power_at_enemy_source'] = power
+                if power > 0:
+                    if node.owner == 'NEUTRAL':
+                        stats['nodes_taken'] += 1
+                        stats['nodes_touched'] += 1
+                    else:
+                        stats['nodes_taken'] += 1
+                        stats['enemy_nodes_taken'] += 1
+                        stats['nodes_touched'] += 1
+                        if node.source:
+                            stats['power_at_enemy_source'] = power
 
         if not node_check:
             if ndx < len(route.edge_path):
                 edge = route.edge_path[ndx]
-                if edge.owner != route.owner:
+                # FIXME: This is incorrect if the route goes right
+                if edge.owner != route.owner and edge.left.owner != route.owner:
                     power -= edge.difficulty
             ndx += 1
 

@@ -30,6 +30,10 @@ class Node:
         self.vector = vector
         self.apply_ward(vector.default_ward)
 
+    def check_vector_depletion(self):
+        if self.vector and len([tag for tag in self.vector.tags if tag.positive]) == 0:
+            self.vector = None
+
 
 class Edge:
     def __init__(self, left: Node, right: Node, difficulty, owner):

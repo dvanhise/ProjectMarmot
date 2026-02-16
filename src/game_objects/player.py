@@ -27,6 +27,7 @@ class Player:
         self.script = None
 
         self.portrait = 'avatar1'
+        self.name = 'PnDa_hax'
         self.health = 6
         self.max_health = 6
         self.cred = 2  # General currency
@@ -70,6 +71,7 @@ class Player:
 
     def add_card(self, new_card: Card):
         # For new cards in between rounds
+        logging.info(f'Added card to deck: "{new_card.name}"')
         self.all_cards[self.id_counter] = new_card
         self.id_counter += 1
 

@@ -10,3 +10,6 @@ class WardBuilder(Tag):
 
     def on_friendly_node_encounter_as_script(self, script, node):
         node.apply_ward(self.count)
+
+    def on_node_capture_as_script(self, script, node):
+        node.apply_ward(self.count)

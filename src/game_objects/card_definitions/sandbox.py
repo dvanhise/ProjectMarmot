@@ -1,20 +1,19 @@
 from src.game_objects.card_type import CardType
-from src.utils.action_queue import get_aq
-from src.game_objects.card import Card
-from src.game_objects.tags.delayed_draw import DelayedDraw
+from src.game_objects.vector import Vector
 from src.game_objects.tags.fortify import Fortify
+from src.game_objects.card import Card
+from src.game_objects.tags.vector import Vector as VectorTag
+from src.game_objects.tags.ward import Ward
 
 
 class Sandbox(Card):
     id = 'sandbox'
     name = 'Sandbox'
-    type = CardType.WARD
+    type = CardType.SCRIPT_VECTOR
     rarity = 'intermediate'
-    tooltips = [Fortify]
-    image_id = 'query'
-    cost = 3
-    description = ['Apply Fortify 2,', 'next turn draw 2 cards']
+    image_id = 'sandbox'
+    tooltips = [VectorTag, Ward, Fortify]
+    cost = 1
+    description = ['Install Vector:', '  Ward 1', '  Fortify 1']
+    vector = Vector(name='Spike', default_ward=1, tags=[Fortify(1)])
 
-    def on_ward_install(self, node):
-        node.tags.add_tag(Fortify(2))
-        get_aq().queue_action('add_player_tag', DelayedDraw, 2)

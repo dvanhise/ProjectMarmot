@@ -15,5 +15,5 @@ class BoostLoss(Tag):
         if boost_tag:
             boost_tag.count -= 1
 
-        if boost_tag.count <= 0:
+        if self.count <= 0:
             self.count = 0

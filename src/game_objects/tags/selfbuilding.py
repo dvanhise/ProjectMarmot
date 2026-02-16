@@ -11,5 +11,3 @@ class SelfBuilding(Tag):
         node.ward += self.count
         self.count -= 1
 
-    # def on_vector_install(self, node, vector, player_info):
-    #     node.tags.add_tag(vector.tags.pop(self))

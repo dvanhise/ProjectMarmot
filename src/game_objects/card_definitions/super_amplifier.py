@@ -10,7 +10,7 @@ class SuperAmplifier(Card):
     name = 'Super Amplifier'
     type = CardType.SCRIPT_VECTOR
     rarity = 'intermediate'
-    tooltips = [Vector, Boost]
+    tooltips = [VectorTag, Boost]
     cost = 1
     description = ['Install Vector:', '  Boost 3']
     vector = Vector(name='B Amp', default_ward=0, tags=[Boost(3)])

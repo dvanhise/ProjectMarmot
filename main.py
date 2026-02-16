@@ -1,5 +1,6 @@
 import pygame
 import logging
+import traceback
 from src.game import Game
 from src.game_state import get_game_state
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
@@ -24,15 +25,20 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
-    game = Game(screen, clock)
-    get_game_state(game)  # First instantion must be with 'game' object argument
-    game.load_game()
+    try:
+        game = Game(screen, clock)
+        get_game_state(game)  # First instantion must be with 'game' object argument
+        game.load_game()
 
-    running = True
-    while running:
-        game.level_update()
-        game.check_events()
-        running = game.render_screen()
+        running = True
+        while running:
+            game.level_update()
+            game.check_events()
+            running = game.render_screen()
+    except Exception as e:
+        logging.critical(traceback.format_exc())
+
+
     pygame.quit()
 
 

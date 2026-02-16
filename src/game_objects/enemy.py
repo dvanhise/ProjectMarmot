@@ -14,6 +14,7 @@ class Enemy:
         self.previous_pattern_id = None
         self.script = None
         self.portrait = definition['portrait']
+        self.name = definition.get('name', 'TODO')
         self.health = definition['health']
         self.max_health = definition['health']
         self.tags = TagManager()
@@ -28,7 +29,7 @@ class Enemy:
             next_pattern = self.pattern[self.current_pattern_id]['next']
             prev = self.previous_pattern_id
             self.previous_pattern_id = self.current_pattern_id
-            if type(next_pattern) is Callable:
+            if callable(next_pattern):
                 self.current_pattern_id = next_pattern(prev)
             elif type(next_pattern) is int:
                 self.current_pattern_id = next_pattern

@@ -30,9 +30,7 @@ class Level:
         raise ValueError(f'Source node for "{owner}" could not be found.')
 
     def remove_depleted_vectors(self):
-        for node in self.nodes.values():
-            if node.vector and len(node.vector.tags) == 0:
-                node.vector = None
+        [node.check_vector_depletion() for node in self.nodes.values()]
 
     def check_win(self):
         return self.health <= 0

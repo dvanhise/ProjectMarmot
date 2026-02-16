@@ -5,7 +5,6 @@ from src.game_objects.card import Card
 from src.game_objects.tags.ward import Ward
 
 
-
 class Bricklayer(Card):
     id = 'bricklayer'
     name = 'Bricklayer'

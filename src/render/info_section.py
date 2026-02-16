@@ -8,15 +8,12 @@ from src.utils.mouse_check import Tooltip
 from src.constants import SCREEN_WIDTH, CURRENCY_COLOR
 
 
-INFO_SECTION_SIZE = (120, 160)
-
 PORTRAIT_SIZE = (100, 100)
 
 SCREEN_OFFSET_PLAYER = (20, 20)
 SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 20, 20)
 
-HEALTH_FONT_SIZE = 24
-CRED_FONT_SIZE = 22
+INFO_FONT_SIZE = 20
 
 
 def render_info(s: pygame.Surface, entity: Player|Enemy):
@@ -36,16 +33,22 @@ def render_info(s: pygame.Surface, entity: Player|Enemy):
     pygame.draw.rect(s, '#444444', pygame.Rect(offset, PORTRAIT_SIZE), 5, 5)
     pygame.draw.rect(s, '#DDDDDD', pygame.Rect(offset, PORTRAIT_SIZE), 3, 5)
 
+    # Draw name
+    font = pygame.font.Font(get_font('BrassMono', 'bold'), INFO_FONT_SIZE)
+    health_text = draw_text_with_outline(entity.name, font, 'white', 1, 'black')
+    text_rect = health_text.get_rect(center=(offset[0]+PORTRAIT_SIZE[0]//2, offset[1]+10))
+    s.blit(health_text, text_rect)
+
     # Draw cred
     if entity.owner == 'PLAYER':
-        font = pygame.font.Font(get_font('BrassMono', 'bold'), CRED_FONT_SIZE)
+        font = pygame.font.Font(get_font('BrassMono', 'bold'), INFO_FONT_SIZE)
         cred_text = draw_text_with_outline(f'※{entity.cred} Cred', font, CURRENCY_COLOR, 2, 'black')
         text_rect = cred_text.get_rect(topleft=(SCREEN_OFFSET_PLAYER[0]+PORTRAIT_SIZE[0]+5, SCREEN_OFFSET_PLAYER[1]))
         s.blit(cred_text, text_rect)
 
     # Draw health
-    font = pygame.font.Font(get_font('BrassMono', 'bold'), HEALTH_FONT_SIZE)
-    health_text = draw_text_with_outline(f'{entity.health} HP', font, 'white', 1, 'black')
+    font = pygame.font.Font(get_font('BrassMono', 'bold'), INFO_FONT_SIZE)
+    health_text = draw_text_with_outline(f'{entity.health}/{entity.max_health} HP', font, 'white', 1, 'black')
     text_rect = health_text.get_rect(center=(offset[0]+PORTRAIT_SIZE[0]//2, offset[1]+PORTRAIT_SIZE[1]-10))
     s.blit(health_text, text_rect)
 

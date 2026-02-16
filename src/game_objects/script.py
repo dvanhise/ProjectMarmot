@@ -77,6 +77,7 @@ class Script:
 
             if node.source:
                 opponent.change_health(-self.power)
+                return False
             else:
                 node.owner = self.owner
 
@@ -93,11 +94,14 @@ class Script:
             node.tags.on_friendly_node_encounter_as_node(self, node)
             if node.vector:
                 node.vector.tags.on_friendly_node_encounter_as_vector(self, node)
+            node.check_vector_depletion()
 
         # Automatically install enemy vector if node doesn't have one installed
         if autoplay_vector and len(self.vector) and not node.vector:
             node.install_vector(self.vector.pop(0))
-            node.vector.tags.on_vector_install(node, node.vector, {})  # TODO: Add enemy info if ever needed
+            self.tags.on_vector_install(node, node.vector, {})  # TODO: Add enemy info if ever needed
+            node.tags.on_vector_install(node, node.vector, {})
+            node.vector.tags.on_vector_install(node, node.vector, {})
 
         return True
 
