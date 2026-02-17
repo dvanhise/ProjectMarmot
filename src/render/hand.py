@@ -5,7 +5,7 @@ from src.utils.mouse_check import Tooltip
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
-CARD_GAP = 5
+CARD_GAP = 2
 
 
 def render_hand(s: pygame.Surface, player: Player):

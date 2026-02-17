@@ -99,9 +99,9 @@ class Script:
         # Automatically install enemy vector if node doesn't have one installed
         if autoplay_vector and len(self.vector) and not node.vector:
             node.install_vector(self.vector.pop(0))
-            self.tags.on_vector_install(node, node.vector, {})  # TODO: Add enemy info if ever needed
-            node.tags.on_vector_install(node, node.vector, {})
-            node.vector.tags.on_vector_install(node, node.vector, {})
+            self.tags.on_vector_install_as_script(self, node, node.vector, {})  # TODO: Add enemy info if ever needed
+            node.tags.on_vector_install_as_node(self, node, node.vector, {})
+            node.vector.tags.on_vector_install_as_vector(self, node, node.vector, {})
 
         return True
 

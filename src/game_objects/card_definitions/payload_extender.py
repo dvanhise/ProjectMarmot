@@ -10,7 +10,7 @@ class PayloadExtender(Card):
     rarity = 'elite'
     image_id = 'query'
     cost = 1
-    description = ['Gain an additional', 'payload slot', 'delete']
+    description = ['Gain an additional', 'payload slot.', 'Delete when played.']
     delete_on_play = True
 
     def on_play(self):

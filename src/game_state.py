@@ -8,6 +8,7 @@ class GameState(StateMachine):
     setup_level = State()  # Load the level and draw up for player's hand
     pre_turn_prep = State()
     wait_for_player = State()
+    deck_screen = State()   # Show current cards in deck
     card_drag = State()
     run_player_script = State()  # Build, enact, and animate script
     run_enemy_script = State()
@@ -35,6 +36,18 @@ class GameState(StateMachine):
         card_drag.to(end_of_level, cond='player_won_level') |
         card_drag.to(game_end_loss, cond='player_lost_level') |
         card_drag.to(wait_for_player, unless=['player_won_level', 'player_lost_level'])
+    )
+
+    show_deck = (
+        wait_for_player.to(deck_screen) |
+        run_player_script.to(deck_screen) |
+        round_end_pick.to(deck_screen)
+    )
+
+    unshow_deck = (
+        deck_screen.to(wait_for_player, cond='previous_state_wait_for_player') |
+        deck_screen.to(run_player_script, cond='previous_state_run_player_script') |
+        deck_screen.to(round_end_pick, cond='previous_state_round_end_pick')
     )
 
     end_turn = wait_for_player.to(run_enemy_script)

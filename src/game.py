@@ -27,6 +27,7 @@ from src.render.round_end_screen import render_round_end_screen
 from src.render.help_text import render_help_text
 from src.render.intro_screen import render_intro_screen
 from src.render.end_screen import render_end_screen
+from src.render.deck import render_deck_screen
 
 from src.utils.asset_loader import img_fetch, get_font
 from src.utils.router import generate_route
@@ -47,11 +48,13 @@ class Game:
         self.mouse_check = MouseCheck()
         self.mouseover_text_list = None
         self.click_down = None
+        self.previous_state = None
 
         self.player_route = None
         self.enemy_temp_route = None  # Pre-planned route of enemy
         self.enemy_route = None  # Route when running enemy script
         self.round_end_choices = None
+        self.show_deck_category = None
 
         # Preload
         self.background = pygame.transform.smoothscale(img_fetch().get('background'), (SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -65,6 +68,18 @@ class Game:
 
     def on_enter_state(self, event, state):
         logging.info(f"Entering '{state.id}' state from '{event}' event.")
+
+    def on_exit_state(self, event, state):
+        self.previous_state = state
+
+    def previous_state_wait_for_player(self):
+        return self.previous_state == GameState.wait_for_player
+
+    def previous_state_run_player_script(self):
+        return self.previous_state == GameState.run_player_script
+
+    def previous_state_round_end_pick(self):
+        return self.previous_state == GameState.round_end_pick
 
     def after_setup_level_complete(self):
         self.player.init_round()
@@ -107,7 +122,7 @@ class Game:
     def on_enter_round_end_pick(self):
         self.round_end_choices = RoundEndPick(player=self.player)
 
-    def before_hardware_pick(self):
+    def before_show_deck(self):
         pass
 
     def player_lost_level(self):
@@ -118,12 +133,6 @@ class Game:
 
     def player_won_game(self):
         return self.level_ndx > len(self.level_order)
-
-    def on_enter_game_end_loss(self):
-        logging.info('YOU LOSE')
-
-    def on_enter_game_end_win(self):
-        logging.info('YOU WIN')
 
     def load_game(self):
         logging.info(get_card_stats())
@@ -192,6 +201,9 @@ class Game:
                         self.end_turn()
                     elif self.mouse_check.has_selected(m_x, m_y, 'SEND_SCRIPT'):
                         self.send_script()
+                    elif (deck_cat := self.mouse_check.has_selected_prefix(m_x, m_y, 'VIEW_DECK')) is not None:
+                        self.show_deck_category = deck_cat
+                        get_game_state().send('show_deck')
 
                 if get_game_state().current_state == GameState.card_drag:
                     card = self.player.get_dragged_card()
@@ -213,19 +225,29 @@ class Game:
                         # Select the next node in the path
                         node = self.level.nodes[node_id]
                         self.node_selected(node)
-                    if (vector_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'INSTALL_VECTOR')) is not None:
+                    elif (vector_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'INSTALL_VECTOR')) is not None:
                         installed_vector = self.player.script.vector.pop(vector_ndx)
                         node = self.player_route.node_path[-1]
                         node.install_vector(installed_vector)
-                        self.player.script.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
-                        node.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
-                        installed_vector.tags.on_vector_install(node, installed_vector, self.player.get_player_info_dict())
+                        self.player.script.tags.on_vector_install_as_script(self, node, installed_vector, self.player.get_player_info_dict())
+                        node.tags.on_vector_install_as_node(self, node, installed_vector, self.player.get_player_info_dict())
+                        installed_vector.tags.on_vector_install_as_vector(self, node, installed_vector, self.player.get_player_info_dict())
+                    elif (deck_cat := self.mouse_check.has_selected_prefix(m_x, m_y, 'VIEW_DECK')) is not None:
+                        self.show_deck_category = deck_cat
+                        get_game_state().send('show_deck')
 
                 elif get_game_state().current_state == GameState.round_end_pick:
                     if (pick_ndx := self.mouse_check.has_selected_prefix(m_x, m_y, 'PICK')) is not None:
                         self.round_end_choices.pick(pick_ndx)
                     elif self.mouse_check.has_selected(m_x, m_y, 'NEXT_BUTTON'):
                         get_game_state().send('end_of_level_progress')
+                    elif (deck_cat := self.mouse_check.has_selected_prefix(m_x, m_y, 'VIEW_DECK')) is not None:
+                        self.show_deck_category = deck_cat
+                        get_game_state().send('show_deck')
+
+                elif get_game_state().current_state == GameState.deck_screen:
+                    if self.mouse_check.has_selected(m_x, m_y, 'LEAVE_DECK'):
+                        get_game_state().send('unshow_deck')
 
                 elif get_game_state().current_state == GameState.intro_screen:
                     if self.mouse_check.has_selected(m_x, m_y, 'START_BUTTON'):
@@ -294,6 +316,12 @@ class Game:
             interactables = render_round_end_screen(self.screen, self.round_end_choices)
             self.mouse_check.register_rect(interactables)
 
+        # Render a card list
+        if get_game_state().current_state == GameState.deck_screen:
+            interactables = render_deck_screen(self.screen, self.player, self.show_deck_category)
+            self.mouse_check.register_rect(interactables)
+
+        # Render intro screen
         if get_game_state().current_state == GameState.intro_screen:
             interactables = render_intro_screen(self.screen)
             self.mouse_check.register_rect(interactables)

@@ -11,10 +11,9 @@ class NetBurn(Tag):
     def on_turn_end_node(self, vector, node):
         node.ward = max(0, node.ward - self.count)
 
-    def on_vector_install(self, node, vector, player_info):
-        if self == vector.tags.find_tag(NetBurn):
-            vector.tags.remove(self)
-            node.tags.add_tag(self)
+    def on_vector_install_as_vector(self, script, node, vector, player_info):
+        vector.tags.remove(self)
+        node.tags.add_tag(self)
 
     def on_failed_node_encounter_as_script(self, script, node):
         script.tags.remove(self)

@@ -22,7 +22,7 @@ class CardMine(Tag):
     def on_node_capture_as_vector(self, script, node):
         get_aq().queue_action('add_card', self.card, 'draw')
 
-    def on_vector_install(self, node, vector, player_info):
+    def on_vector_install_as_vector(self, script, node, vector, player_info):
         # Move the tag to the node when the vector is installed
         vector.tags.remove(self)
         node.tags.add_tag(self)

@@ -1,5 +1,5 @@
 import copy
-from random import shuffle
+import random
 import logging
 from src.game_objects.card import Card
 from src.game_objects.tag import TagManager
@@ -38,7 +38,7 @@ class Player:
 
     def init_round(self):
         self.all_cards_temp = copy.deepcopy(self.all_cards)
-        for card in self.all_cards_temp:
+        for card in self.all_cards_temp.values():
             self.tags.on_temp_card_creation(card, self.get_player_info_dict())
 
     def change_health(self, change):
@@ -66,8 +66,14 @@ class Player:
     def get_cards_in_discard(self):
         return [self.all_cards_temp[card_id] for card_id in self.discard_pile]
 
-    def get_cards_in_draw_pile(self):
-        return [self.all_cards_temp[card_id] for card_id in self.draw_pile]
+    def get_cards_in_draw_pile(self, seed=None):
+        cards = [self.all_cards_temp[card_id] for card_id in self.draw_pile]
+        if seed:
+            random.Random(seed).shuffle(cards)
+        return cards
+
+    def get_deleted_cards(self):
+        return [self.all_cards_temp[card_id] for card_id in self.deleted_pile]
 
     def add_card(self, new_card: Card):
         # For new cards in between rounds
@@ -96,7 +102,7 @@ class Player:
         self.discard_pile = []
         self.deleted_pile = []
         self.draw_pile = list(self.all_cards.keys())
-        shuffle(self.draw_pile)
+        random.shuffle(self.draw_pile)
         self.energy = 0
 
     def discard_hand(self):
@@ -122,7 +128,7 @@ class Player:
                 # Reshuffle discard into draw if draw is empty
                 self.draw_pile = self.discard_pile
                 self.discard_pile = []
-                shuffle(self.draw_pile)
+                random.shuffle(self.draw_pile)
 
             if len(self.current_hand) >= self.max_hand_size:
                 # Don't draw over max hand size

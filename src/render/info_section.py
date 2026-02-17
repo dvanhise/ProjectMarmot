@@ -39,8 +39,8 @@ def render_info(s: pygame.Surface, entity: Player|Enemy):
     text_rect = health_text.get_rect(center=(offset[0]+PORTRAIT_SIZE[0]//2, offset[1]+10))
     s.blit(health_text, text_rect)
 
-    # Draw cred
     if entity.owner == 'PLAYER':
+        # Draw cred
         font = pygame.font.Font(get_font('BrassMono', 'bold'), INFO_FONT_SIZE)
         cred_text = draw_text_with_outline(f'※{entity.cred} Cred', font, CURRENCY_COLOR, 2, 'black')
         text_rect = cred_text.get_rect(topleft=(SCREEN_OFFSET_PLAYER[0]+PORTRAIT_SIZE[0]+5, SCREEN_OFFSET_PLAYER[1]))

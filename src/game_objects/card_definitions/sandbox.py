@@ -15,5 +15,5 @@ class Sandbox(Card):
     tooltips = [VectorTag, Ward, Fortify]
     cost = 1
     description = ['Install Vector:', '  Ward 1', '  Fortify 1']
-    vector = Vector(name='Spike', default_ward=1, tags=[Fortify(1)])
+    vector = Vector(name='Sand', default_ward=1, tags=[Fortify(1)])
 

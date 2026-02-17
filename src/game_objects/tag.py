@@ -72,7 +72,13 @@ class Tag:
     def on_friendly_node_encounter_as_vector(self, script, node):
         pass
 
-    def on_vector_install(self, node, vector, player_info):
+    def on_vector_install_as_script(self, script, node, vector, player_info):
+        pass
+
+    def on_vector_install_as_node(self, script, node, vector, player_info):
+        pass
+
+    def on_vector_install_as_vector(self, script, node, vector, player_info):
         pass
 
     def on_turn_end_player(self, player):
@@ -219,9 +225,19 @@ class TagManager(list):
             tag.on_turn_start_player(player)
         self.remove_depleted_tags()
 
-    def on_vector_install(self, node, vector, player_info):
+    def on_vector_install_as_script(self, script, node, vector, player_info):
         for tag in self:
-            tag.on_vector_install(node, vector, player_info)
+            tag.on_vector_install_as_script(script, node, vector, player_info)
+        self.remove_depleted_tags()
+
+    def on_vector_install_as_node(self, script, node, vector, player_info):
+        for tag in self:
+            tag.on_vector_install_as_node(script, node, vector, player_info)
+        self.remove_depleted_tags()
+
+    def on_vector_install_as_vector(self, script, node, vector, player_info):
+        for tag in self:
+            tag.on_vector_install_as_vector(script, node, vector, player_info)
         self.remove_depleted_tags()
 
     def on_script_creation(self, script):
