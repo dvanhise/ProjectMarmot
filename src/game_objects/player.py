@@ -20,7 +20,7 @@ class Player:
 
         self.energy = 0
         self.max_energy = 3
-        self.max_hand_size = 8   # TODO: Change to 10 when screen is larger
+        self.max_hand_size = 10
         self.draw_count = 5   # Default draw number at start of turn
         self.card_reward_count = 3
         self.tags = TagManager()

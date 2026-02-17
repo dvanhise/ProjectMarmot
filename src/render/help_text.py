@@ -1,5 +1,5 @@
 import pygame
-from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TERMINAL_GREEN, DARK_TERMINAL
+from src.constants import SCREEN_WIDTH, TERMINAL_GREEN, DARK_TERMINAL
 from src.utils.asset_loader import get_font
 
 HELP_LINE_HEIGHT = 14

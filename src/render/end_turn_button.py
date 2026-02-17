@@ -8,7 +8,7 @@ LABEL_FONT_SIZE = 20
 
 def render_end_turn(s: pygame.Surface):
     x = SCREEN_WIDTH - BUTTON_SIZE[0] - 10
-    y = SCREEN_HEIGHT - BUTTON_SIZE[1] - 10
+    y = SCREEN_HEIGHT - BUTTON_SIZE[1] - 5
 
     image = img_fetch().get('end-turn')
     image = pygame.transform.smoothscale(image, BUTTON_SIZE)

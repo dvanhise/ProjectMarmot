@@ -13,8 +13,8 @@ VERT_OFFSET = 25
 
 
 def render_deck_info(s: pygame.Surface,  player: Player):
-    left = SCREEN_WIDTH-200
-    top = SCREEN_HEIGHT-CARD_HEIGHT
+    left = SCREEN_WIDTH-INFO_CARD_SIZE[0]-10
+    top = SCREEN_HEIGHT-CARD_HEIGHT-10
 
     back = img_fetch().get('cardback')
     card_surface = pygame.transform.smoothscale(back, INFO_CARD_SIZE)

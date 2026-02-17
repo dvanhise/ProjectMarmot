@@ -4,7 +4,7 @@ from src.render.card import CARD_HEIGHT
 from src.utils.text_helper import draw_text_with_outline
 from src.utils.asset_loader import get_font
 
-SCREEN_OFFSET = (SCREEN_WIDTH-50, SCREEN_HEIGHT - CARD_HEIGHT + 20)
+SCREEN_OFFSET = (SCREEN_WIDTH-35, SCREEN_HEIGHT - CARD_HEIGHT - 35)
 ENERGY_CIRCLE_RADIUS = 30
 ENERGY_FONT_SIZE = 26
 

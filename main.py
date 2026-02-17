@@ -35,7 +35,7 @@ def main():
             game.level_update()
             game.check_events()
             running = game.render_screen()
-    except Exception as e:
+    except Exception:
         logging.critical(traceback.format_exc())
 
 
