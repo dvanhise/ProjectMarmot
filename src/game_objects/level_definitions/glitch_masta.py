@@ -21,6 +21,7 @@ definition = {
     'network_width': 3,
     'network_height': 3,
     'portrait': 'placeholder',
+    'name': 'GlitchMasta',
     'health': 6,
     'nodes': [
         {

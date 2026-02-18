@@ -1,10 +1,12 @@
+import random
+from src.game_objects.tags.enemy_surge import EnemySurge
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
+from src.game_objects.tags.netburn import NetBurn
 from src.utils.router import PathType
 
-
 """
-Generic test level with minimal powers
+Lots of netburn and controlled nodes
 
      0   1   2   3   4
 0           [4]
@@ -19,8 +21,9 @@ definition = {
     'edge_difficulty': 2,
     'network_width': 5,
     'network_height': 5,
-    'portrait': 'avatar2',
-    'health': 4,
+    'portrait': 'placeholder',
+    'name': 'Billionz4me',
+    'health': 5,
     'nodes': [
         {
             'id': 1,
@@ -42,7 +45,10 @@ definition = {
         },
         {
             'id': 5,
-            'position': (2, 2)
+            'position': (2, 2),
+            'tags': [NetBurn(2)],
+            'ward': 8,
+            'owner': 'ENEMY'
         },
         {
             'id': 6,
@@ -50,15 +56,14 @@ definition = {
         },
         {
             'id': 7,
-            'position': (3, 1)
+            'position': (3, 1),
+            'owner': 'ENEMY'
         },
         {
             'id': 8,
             'name': 'Database',
             'position': (3, 3),
-            'owner': 'ENEMY',
-            'ward': 2,
-            'vector': Vector(name='Amp', tags=[Boost(2)])
+            'owner': 'ENEMY'
         },
         {
             'id': 9,
@@ -122,31 +127,28 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 3,
-            'vectors': [Vector(name='Amp', default_ward=1, tags=[Boost(2)])],
+            'vectors': [
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)]),
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)]),
+                Vector(name='Fire', default_ward=4, tags=[Boost(1), NetBurn(1)])
+            ],
             'pathing': PathType.RANDOM,
-            'next': 2
+            'next': lambda prev: random.choice([2,3])
         },
         {
             'pattern_id': 2,
-            'power': 3,
-            'pathing': PathType.TAKE_OPPONENT_NODES,
-            'next': 3
+            'power': 5,
+            'tags': [NetBurn(3)],
+            'pathing': PathType.CLOSEST_ENEMY_NODE,
+            'next': lambda prev: 1 if prev == 3 else 3
         },
         {
             'pattern_id': 3,
-            'power': 3,
-            'vectors': [
-                Vector(name='Amp', default_ward=1, tags=[Boost(2)]),
-                Vector(name='S Amp', tags=[Boost(1)])
-            ],
-            'pathing': PathType.RANDOM,
-            'next': 4
-        },
-        {
-            'pattern_id': 4,
             'power': 4,
+            'self_tags': [EnemySurge(1)],
+            'vectors': [Vector(name='Smoke', default_ward=6, tags=[Boost(2), NetBurn(1)])],
             'pathing': PathType.TAKE_OPPONENT_NODES,
-            'next': 3
+            'next': lambda prev: 1 if prev == 2 else 2
         }
     ]
 }

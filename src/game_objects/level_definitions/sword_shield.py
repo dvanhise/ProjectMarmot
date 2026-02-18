@@ -17,6 +17,7 @@ definition = {
     'network_width': 6,
     'network_height': 3,
     'portrait': 'placeholder',
+    'name': 'Sword&Shield54',
     'health': 4,
     'nodes': [
         {

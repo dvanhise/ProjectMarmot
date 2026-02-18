@@ -1,8 +1,10 @@
 import random
+
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
 from src.game_objects.tags.enemy_surge import EnemySurge
 from src.game_objects.tags.selfbuilding import SelfBuilding
+from src.game_objects.tags.fortify import Fortify
 from src.utils.router import PathType
 
 
@@ -23,6 +25,7 @@ definition = {
     'network_width': 5,
     'network_height': 5,
     'portrait': 'placeholder',
+    'name': 'PanoptiCorp',
     'health': 4,
     'nodes': [
         {
@@ -149,7 +152,7 @@ definition = {
             'power': 4,
             'vectors': [
                 Vector(name='Amp', tags=[Boost(1)]),
-                Vector(name='++', default_ward=1, tags=[SelfBuilding(3)])
+                Vector(name='++', default_ward=1, tags=[SelfBuilding(3), Fortify(1)])
             ],
             'pathing': PathType.TAKE_NODES,
             'next': 2

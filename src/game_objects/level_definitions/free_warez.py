@@ -20,7 +20,7 @@ definition = {
     'network_width': 6,
     'network_height': 3,
     'portrait': 'placeholder',
-    'name': 'Ad Vendor',
+    'name': 'free_warez.ru',
     'health': 5,
     'nodes': [
         {

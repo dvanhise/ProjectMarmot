@@ -4,7 +4,7 @@ import random
 
 import pygame
 
-from src.game_objects.level_definitions.level1 import definition as level1_def
+from src.game_objects.level_definitions.haxor import definition as level1_def
 from src.game_objects.level import Level
 from src.game_objects.enemy import Enemy
 from src.game_objects.player import Player
@@ -123,9 +123,6 @@ class Game:
     def on_enter_round_end_pick(self):
         if self.previous_state != GameState.deck_screen:
             self.round_end_choices = RoundEndPick(player=self.player)
-
-    def before_show_deck(self):
-        pass
 
     def player_lost_level(self):
         return self.player.check_defeat()
