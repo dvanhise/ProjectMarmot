@@ -15,6 +15,7 @@ class PathType(StrEnum):
     ATTACK_OPPONENT_SOURCE = auto()
     TAKE_OPPONENT_NODES = auto()
     TAKE_NODES = auto()
+    TOUCH_NODES = auto()
 
 
 def generate_route(source_node: Node, script: Script):
@@ -50,6 +51,11 @@ def generate_route(source_node: Node, script: Script):
     elif script.pathing == PathType.TAKE_OPPONENT_NODES:
         max_stat = max([s['enemy_nodes_taken'] for s in stats])
         chosen_ndx = random.choice([ndx for ndx, s in enumerate(stats) if s['enemy_nodes_taken'] == max_stat])
+        return all_paths[chosen_ndx]
+
+    elif script.pathing == PathType.TOUCH_NODES:
+        max_stat = max([s['nodes_touched'] for s in stats])
+        chosen_ndx = random.choice([ndx for ndx, s in enumerate(stats) if s['nodes_touched'] == max_stat])
         return all_paths[chosen_ndx]
 
     else:

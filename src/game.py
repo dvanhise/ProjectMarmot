@@ -116,11 +116,13 @@ class Game:
         self.level.remove_depleted_vectors()
 
     def on_exit_end_of_level(self):
+        self.player.tags.clear()
         self.player.cred += 2
         self.level_ndx += 1
 
     def on_enter_round_end_pick(self):
-        self.round_end_choices = RoundEndPick(player=self.player)
+        if self.previous_state != GameState.deck_screen:
+            self.round_end_choices = RoundEndPick(player=self.player)
 
     def before_show_deck(self):
         pass
@@ -408,7 +410,8 @@ class Game:
             self.player.pay_energy(card.cost)
             replaced = self.script_builder.add_card(self.player.dragged, card, script_ndx)
             if replaced:
-                card.on_script_replacement()
+                card.on_script_overwrite()
+                self.player.all_cards_temp[replaced].on_script_overwritten()
                 self.player.add_card_to_discard(replaced)
 
             self.run_action_queue()

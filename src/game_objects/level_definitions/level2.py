@@ -7,7 +7,7 @@ Lots of enemy starting nodes with high ward
 
      0      1       2       3       4       5
 0          [2]     [4]     [6]     [8]
-1   [1p]                                    [10e]
+1   [1p]                /                   [10e]
 2          [3]     [5]     [7]     [9]
 """
 
@@ -39,15 +39,11 @@ definition = {
         },
         {
             'id': 5,
-            'position': (2, 2),
-            'owner': 'ENEMY',
-            'ward': 1
+            'position': (2, 2)
         },
         {
             'id': 6,
-            'position': (3, 0),
-            'owner': 'ENEMY',
-            'ward': 1
+            'position': (3, 0)
         },
         {
             'id': 7,
@@ -98,6 +94,10 @@ definition = {
         },
         {
             'left_id': 5,
+            'right_id': 6
+        },
+        {
+            'left_id': 5,
             'right_id': 7
         },
         {
@@ -128,7 +128,7 @@ definition = {
         },
         {
             'pattern_id': 2,
-            'power': 5,
+            'power': 4,
             'vectors': [Vector(name='Knf', tags=[Boost(1)])],
             'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': 1

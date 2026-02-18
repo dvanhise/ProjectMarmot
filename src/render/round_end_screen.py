@@ -49,7 +49,7 @@ def render_round_end_screen(s: pygame.Surface, choices: RoundEndPick):
             s.blit(gen_card(choice.card), (horizontal_offset, WINDOW_TOP + CARD_VERT_OFFSET))
             font = pygame.font.Font(get_font('BrassMono', 'regular'), 20)
             outline_text = draw_text_with_outline('Remove Card', font, 'red', 2, 'black')
-            text_rect = outline_text.get_rect(center=(horizontal_offset+CARD_WIDTH//2, WINDOW_TOP + CARD_VERT_OFFSET+CARD_HEIGHT-40))
+            text_rect = outline_text.get_rect(center=(horizontal_offset+CARD_WIDTH//2, WINDOW_TOP + CARD_VERT_OFFSET+CARD_HEIGHT-30))
             s.blit(outline_text, text_rect)
         elif choice.choice_type == 'health':
             s.blit(gen_health_card(choice.health), (horizontal_offset, WINDOW_TOP + CARD_VERT_OFFSET))

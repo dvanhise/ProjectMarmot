@@ -58,7 +58,7 @@ class Player:
         return self.all_cards_temp[self.dragged]
 
     def get_full_deck(self):
-        return list(self.all_cards_temp.values())
+        return list(self.all_cards.values())
 
     def get_cards_in_hand(self):
         return [self.all_cards_temp[card_id] for card_id in self.current_hand]

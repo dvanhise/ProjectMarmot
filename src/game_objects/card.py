@@ -38,6 +38,10 @@ class Card:
     def on_ward_install(self, node):
         pass
 
-    def on_script_replacement(self):
-        # When a script card replace another card in the script builder
+    def on_script_overwrite(self):
+        # When a script card replaces another card in the script builder
+        pass
+
+    def on_script_overwritten(self):
+        # When a script card is replaced by another card in the script builder
         pass

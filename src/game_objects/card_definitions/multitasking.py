@@ -11,7 +11,7 @@ class Multitasking(Card):
     rarity = 'simple'
     image_id = 'query'
     cost = 1
-    description = ['When executing a', 'script this encounter,', 'draw 1 card.']
+    description = ['When executing a', 'script this encounter,', 'draw 1 card.', 'Delete when played.']
     delete_on_play = True
 
     def on_play(self):

@@ -10,7 +10,7 @@ class RemoteMiner(Card):
     type = CardType.SCRIPT_MOD
     rarity = 'intermediate'
     image_id = 'mod'
-    cost = 2
+    cost = 1
     description = ['Gain 1 energy for', 'each node captured']
 
     def on_script_activation(self, script: Script, player_info):

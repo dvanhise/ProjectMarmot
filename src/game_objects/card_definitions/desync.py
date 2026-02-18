@@ -13,7 +13,7 @@ class Desync(Card):
     image_id = 'desync'
     tooltips = [Ward]
     cost = 1
-    description = ['{ward} ward,', 'next turn', 'gain 1 energy']
+    description = ['{ward} Ward.', 'Gain 1 energy next turn.']
     ward = 2
 
     def on_ward_install(self, node):

@@ -13,4 +13,4 @@ class ChargeUp(Tag):
         energy = player_info['energy']
         vector.tags.add_tag(Boost(energy*self.count))
         get_aq().queue_action('change_energy', -energy)
-        vector.remove(self)
+        vector.tags.remove(self)

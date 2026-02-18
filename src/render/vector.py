@@ -6,7 +6,7 @@ from src.constants import DARK_TERMINAL
 from src.utils.asset_loader import get_font
 
 VECTOR_WIDTH = 30
-VECTOR_FONT_SIZE = 12
+VECTOR_FONT_SIZE = 11
 VECTOR_NAME_OFFSET = 10
 PADDING = 1
 

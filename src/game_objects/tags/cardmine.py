@@ -6,7 +6,7 @@ class CardMine(Tag):
     id = 'card-mine'
     name = 'Card Mine'
     icon = 'card_mine'
-    tooltip = 'Add {count} copy of {card} to draw pile when node is captured.'
+    tooltip = "Add {count} copy of {card} to the player's draw pile when node is captured."
     card = ''
 
     def __init__(self, *args, **kwargs):
@@ -18,9 +18,11 @@ class CardMine(Tag):
 
     def on_node_capture_as_node(self, script, node):
         get_aq().queue_action('add_card', self.card, 'draw')
+        node.tags.remove(self)
 
     def on_node_capture_as_vector(self, script, node):
         get_aq().queue_action('add_card', self.card, 'draw')
+        node.vector.tags.remove(self)
 
     def on_vector_install_as_vector(self, script, node, vector, player_info):
         # Move the tag to the node when the vector is installed

@@ -9,10 +9,10 @@ from src.utils.router import PathType
 """
 Small network with unbalanced edge difficulty
 
-     0   1   2
-0       [2]
-1   [1p]    [4e]
-2       [3]
+     0    1    2
+0        [2]
+1   [1p] [3] [5e]
+2        [4]
 """
 
 
@@ -35,10 +35,14 @@ definition = {
         },
         {
             'id': 3,
-            'position': (1, 2)
+            'position': (1, 1)
         },
         {
             'id': 4,
+            'position': (1, 2)
+        },
+        {
+            'id': 5,
             'position': (2, 1),
             'owner': 'ENEMY',
             'source': True
@@ -47,21 +51,33 @@ definition = {
     'edges': [
         {
             'left_id': 1,
-            'right_id': 2
+            'right_id': 2,
+            'difficulty': 2
         },
         {
             'left_id': 1,
             'right_id': 3,
-            'difficulty': 4
+            'difficulty': 3
         },
         {
-            'left_id': 2,
+            'left_id': 1,
             'right_id': 4,
             'difficulty': 4
         },
         {
+            'left_id': 2,
+            'right_id': 5,
+            'difficulty': 4
+        },
+        {
             'left_id': 3,
-            'right_id': 4
+            'right_id': 5,
+            'difficulty': 3
+        },
+        {
+            'left_id': 4,
+            'right_id': 5,
+            'difficulty': 2
         }
     ],
     'pattern': [
@@ -69,7 +85,7 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 4,
-            'vectors': [Vector(name='Amp', default_ward=1, tags=[Boost(2)])],
+            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
             'pathing': PathType.TAKE_NODES,
             'next': lambda prev: random.choice([2,3])
         },
@@ -77,8 +93,8 @@ definition = {
             'pattern_id': 2,
             'start': True,
             'power': 5,
-            'vectors': [Vector(name='Amp', tags=[Boost(2)])],
-            'pathing': PathType.ATTACK_OPPONENT_SOURCE,
+            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
+            'pathing': PathType.RANDOM,
             'next': 3
         },
         {
@@ -86,7 +102,7 @@ definition = {
             'power': 3,
             'self_tags': [EnemySurge(1)],
             'vectors': [Vector(name='Stop', tags=[Boost(1), Fortify(1)])],
-            'pathing': PathType.RANDOM,
+            'pathing': PathType.TOUCH_NODES,
             'next': 1
         }
     ]

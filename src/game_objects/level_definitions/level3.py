@@ -1,6 +1,4 @@
 import random
-
-from src.game_objects.tags.fortify import Fortify
 from src.game_objects.tags.enemy_surge import EnemySurge
 from src.game_objects.vector import Vector
 from src.game_objects.tags.boost import Boost
@@ -138,7 +136,7 @@ definition = {
         },
         {
             'pattern_id': 2,
-            'power': 6,
+            'power': 5,
             'tags': [NetBurn(2)],
             'pathing': PathType.CLOSEST_ENEMY_NODE,
             'next': lambda prev: 1 if prev == 3 else 3
@@ -147,7 +145,7 @@ definition = {
             'pattern_id': 3,
             'power': 4,
             'self_tags': [EnemySurge(1)],
-            'vectors': [Vector(name='Smoke', default_ward=6, tags=[Boost(3), Fortify(1), NetBurn(1)])],
+            'vectors': [Vector(name='Smoke', default_ward=6, tags=[Boost(2), NetBurn(1)])],
             'pathing': PathType.TAKE_OPPONENT_NODES,
             'next': lambda prev: 1 if prev == 2 else 2
         }

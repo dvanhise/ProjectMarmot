@@ -20,6 +20,7 @@ definition = {
     'network_width': 6,
     'network_height': 3,
     'portrait': 'placeholder',
+    'name': 'Ad Vendor',
     'health': 5,
     'nodes': [
         {
@@ -56,20 +57,25 @@ definition = {
             'id': 8,
             'position': (4, 0),
             'owner': 'ENEMY',
-            'vector': Vector(name='Clk me', tags=[Boost(1), CardMine(count=1, card='spam')])
+            'ward': 1,
+            'vector': Vector(name='Click', tags=[Boost(1)]),
+            'tags': [CardMine(count=1, card='spam')]
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
-            'vector': Vector(name='Warez', default_ward=1, tags=[Boost(1), CardMine(count=1, card='shovelware')])
+            'ward': 1,
+            'vector': Vector(name='Warez', tags=[Boost(1)]),
+            'tags': [CardMine(count=1, card='shovelware')]
         },
         {
             'id': 10,
             'position': (5, 1),
             'owner': 'ENEMY',
             'source': True,
-            'vector': Vector(name='Warez', tags=[CardMine(count=1, card='popup-ad')])
+            'vector': Vector(name='Warez', tags=[Boost(2)]),
+            'tags': [CardMine(count=2, card='popup-ad')]
         }
     ],
     'edges': [
@@ -143,7 +149,7 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 3,
-            'vectors': [Vector(name='Amp', default_ward=1, tags=[CardMine(count=1, card='popup-ad')])],
+            'vectors': [Vector(name='Warez', default_ward=1, tags=[CardMine(count=1, card='popup-ad')])],
             'pathing': PathType.RANDOM,
             'next': lambda prev: 3 if prev == 2 else 2
         },
@@ -151,14 +157,17 @@ definition = {
             'pattern_id': 2,
             'start': True,
             'power': 3,
-            'vectors': [Vector(name='Amp', default_ward=1, tags=[CardMine(count=1, card='shovelware')])],
+            'vectors': [
+                Vector(name='Clk1', default_ward=1, tags=[CardMine(count=1, card='shovelware')]),
+                Vector(name='Clk2', default_ward=1, tags=[CardMine(count=1, card='spam')])
+            ],
             'pathing': PathType.RANDOM,
             'next': lambda prev: 3 if prev == 1 else 1
         },
         {
             'pattern_id': 3,
             'start': True,
-            'power': 4,
+            'power': 5,
             'self_tags': [EnemySurge(1)],
             'pathing': PathType.ATTACK_OPPONENT_SOURCE,
             'next': lambda prev: random.choice([1, 2])
