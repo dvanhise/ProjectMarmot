@@ -12,7 +12,7 @@ class Fireball(Card):
     tooltips = [NetBurn]
     image_id = 'fireball'
     cost = 0
-    description = ['Add Netburn 2 to script.', 'Applied to node', 'after failed encounter']
+    description = ['When failing to', 'capture enemy node,', 'add Netburn 2 to node.']
 
     def on_script_activation(self, script: Script, player_info):
         script.tags.add_tag(NetBurn(2))

@@ -86,7 +86,9 @@ class Player:
         self.all_cards_temp[self.id_counter] = new_card
         if to == 'hand': self.current_hand.append(self.id_counter)
         elif to == 'discard': self.discard_pile.append(self.id_counter)
-        elif to == 'draw': self.draw_pile.append(self.id_counter)
+        elif to == 'draw':
+            self.draw_pile.append(self.id_counter)
+            random.shuffle(self.draw_pile)
         else:
             raise ValueError(f'Unexpected location to add temp card "{to}"')
         self.id_counter += 1

@@ -7,10 +7,10 @@ class Query(Card):
     id = 'query'
     name = 'Query'
     type = CardType.UTILITY
-    rarity = 'simple'
+    rarity = 'built-in'
     image_id = 'query'
     cost = 1
-    description = ['Draw 3 cards']
+    description = ['Draw 2 cards']
 
     def on_play(self):
-        get_aq().queue_action('draw_cards', 3)
+        get_aq().queue_action('draw_cards', 2)

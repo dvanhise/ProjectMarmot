@@ -10,4 +10,4 @@ CRT_TAN = pygame.Color('#F5F2DA')
 ENERGY_COLOR = pygame.Color('#00FFF4')
 CURRENCY_COLOR = pygame.Color('#F5F100')
 
-DEVELOPMENT_VERSION = 'v0.1 Alpha'
+DEVELOPMENT_VERSION = 'v0.2 Alpha'

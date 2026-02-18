@@ -14,7 +14,6 @@ class Bulwark(Card):
     cost = 1
     description = ['Ward {ward}']
     ward = 3
-    delete_on_play = True
 
     def on_ward_install(self, node):
         node.apply_ward(self.ward)

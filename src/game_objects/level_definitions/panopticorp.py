@@ -24,7 +24,7 @@ definition = {
     'edge_difficulty': 2,
     'network_width': 5,
     'network_height': 5,
-    'portrait': 'placeholder',
+    'portrait': 'panopticorp_avatar',
     'name': 'PanoptiCorp',
     'health': 4,
     'nodes': [

@@ -6,8 +6,8 @@ class Card:
     id = ''
     cost = 0
     type = CardType.NULL
-    description = 'Default description'
-    tooltips = []
+    description = ['Default description']
+    tooltips = []  # Helpful tooltips that reference tags
     rarity = 'simple'
     image_id = 'default'
     vector = None

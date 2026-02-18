@@ -4,7 +4,6 @@ class Tag:
     icon = 'tag_placeholder'
     tooltip = 'TODO'
     count = 0
-    card = ''
     owner = ''
     positive = True  # Whether the tag is good or bad for the node/vector/player it's applied to
 
@@ -12,7 +11,7 @@ class Tag:
         self.count = count
 
     def get_tooltip(self):
-        return f'{self.name}: {self.tooltip.format(count=self.count, card=self.card)}'
+        return f'{self.name}: {self.tooltip.format(count=self.count)}'
 
     def get_full_name(self):
         return f'{self.id}{self.count}'

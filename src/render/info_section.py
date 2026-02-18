@@ -8,10 +8,10 @@ from src.utils.mouse_check import Tooltip
 from src.constants import SCREEN_WIDTH, CURRENCY_COLOR
 
 
-PORTRAIT_SIZE = (100, 100)
+PORTRAIT_SIZE = (120, 120)
 
-SCREEN_OFFSET_PLAYER = (20, 20)
-SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 20, 20)
+SCREEN_OFFSET_PLAYER = (10, 20)
+SCREEN_OFFSET_ENEMY = (SCREEN_WIDTH - PORTRAIT_SIZE[0] - 10, 20)
 
 INFO_FONT_SIZE = 20
 
@@ -34,7 +34,7 @@ def render_info(s: pygame.Surface, entity: Player|Enemy):
     pygame.draw.rect(s, '#DDDDDD', pygame.Rect(offset, PORTRAIT_SIZE), 3, 5)
 
     # Draw name
-    font = pygame.font.Font(get_font('BrassMono', 'bold'), INFO_FONT_SIZE)
+    font = pygame.font.Font(get_font('BrassMono', 'regular'), INFO_FONT_SIZE)
     health_text = draw_text_with_outline(entity.name, font, 'white', 1, 'black')
     text_rect = health_text.get_rect(center=(offset[0]+PORTRAIT_SIZE[0]//2, offset[1]+10))
     s.blit(health_text, text_rect)

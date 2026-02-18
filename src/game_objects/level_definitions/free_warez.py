@@ -2,7 +2,9 @@ import random
 
 from src.game_objects.tags.boost import Boost
 from src.game_objects.tags.enemy_surge import EnemySurge
-from src.game_objects.tags.cardmine import CardMine
+from src.game_objects.tags.popup_ad_trap import PopupAdTrap
+from src.game_objects.tags.shovelware_trap import ShovelwareTrap
+from src.game_objects.tags.spam_trap import SpamTrap
 from src.game_objects.vector import Vector
 from src.utils.router import PathType
 
@@ -58,24 +60,21 @@ definition = {
             'position': (4, 0),
             'owner': 'ENEMY',
             'ward': 1,
-            'vector': Vector(name='Click', tags=[Boost(1)]),
-            'tags': [CardMine(count=1, card='spam')]
+            'vector': Vector(name='Click', tags=[Boost(1), SpamTrap(count=1)])
         },
         {
             'id': 9,
             'position': (4, 2),
             'owner': 'ENEMY',
             'ward': 1,
-            'vector': Vector(name='Warez', tags=[Boost(1)]),
-            'tags': [CardMine(count=1, card='shovelware')]
+            'vector': Vector(name='Warez', tags=[Boost(1), ShovelwareTrap(count=1)])
         },
         {
             'id': 10,
             'position': (5, 1),
             'owner': 'ENEMY',
             'source': True,
-            'vector': Vector(name='Warez', tags=[Boost(2)]),
-            'tags': [CardMine(count=2, card='popup-ad')]
+            'vector': Vector(name='Warez', tags=[Boost(2), PopupAdTrap(count=2)])
         }
     ],
     'edges': [
@@ -149,7 +148,7 @@ definition = {
             'pattern_id': 1,
             'start': True,
             'power': 3,
-            'vectors': [Vector(name='Warez', default_ward=1, tags=[CardMine(count=1, card='popup-ad')])],
+            'vectors': [Vector(name='Warez', default_ward=1, tags=[PopupAdTrap(count=1)])],
             'pathing': PathType.RANDOM,
             'next': lambda prev: 3 if prev == 2 else 2
         },
@@ -158,8 +157,8 @@ definition = {
             'start': True,
             'power': 4,
             'vectors': [
-                Vector(name='Clk1', default_ward=1, tags=[CardMine(count=1, card='shovelware')]),
-                Vector(name='Clk2', default_ward=1, tags=[CardMine(count=1, card='spam')])
+                Vector(name='Clk1', default_ward=1, tags=[ShovelwareTrap(count=1)]),
+                Vector(name='Clk2', default_ward=1, tags=[SpamTrap(count=1)])
             ],
             'pathing': PathType.RANDOM,
             'next': lambda prev: 3 if prev == 1 else 1
