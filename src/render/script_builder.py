@@ -62,13 +62,13 @@ def render_script_builder(s: pygame.Surface, builder: ScriptBuilder):
     # Draw send script button
     image = img_fetch().get('execute')
     image = pygame.transform.smoothscale(image, BUTTON_SIZE)
-    s.blit(image, (SCREEN_WIDTH-BUTTON_SIZE[0]-10, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2))
+    s.blit(image, (SCREEN_WIDTH-BUTTON_SIZE[0]-12, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2))
 
     # Add energy cost to button
-    pygame.draw.circle(s, ENERGY_COLOR, (SCREEN_WIDTH-BUTTON_SIZE[0]+45, SCREEN_Y_OFFSET+60), 16)
+    pygame.draw.circle(s, ENERGY_COLOR, (SCREEN_WIDTH-BUTTON_SIZE[0]+45, SCREEN_Y_OFFSET+62), 16)
     font = pygame.font.Font(get_font('BrassMono', 'bold'), 26)
     outline_text = draw_text_with_outline('1', font, 'white', 2, 'black')
-    text_rect = outline_text.get_rect(center=(SCREEN_WIDTH - BUTTON_SIZE[0] +45, SCREEN_Y_OFFSET+60))
+    text_rect = outline_text.get_rect(center=(SCREEN_WIDTH - BUTTON_SIZE[0]+45, SCREEN_Y_OFFSET+62))
     s.blit(outline_text, text_rect)
 
     interactables['SEND_SCRIPT'] = pygame.Rect((SCREEN_WIDTH-BUTTON_SIZE[0]-10, SCREEN_Y_OFFSET + CARD_HEIGHT//2 - BUTTON_SIZE[1]//2), BUTTON_SIZE)

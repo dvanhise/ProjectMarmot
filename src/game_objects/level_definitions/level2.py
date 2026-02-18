@@ -17,7 +17,7 @@ definition = {
     'network_width': 6,
     'network_height': 3,
     'portrait': 'placeholder',
-    'health': 3,
+    'health': 4,
     'nodes': [
         {
             'id': 1,

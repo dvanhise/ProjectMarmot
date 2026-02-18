@@ -1,6 +1,4 @@
 import copy
-from typing import Callable
-
 from src.game_objects.script import Script
 from src.game_objects.tag import TagManager
 
@@ -44,7 +42,7 @@ class Enemy:
 
         tags = p.get('tags', [])
         for tag in tags:
-            self.script.tags.add_tag(tag)
+            self.script.tags.add_tag(copy.deepcopy(tag))
 
         vectors = p.get('vectors', [])
         for vector in vectors:

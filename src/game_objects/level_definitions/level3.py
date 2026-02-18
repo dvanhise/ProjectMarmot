@@ -137,7 +137,7 @@ definition = {
         {
             'pattern_id': 2,
             'power': 5,
-            'tags': [NetBurn(2)],
+            'tags': [NetBurn(3)],
             'pathing': PathType.CLOSEST_ENEMY_NODE,
             'next': lambda prev: 1 if prev == 3 else 3
         },

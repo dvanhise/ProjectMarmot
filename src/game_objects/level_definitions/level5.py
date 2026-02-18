@@ -57,7 +57,9 @@ definition = {
         },
         {
             'id': 8,
-            'position': (3, 2)
+            'position': (3, 2),
+            'tags': [SelfBuilding(2)],
+            'owner': 'ENEMY'
         },
         {
             'id': 9,
@@ -144,7 +146,7 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 3,
+            'power': 4,
             'vectors': [
                 Vector(name='Amp', tags=[Boost(1)]),
                 Vector(name='++', default_ward=1, tags=[SelfBuilding(3)])
@@ -154,7 +156,7 @@ definition = {
         },
         {
             'pattern_id': 2,
-            'power': 5,
+            'power': 6,
             'pathing': PathType.TAKE_OPPONENT_NODES,
             'next': 3
         },

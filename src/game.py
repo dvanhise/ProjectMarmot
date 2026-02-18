@@ -115,7 +115,7 @@ class Game:
                 self.player.add_card_to_discard(card_id)
         self.level.remove_depleted_vectors()
 
-    def on_exit_end_of_level(self):
+    def on_enter_end_of_level(self):
         self.player.tags.clear()
         self.player.cred += 2
         self.level_ndx += 1
@@ -134,7 +134,7 @@ class Game:
         return self.enemy.check_defeat()
 
     def player_won_game(self):
-        return self.level_ndx > len(self.level_order)
+        return self.level_ndx >= len(self.level_order)
 
     def load_game(self):
         logging.info(get_card_stats())

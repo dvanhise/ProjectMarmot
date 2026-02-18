@@ -156,7 +156,7 @@ definition = {
         {
             'pattern_id': 2,
             'start': True,
-            'power': 3,
+            'power': 4,
             'vectors': [
                 Vector(name='Clk1', default_ward=1, tags=[CardMine(count=1, card='shovelware')]),
                 Vector(name='Clk2', default_ward=1, tags=[CardMine(count=1, card='spam')])

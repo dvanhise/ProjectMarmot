@@ -45,6 +45,7 @@ definition = {
             'id': 5,
             'position': (2, 1),
             'owner': 'ENEMY',
+            'vector': Vector(name='Amp', tags=[Boost(2)]),
             'source': True
         }
     ],
@@ -84,26 +85,34 @@ definition = {
         {
             'pattern_id': 1,
             'start': True,
-            'power': 4,
-            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
+            'power': 3,
+            'vectors': [Vector(name='Amp', tags=[Boost(1), Fortify(1)])],
             'pathing': PathType.TAKE_NODES,
-            'next': lambda prev: random.choice([2,3])
+            'next': 2
         },
         {
             'pattern_id': 2,
             'start': True,
-            'power': 5,
+            'power': 4,
             'vectors': [Vector(name='Amp', tags=[Boost(1)])],
-            'pathing': PathType.RANDOM,
-            'next': 3
+            'pathing': PathType.TAKE_NODES,
+            'next': lambda prev: random.choice([3,4])
         },
         {
             'pattern_id': 3,
+            'start': True,
+            'power': 5,
+            'vectors': [Vector(name='Amp', tags=[Boost(1)])],
+            'pathing': PathType.RANDOM,
+            'next': 4
+        },
+        {
+            'pattern_id': 4,
             'power': 3,
             'self_tags': [EnemySurge(1)],
-            'vectors': [Vector(name='Stop', tags=[Boost(1), Fortify(1)])],
+            'vectors': [Vector(name='Stop', default_ward=3, tags=[Boost(1)])],
             'pathing': PathType.TOUCH_NODES,
-            'next': 1
+            'next': 2
         }
     ]
 }
